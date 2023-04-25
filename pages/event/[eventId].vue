@@ -1,21 +1,19 @@
 <template>
-  <div>
-    <div class="my-6 flex justify-center">
-      <span
-        class="text-3xl px-6 pt-1 pb-2 font-semibold rounded-md bg-slate-900 text-white"
-      >
+  <div class="bg-gradient-to-b from-slate-200">
+    <div class="py-3 mb-3">
+      <span class="text-xl mx-6 mt-1 mb-2 font-semibold">
         {{ event.name }}
       </span>
     </div>
 
-    <div class="flex justify-center">
-      <div>
+    <div class="flex w-full overflow-x-auto" style="height: calc(100vh - 92px)">
+      <div class="sticky left-0">
         <div
           v-for="userLink in event.userLinks"
-          class="w-40 rounded-md text-slate-900 bg-white shadow-lg ring-1 ring-black ring-opacity-5 m-2 flex items-center justify-center"
+          class="opacity-90 w-36 px-1 rounded-md text-slate-950 bg-slate-100 shadow-lg ring-1 ring-black ring-opacity-5 m-2 flex items-center justify-center font-semibold text-center"
           style="height: 89px"
         >
-          <b>{{ userLink.alias }}</b>
+          {{ userLink.alias }}
         </div>
       </div>
 
@@ -33,17 +31,19 @@
           >
             <div class="divide-y">
               <div
-                class="text-slate-900 block py-1 text-sm flex items-center justify-center"
+                class="text-slate-900 py-1 text-sm flex items-center justify-center"
               >
                 <span
-                  class="h-10 text-center inline-flex flex-col justify-center"
+                  class="h-10 text-center inline-flex flex-col justify-center font-bold"
                 >
-                  <span v-if="date.comment">
+                  <span
+                    v-if="date.comment"
+                    class="text-slate-600 font-semibold"
+                  >
                     <small>{{ date.comment }}</small>
-                    <br />
                   </span>
 
-                  <b>{{ _date.formatDatetime(String(date.date)) }}</b>
+                  {{ _date.formatDatetime(String(date.date)) }}
                 </span>
               </div>
 
@@ -79,13 +79,15 @@ const route = useRoute()
 
 const eventId = Number(route.params.eventId)
 
-const request = await _fetch('/api/getEvent', {
+let event = await _fetch('/api/getEvent', {
   eventId: eventId,
 })
 
-// console.log(request)
+event.userLinks.sort((a: EventUser, b: EventUser) => a.position - b.position)
 
-let event: Event = ref(request)
+// console.log(event)
+
+event = ref(event)
 
 function selectAvailabilityIcon(
   status: string,
