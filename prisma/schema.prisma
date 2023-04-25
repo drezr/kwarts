@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id              Int         @id @default(autoincrement())
+  name            String
+
+  owner           User       @relation(fields: [ownerId], references: [id])
+  ownerId         Int
+  userLinks       EventUser[]
+  dates           Date[]
+}
+
+model User {
+  id              Int         @id @default(autoincrement())
+  alias           String
+  email           String      @unique
+  chosenLanguage  String
+
+  eventLinks      EventUser[]
+  availabilities  Availability[]
+  ownedEvents     Event[]
+}
+
+model Date {
+  id              Int         @id @default(autoincrement())
+  date            DateTime
+  comment         String?
+  isLocked        Boolean     @default(false)
+
+  event           Event       @relation(fields: [eventId], references: [id])
+  eventId         Int
+  availabilities  Availability[]
+}
+
+
+model Availability {
+  id              Int         @id @default(autoincrement())
+  isAvailable     Boolean     @default(false)
+
+  date            Date        @relation(fields: [dateId], references: [id])
+  dateId          Int
+  user            User        @relation(fields: [userId], references: [id])
+  userId          Int
+}
+
+model EventUser {
+  id              Int         @id @default(autoincrement())
+  position        Int
+  password        String
+
+  event           Event       @relation(fields: [eventId], references: [id])
+  eventId         Int
+  user            User        @relation(fields: [userId], references: [id])
+  userId          Int
+
+  @@unique([eventId, userId])
+}
