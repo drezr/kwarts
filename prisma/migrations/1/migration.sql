@@ -1,17 +1,16 @@
 -- CreateTable
+CREATE TABLE "User" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "email" TEXT NOT NULL,
+    "chosenLanguage" TEXT NOT NULL
+);
+
+-- CreateTable
 CREATE TABLE "Event" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
     "ownerId" INTEGER NOT NULL,
     CONSTRAINT "Event_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
--- CreateTable
-CREATE TABLE "User" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "alias" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "chosenLanguage" TEXT NOT NULL
 );
 
 -- CreateTable
@@ -38,6 +37,7 @@ CREATE TABLE "Availability" (
 CREATE TABLE "EventUser" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "position" INTEGER NOT NULL,
+    "alias" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "eventId" INTEGER NOT NULL,
     "userId" INTEGER NOT NULL,

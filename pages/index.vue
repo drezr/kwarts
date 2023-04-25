@@ -57,14 +57,34 @@
 
         <div>
           <button
-            class="flex w-full justify-center rounded-md bg-slate-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            class="flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             @click="tryConnect()"
             :class="
-              !email || !password ? 'bg-slate-400 hover:bg-slate-400' : ''
+              !email || !password
+                ? 'bg-slate-400 hover:bg-slate-400'
+                : 'bg-slate-900 hover:bg-slate-800'
             "
             :disabled="!email || !password"
           >
             {{ _local(['common', 'signin']) }}
+          </button>
+        </div>
+
+        <div>
+          <button
+            class="flex w-full justify-center rounded-md bg-green-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            @click="initDatabase()"
+          >
+            Init Database
+          </button>
+        </div>
+
+        <div>
+          <button
+            class="flex w-full justify-center rounded-md bg-red-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            @click="clearDatabase()"
+          >
+            Clear Database
           </button>
         </div>
       </div>
@@ -87,5 +107,13 @@ async function tryConnect() {
   } else {
     console.log('error')
   }
+}
+
+async function initDatabase() {
+  await _fetch('/api/initDatabase', {})
+}
+
+async function clearDatabase() {
+  await _fetch('/api/clearDatabase', {})
 }
 </script>

@@ -15,7 +15,7 @@
           class="w-40 rounded-md text-slate-900 bg-white shadow-lg ring-1 ring-black ring-opacity-5 m-2 flex items-center justify-center"
           style="height: 89px"
         >
-          <b>{{ userLink.user.alias }}</b>
+          <b>{{ userLink.alias }}</b>
         </div>
       </div>
 
@@ -148,3 +148,5 @@ async function setAivalability(
   }
 }
 </script>
+
+<style></style>

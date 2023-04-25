@@ -10,6 +10,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id              Int         @id @default(autoincrement())
+  email           String      @unique
+  chosenLanguage  String
+
+  eventLinks      EventUser[]
+  availabilities  Availability[]
+  ownedEvents     Event[]
+}
+
 model Event {
   id              Int         @id @default(autoincrement())
   name            String
@@ -18,17 +28,6 @@ model Event {
   ownerId         Int
   userLinks       EventUser[]
   dates           Date[]
-}
-
-model User {
-  id              Int         @id @default(autoincrement())
-  alias           String
-  email           String      @unique
-  chosenLanguage  String
-
-  eventLinks      EventUser[]
-  availabilities  Availability[]
-  ownedEvents     Event[]
 }
 
 model Date {
@@ -56,6 +55,7 @@ model Availability {
 model EventUser {
   id              Int         @id @default(autoincrement())
   position        Int
+  alias           String
   password        String
 
   event           Event       @relation(fields: [eventId], references: [id])

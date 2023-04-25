@@ -1,3 +1,12 @@
+interface User {
+  id: number,
+  email: string,
+  chosenLanguage: string,
+  eventLinks: EventUser[],
+  availabilities: Availability[],
+  ownedEvents: Event[],
+}
+
 interface Event {
   id: number,
   name: string,
@@ -5,16 +14,6 @@ interface Event {
   ownerId: number,
   userLinks: EventUser[],
   dates: Date[],
-}
-
-interface User {
-  id: number,
-  alias: string,
-  email: string,
-  chosenLanguage: string,
-  eventLinks: EventUser[],
-  availabilities: Availability[],
-  ownedEvents: Event[],
 }
 
 interface Date {
@@ -39,6 +38,7 @@ interface Availability {
 interface EventUser {
   id: number,
   position: number,
+  alias: string,
   password: string,
   event: Event,
   eventId: number,

@@ -4,6 +4,15 @@
 
 
 
+export interface User {
+    id: number,
+    email: string,
+    chosenLanguage: string,
+    eventLinks: EventUser[],
+    availabilities: Availability[],
+    ownedEvents: Event[],
+}
+
 export interface Event {
     id: number,
     name: string,
@@ -11,16 +20,6 @@ export interface Event {
     ownerId: number,
     userLinks: EventUser[],
     dates: Date[],
-}
-
-export interface User {
-    id: number,
-    alias: string,
-    email: string,
-    chosenLanguage: string,
-    eventLinks: EventUser[],
-    availabilities: Availability[],
-    ownedEvents: Event[],
 }
 
 export interface Date {
@@ -45,6 +44,7 @@ export interface Availability {
 export interface EventUser {
     id: number,
     position: number,
+    alias: string,
     password: string,
     event: Event,
     eventId: number,
