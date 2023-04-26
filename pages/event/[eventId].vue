@@ -1,7 +1,10 @@
 <template>
   <div class="bg-gradient-to-b from-slate-200">
-    <div class="py-3 mb-3">
-      <span class="text-xl mx-6 mt-1 mb-2 font-semibold">
+    <div class="flex items-center pl-3 py-3">
+      <div class="p-1 rounded-full bg-white mr-3 shadow">
+        <img src="/kwarts_logo_mini.png" class="w-12" />
+      </div>
+      <span class="text-xl font-semibold">
         {{ event.name }}
       </span>
     </div>
