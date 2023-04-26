@@ -1,7 +1,7 @@
 <template>
   <div class="bg-gradient-to-b from-slate-200">
     <div class="flex items-center pl-3 py-3">
-      <div class="p-1 rounded-full bg-white mr-3 shadow">
+      <div class="p-1 rounded-full bg-slate-700 mr-3 shadow">
         <img src="/kwarts_logo_mini.png" class="w-12" />
       </div>
       <span class="text-xl font-semibold">
