@@ -97,13 +97,19 @@ let email = ref()
 let password = ref()
 
 async function tryConnect() {
-  const eventId = await _fetch('/api/tryConnect', {
+  const request = await _fetch('/api/tryConnect', {
     email: email.value,
     password: password.value,
   })
 
-  if (eventId) {
-    navigateTo('/event/' + eventId)
+  if (request.eventId) {
+    useCookie('userId').value = request.user.id
+    useCookie('token').value = request.token
+    useCookie('eventId').value = request.eventId
+
+    useState<User>('loggedUser', () => request.user)
+
+    navigateTo('/event/' + request.eventId)
   } else {
     console.log('error')
   }

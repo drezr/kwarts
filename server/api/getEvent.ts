@@ -1,9 +1,13 @@
 import prisma from '~/server/prisma'
+import authorize from '~/server/authorize'
 
 export default defineEventHandler(async (e) => {
   const params: any = getQuery(e)
-
   const eventId: number = parseInt(params.eventId)
+  const authData = JSON.parse(params.auth)
+  const authorization = await authorize(authData)
+
+  if (!authorization) return null
 
   const event = await prisma.event.findUnique({
     where: {
@@ -28,5 +32,9 @@ export default defineEventHandler(async (e) => {
     },
   })
 
-  return event
+  if (event) {
+    return event
+  }
+
+  return null
 })

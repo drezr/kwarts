@@ -24,6 +24,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    signout: {
+      fr: 'Déconnexion',
+      nl: '',
+      de: '',
+      en: '',
+    },
   },
 }
 

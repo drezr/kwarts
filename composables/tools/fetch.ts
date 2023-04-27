@@ -27,6 +27,12 @@ export const useFetchWrapper = async (
     }
   }
 
+  opts.params.auth = {
+    userId: useCookie('userId').value,
+    token: useCookie('token').value,
+    eventId: useCookie('eventId').value,
+  }
+
   let fetchedItem = await useFetch(url, opts)
 
   return JSON.parse(JSON.stringify(fetchedItem.data.value))
