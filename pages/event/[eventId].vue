@@ -281,18 +281,25 @@
                           <input
                             type="text"
                             v-model="element.title"
-                            class="flex-grow mb-1 mx-1 h-8 block rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            style="min-width: 150px"
+                            class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             :placeholder="_local(['common', 'title'])"
                             maxlength="18"
+                            style="height: 38px"
                           />
 
-                          <input
-                            type="date"
-                            :value="element.date.slice(0, 10)"
-                            class="flex-grow mx-1 block h-8 rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            @change="updateDate(element)"
-                          />
+                          <VueDatePicker
+                            v-model="element.date"
+                            class="flex-grow mx-1"
+                            :format="_date.formatDatetime(element.date)"
+                            locale="fr"
+                            teleport-center
+                            auto-apply
+                            placeholder="Select Date"
+                            :enable-time-picker="false"
+                            month-name-format="long"
+                            style="width: 30%; min-width: 150px"
+                            menu-class-name="dp-custom-menu"
+                          ></VueDatePicker>
                         </div>
                       </div>
                     </template>
@@ -323,6 +330,8 @@
 
 <script setup lang="ts">
 import draggable from 'vuedraggable'
+import VueDatePicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
 
 const route = useRoute()
 
@@ -500,5 +509,10 @@ async function updateDate(date: Date) {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+
+.dp-custom-menu {
+  box-shadow: 0 0 0 10px rgb(243, 243, 243);
+  border-radius: 15px;
 }
 </style>

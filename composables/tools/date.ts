@@ -1,5 +1,5 @@
 export default class DateTools {
-  formatDatetime(datetime: string | undefined | null) {
+  formatDatetime(datetime: string | undefined | null): string {
     /**
      * Returns datetime with the following format: DD/MM
      *
@@ -19,7 +19,7 @@ export default class DateTools {
       return `${day}/${month}/${year}`
     }
 
-    return null
+    return ''
   }
 
   formatDatetimeNoYear(datetime: string | undefined | null) {
