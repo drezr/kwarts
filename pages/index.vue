@@ -9,7 +9,21 @@
       </h2>
     </div>
 
-    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <div
+      v-if="loginError"
+      class="flex items-center bg-red-100 rounded-lg p-4 mt-6 text-sm text-red-700 sm:mx-auto sm:w-full sm:max-w-sm"
+      role="alert"
+    >
+      <span
+        v-html="_icon('exclamation-triangle-fill', _color.pick('red', -4), 24)"
+        class="mr-4"
+      ></span>
+      <div>
+        {{ _local(['common', 'loginError']) }}
+      </div>
+    </div>
+
+    <div class="mt-6 sm:mx-auto sm:w-full sm:max-w-sm">
       <div class="space-y-6">
         <div>
           <label
@@ -95,6 +109,7 @@
 <script setup lang="ts">
 let email = ref()
 let password = ref()
+let loginError = ref(false)
 
 async function tryConnect() {
   const request = await _fetch('/api/tryConnect', {
@@ -111,7 +126,7 @@ async function tryConnect() {
 
     navigateTo('/event/' + request.eventId)
   } else {
-    console.log('error')
+    loginError.value = true
   }
 }
 

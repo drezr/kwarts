@@ -79,7 +79,7 @@ export default defineEventHandler(async (e) => {
   const date1 = await prisma.date.create({
     data: {
       date: new Date('2023-04-28').toISOString(),
-      comment: 'Ronde 1',
+      title: 'Ronde 1',
       isLocked: false,
       eventId: event1.id,
     },
@@ -88,7 +88,7 @@ export default defineEventHandler(async (e) => {
   const date2 = await prisma.date.create({
     data: {
       date: new Date('2023-05-12').toISOString(),
-      comment: 'Ronde 2',
+      title: 'Ronde 2',
       isLocked: false,
       eventId: event1.id,
     },
@@ -97,7 +97,7 @@ export default defineEventHandler(async (e) => {
   const date3 = await prisma.date.create({
     data: {
       date: new Date('2023-05-19').toISOString(),
-      comment: 'Ronde 3',
+      title: 'Ronde 3',
       isLocked: false,
       eventId: event1.id,
     },
@@ -106,7 +106,7 @@ export default defineEventHandler(async (e) => {
   const date4 = await prisma.date.create({
     data: {
       date: new Date('2023-06-02').toISOString(),
-      comment: 'Ronde 4',
+      title: 'Ronde 4',
       isLocked: false,
       eventId: event1.id,
     },
@@ -115,7 +115,7 @@ export default defineEventHandler(async (e) => {
   const date5 = await prisma.date.create({
     data: {
       date: new Date('2023-06-16').toISOString(),
-      comment: 'Ronde 5',
+      title: 'Ronde 5',
       isLocked: false,
       eventId: event1.id,
     },
@@ -124,7 +124,7 @@ export default defineEventHandler(async (e) => {
   const date6 = await prisma.date.create({
     data: {
       date: new Date('2023-06-23').toISOString(),
-      comment: 'Ronde 6',
+      title: 'Ronde 6',
       isLocked: false,
       eventId: event1.id,
     },
@@ -133,7 +133,7 @@ export default defineEventHandler(async (e) => {
   const date7 = await prisma.date.create({
     data: {
       date: new Date('2023-06-30').toISOString(),
-      comment: 'Ronde 7',
+      title: 'Ronde 7',
       isLocked: false,
       eventId: event1.id,
     },

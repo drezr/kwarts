@@ -30,6 +30,48 @@ const localisation = {
       de: '',
       en: '',
     },
+    loginError: {
+      fr: 'L\'adresse email et le mot de passe que vous avez introduit ne correspondent à aucun évènement.',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    eventConfig: {
+      fr: 'Configuration de l\'évènement',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    general: {
+      fr: 'Général',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    dates: {
+      fr: 'Dates',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    people: {
+      fr: 'Personnes',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    eventName: {
+      fr: 'Nom de l\'évènement',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    title: {
+      fr: 'Titre',
+      nl: '',
+      de: '',
+      en: '',
+    },
   },
 }
 

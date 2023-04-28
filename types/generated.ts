@@ -27,6 +27,7 @@ export interface Event {
 export interface Date {
     id: number,
     date: Date,
+    title?: string,
     comment?: string,
     isLocked: boolean,
     event: Event,
