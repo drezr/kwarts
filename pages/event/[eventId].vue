@@ -32,7 +32,7 @@
             ></span>
             <div
               v-for="userLink in event.userLinks"
-              class="opacity-90 w-36 px-1 rounded-md text-slate-950 bg-slate-100 shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2 flex items-center justify-center font-semibold text-center"
+              class="opacity-90 w-36 px-1 rounded-md text-slate-950 bg-slate-100 shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2 flex items-center justify-center font-semibold text-center overflow-hidden break-normal"
               :class="{ 'mb-4': userLink.userId == loggedUserId }"
               style="height: 81px"
             >
@@ -139,20 +139,21 @@
       <div v-show="showModal" class="fixed inset-0 z-30">
         <div
           v-show="showModal"
-          @click="toggleModal()"
           class="bg-filter bg-black opacity-50 fixed inset-0 w-full h-full z-20"
+          @click="toggleModal()"
         ></div>
 
         <main class="flex flex-col items-center justify-center h-full w-full">
           <transition name="fade-up-down">
             <div
               v-show="showModal"
-              class="inline-block items-center z-30 w-full"
+              class="inline-block items-center z-30"
+              style="max-width: 426px"
             >
               <div
                 class="modal max-w-md mx-auto xl:max-w-xl lg:max-w-xl md:max-w-xl bg-white max-h-screen shadow-lg flex-row rounded relative"
               >
-                <div class="p-5 rounded-t flex justify-between">
+                <div class="p-5 rounded-t flex justify-between items-center">
                   <div class="text-slate-800 text-2xl flex items-center">
                     <span
                       v-html="_icon('gear-fill', _color.pick('blue'), 24)"
@@ -186,7 +187,7 @@
                   </span>
 
                   <span
-                    class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer flex"
+                    class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer flex mx-1"
                     :class="{ 'bg-slate-900': modalTab == 'dates' }"
                     @click="modalTab = 'dates'"
                   >
@@ -229,7 +230,7 @@
                     <input
                       v-model="eventName"
                       name="eventName"
-                      class="block w-full rounded-md border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
                     />
 
                     <span
@@ -281,7 +282,7 @@
                           <input
                             type="text"
                             v-model="element.title"
-                            class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
                             :placeholder="_local(['common', 'title'])"
                             maxlength="18"
                             style="height: 38px"
@@ -310,14 +311,40 @@
                   class="modal-body p-5 w-full h-full overflow-y-auto"
                   v-show="modalTab == 'people'"
                 >
-                  <p class="text-justify">
-                    PEOPLE cilis omnis nam illum maiores, porro velit deserunt
-                    neque. Lorem ipsum dolor, sit amet consectetur adipisicing
-                    elit. Esse, voluptates eveniet labore dolorum molestiae,
-                    modi saepe fugiat minima repudiandae repellendus obcaecati
-                    voluptatibus ab tenetur recusandae eius quos at maiores
-                    atque consectetur facilis! Nisi fuga
-                  </p>
+                  <draggable
+                    v-model="event.userLinks"
+                    @start="dragging = true"
+                    @end="dragging = false"
+                    handle=".handle"
+                    item-key="id"
+                    v-bind="{
+                      animation: 200,
+                      group: 'description',
+                      disabled: false,
+                      ghostClass: 'ghost',
+                    }"
+                  >
+                    <template #item="{ element }">
+                      <div class="mb-3 flex items-center">
+                        <span
+                          v-html="
+                            _icon('grip-horizontal', _color.pick('pink'), 16)
+                          "
+                          class="cursor-grab hover:brightness-110 mr-2 handle"
+                        ></span>
+
+                        <div class="flex flex-grow flex-wrap">
+                          <input
+                            type="text"
+                            v-model="element.alias"
+                            class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+                            :placeholder="_local(['common', 'title'])"
+                            style="height: 38px"
+                          />
+                        </div>
+                      </div>
+                    </template>
+                  </draggable>
                 </div>
               </div>
             </div>
@@ -345,6 +372,8 @@ let event = await _fetch('/api/getEvent', {
 if (!event) {
   logout()
 }
+
+console.log(event)
 
 event.userLinks.sort((a: EventUser, b: EventUser) => a.position - b.position)
 
