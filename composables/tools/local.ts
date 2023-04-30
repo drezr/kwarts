@@ -31,13 +31,13 @@ const localisation = {
       en: '',
     },
     loginError: {
-      fr: 'L\'adresse email et le mot de passe que vous avez introduit ne correspondent à aucun évènement.',
+      fr: "L'adresse email et le mot de passe que vous avez introduit ne correspondent à aucun évènement.",
       nl: '',
       de: '',
       en: '',
     },
     eventConfig: {
-      fr: 'Configuration de l\'évènement',
+      fr: "Configuration de l'évènement",
       nl: '',
       de: '',
       en: '',
@@ -61,13 +61,19 @@ const localisation = {
       en: '',
     },
     eventName: {
-      fr: 'Nom de l\'évènement',
+      fr: "Nom de l'évènement",
       nl: '',
       de: '',
       en: '',
     },
     title: {
       fr: 'Titre',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    alias: {
+      fr: 'Alias',
       nl: '',
       de: '',
       en: '',

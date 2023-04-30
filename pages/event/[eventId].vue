@@ -335,10 +335,18 @@
 
                         <div class="flex flex-grow flex-wrap">
                           <input
+                            type="email"
+                            v-model="element.user.email"
+                            class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+                            :placeholder="_local(['common', 'email'])"
+                            style="height: 38px"
+                          />
+
+                          <input
                             type="text"
                             v-model="element.alias"
                             class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-                            :placeholder="_local(['common', 'title'])"
+                            :placeholder="_local(['common', 'alias'])"
                             style="height: 38px"
                           />
                         </div>
@@ -372,8 +380,6 @@ let event = await _fetch('/api/getEvent', {
 if (!event) {
   logout()
 }
-
-console.log(event)
 
 event.userLinks.sort((a: EventUser, b: EventUser) => a.position - b.position)
 
