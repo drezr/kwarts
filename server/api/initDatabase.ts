@@ -82,6 +82,7 @@ export default defineEventHandler(async (e) => {
       title: 'Ronde 1',
       isLocked: false,
       eventId: event1.id,
+      position: 0,
     },
   })
 
@@ -91,6 +92,7 @@ export default defineEventHandler(async (e) => {
       title: 'Ronde 2',
       isLocked: false,
       eventId: event1.id,
+      position: 1,
     },
   })
 
@@ -100,6 +102,7 @@ export default defineEventHandler(async (e) => {
       title: 'Ronde 3',
       isLocked: false,
       eventId: event1.id,
+      position: 2,
     },
   })
 
@@ -109,6 +112,7 @@ export default defineEventHandler(async (e) => {
       title: 'Ronde 4',
       isLocked: false,
       eventId: event1.id,
+      position: 3,
     },
   })
 
@@ -118,6 +122,7 @@ export default defineEventHandler(async (e) => {
       title: 'Ronde 5',
       isLocked: false,
       eventId: event1.id,
+      position: 4,
     },
   })
 
@@ -127,6 +132,7 @@ export default defineEventHandler(async (e) => {
       title: 'Ronde 6',
       isLocked: false,
       eventId: event1.id,
+      position: 5,
     },
   })
 
@@ -136,6 +142,7 @@ export default defineEventHandler(async (e) => {
       title: 'Ronde 7',
       isLocked: false,
       eventId: event1.id,
+      position: 6,
     },
   })
 

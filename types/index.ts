@@ -24,6 +24,7 @@ interface Date {
   title?: string,
   comment?: string,
   isLocked: boolean,
+  position: number,
   event: Event,
   eventId: number,
   availabilities: Availability[],

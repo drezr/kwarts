@@ -28,10 +28,10 @@
               v-if="isOwner"
               v-html="_icon('gear-fill', _color.pick('blue'), 24)"
               class="mb-1 cursor-pointer hover:brightness-110"
-              @click="toggleModal()"
+              @click="toggleConfigModal()"
             ></span>
             <div
-              v-for="userLink in event.userLinks"
+              v-for="userLink in userLinksLoggedUserFirst"
               class="opacity-90 w-36 px-1 rounded-md text-slate-950 bg-slate-100 shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2 flex items-center justify-center font-semibold text-center overflow-hidden break-normal"
               :class="{ 'mb-4': userLink.userId == loggedUserId }"
               style="height: 81px"
@@ -58,7 +58,7 @@
               ></span>
 
               <div
-                v-for="userLink in event.userLinks"
+                v-for="userLink in userLinksLoggedUserFirst"
                 class="w-24 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2"
                 :class="{
                   'mb-4': userLink.userId == loggedUserId,
@@ -136,25 +136,25 @@
     </div>
 
     <transition name="fade" v-if="isOwner">
-      <div v-show="showModal" class="fixed inset-0 z-30">
+      <div v-show="showConfigModal" class="fixed inset-0 z-30">
         <div
-          v-show="showModal"
+          v-show="showConfigModal"
           class="bg-filter bg-black opacity-50 fixed inset-0 w-full h-full z-20"
-          @click="toggleModal()"
+          @click="toggleConfigModal()"
         ></div>
 
         <main class="flex flex-col items-center justify-center h-full w-full">
           <transition name="fade-up-down">
             <div
-              v-show="showModal"
-              class="inline-block items-center z-30"
+              v-show="showConfigModal"
+              class="inline-block items-center z-30 w-full"
               style="max-width: 426px"
             >
               <div
                 class="modal max-w-md mx-auto xl:max-w-xl lg:max-w-xl md:max-w-xl bg-white max-h-screen shadow-lg flex-row rounded relative"
               >
                 <div class="p-5 rounded-t flex justify-between items-center">
-                  <div class="text-slate-800 text-2xl flex items-center">
+                  <div class="text-slate-800 text-lg flex items-center">
                     <span
                       v-html="_icon('gear-fill', _color.pick('blue'), 24)"
                       class="mr-3 relative"
@@ -167,7 +167,7 @@
                   <span
                     v-html="_icon('x-lg', _color.pick('grey'), 24)"
                     class="cursor-pointer hover:brightness-110 ml-3"
-                    @click="toggleModal()"
+                    @click="toggleConfigModal()"
                   ></span>
                 </div>
 
@@ -228,27 +228,11 @@
 
                   <div class="mt-2 flex items-center">
                     <input
-                      v-model="eventName"
+                      v-model="event.name"
                       name="eventName"
-                      class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+                      class="flex-grow mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+                      @input="updateEventName()"
                     />
-
-                    <span
-                      v-html="
-                        _icon(
-                          'check-square-fill',
-                          _color.pick(
-                            eventName == event.name ? 'grey' : 'green'
-                          ),
-                          36
-                        )
-                      "
-                      class="cursor-pointer hover:brightness-110 ml-3"
-                      :class="{
-                        'pointer-events-none': eventName == event.name,
-                      }"
-                      @click="updateEventName()"
-                    ></span>
                   </div>
                 </div>
 
@@ -260,6 +244,7 @@
                     v-model="event.dates"
                     @start="dragging = true"
                     @end="dragging = false"
+                    @change="updateDatePositions()"
                     handle=".handle"
                     item-key="id"
                     v-bind="{
@@ -286,6 +271,7 @@
                             :placeholder="_local(['common', 'title'])"
                             maxlength="18"
                             style="height: 38px"
+                            @input="updateDate(element)"
                           />
 
                           <VueDatePicker
@@ -300,6 +286,8 @@
                             month-name-format="long"
                             style="width: 30%; min-width: 150px"
                             menu-class-name="dp-custom-menu"
+                            :clearable="false"
+                            @update:model-value="updateDate(element)"
                           ></VueDatePicker>
                         </div>
                       </div>
@@ -323,6 +311,7 @@
                       disabled: false,
                       ghostClass: 'ghost',
                     }"
+                    @change="updateUserLinkPositions()"
                   >
                     <template #item="{ element }">
                       <div class="mb-3 flex items-center">
@@ -337,22 +326,55 @@
                           <input
                             type="email"
                             v-model="element.user.email"
-                            class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+                            class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
                             :placeholder="_local(['common', 'email'])"
-                            style="height: 38px"
+                            style="height: 38px; width: 150px"
                           />
 
                           <input
                             type="text"
                             v-model="element.alias"
-                            class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+                            class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
                             :placeholder="_local(['common', 'alias'])"
-                            style="height: 38px"
+                            style="height: 38px; width: 150px"
                           />
                         </div>
+
+                        <span
+                          v-html="_icon('trash-fill', _color.pick('red'), 16)"
+                          class="cursor-pointer hover:brightness-110 ml-2"
+                          @click="deleteUserLink(element)"
+                        ></span>
                       </div>
                     </template>
                   </draggable>
+                </div>
+
+                <div
+                  class="flex p-2 bg-slate-200 rounded"
+                  :class="
+                    modalTab == 'general' ? 'justify-end' : 'justify-between'
+                  "
+                >
+                  <span
+                    v-if="modalTab != 'general'"
+                    v-html="_icon('plus-square-fill', 'green', 30)"
+                    class="cursor-pointer hover:brightness-110"
+                  ></span>
+
+                  <span
+                    v-html="
+                      _icon(
+                        fetchIsLoading ? 'arrow-clockwise' : 'check',
+                        _color.pick(fetchIsLoading ? 'blue' : 'green'),
+                        30
+                      )
+                    "
+                    class="hover:brightness-110 ml-3"
+                    :class="{
+                      'animate-spin': fetchIsLoading,
+                    }"
+                  ></span>
                 </div>
               </div>
             </div>
@@ -371,7 +393,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 const route = useRoute()
 
 const loggedUserId = useCookie('userId')
-const eventId = Number(route.params.eventId)
+const eventId: Number = Number(route.params.eventId)
 
 let event = await _fetch('/api/getEvent', {
   eventId: eventId,
@@ -381,21 +403,31 @@ if (!event) {
   logout()
 }
 
+event.dates.sort((a: Date, b: Date) => a.position - b.position)
 event.userLinks.sort((a: EventUser, b: EventUser) => a.position - b.position)
 
-const loggedUserLink = event.userLinks.find(
-  (ul: any) => ul.userId == loggedUserId.value
-)
-
-event.userLinks = event.userLinks.filter((ul: any) => ul != loggedUserLink)
-event.userLinks.unshift(loggedUserLink)
-
-const isOwner = ref(event.ownerId == useCookie('userId').value)
+const isOwner = ref<Boolean>(event.ownerId == useCookie('userId').value)
 event = ref(event)
-let dragging = ref(false)
-let showModal = ref(false)
-let modalTab = ref('general')
-let eventName = ref(event.value.name)
+let dragging = ref<Boolean>(false)
+let showConfigModal = ref<Boolean>(false)
+let modalTab = ref<String>('general')
+let fetchThrottleTimer: any = null
+let fetchIsLoading = ref<Boolean>(false)
+
+const userLinksLoggedUserFirst = computed(() => {
+  let sortedUserLinks = JSON.parse(JSON.stringify(event.value.userLinks))
+
+  const loggedUserLink = sortedUserLinks.find(
+    (ul: any) => ul.userId == loggedUserId.value
+  )
+
+  sortedUserLinks = sortedUserLinks.filter(
+    (ul: any) => ul.userId != loggedUserId.value
+  )
+  sortedUserLinks.unshift(loggedUserLink)
+
+  return sortedUserLinks
+})
 
 function selectAvailabilityIcon(
   status: string,
@@ -482,8 +514,8 @@ async function logout() {
   navigateTo('/')
 }
 
-function toggleModal() {
-  if (showModal.value) {
+function toggleConfigModal() {
+  if (showConfigModal.value) {
     document
       .getElementsByTagName('html')[0]
       .classList.remove('overflow-y-hidden')
@@ -491,20 +523,76 @@ function toggleModal() {
     document.getElementsByTagName('html')[0].classList.add('overflow-y-hidden')
   }
 
-  showModal.value = !showModal.value
+  showConfigModal.value = !showConfigModal.value
 }
 
 async function updateEventName() {
-  await _fetch('/api/updateEventName', {
-    eventId: event.value.id,
-    newEventName: eventName.value,
-  })
+  fetchIsLoading.value = true
+  clearTimeout(fetchThrottleTimer)
 
-  event.value.name = eventName.value
+  fetchThrottleTimer = setTimeout(async () => {
+    await _fetch('/api/updateEventName', {
+      eventId: event.value.id,
+      newEventName: event.value.name,
+    })
+
+    fetchIsLoading.value = false
+  }, 500)
 }
 
-async function updateDate(date: Date) {
-  console.log(date)
+function updateDate(date: Date) {
+  fetchIsLoading.value = true
+  clearTimeout(fetchThrottleTimer)
+
+  fetchThrottleTimer = setTimeout(async () => {
+    if (typeof date.date == 'string') {
+      date.date = new Date(date.date)
+    }
+
+    await _fetch('/api/updateDate', {
+      dateId: date.id,
+      date: date.date.toISOString(),
+      title: date.title,
+    })
+
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+async function updateDatePositions() {
+  const datePositionsData = []
+
+  for (let index in event.value.dates) {
+    datePositionsData.push({
+      dateId: event.value.dates[index].id,
+      position: Number(index),
+    })
+  }
+
+  await _fetch('/api/updateDatePositions', {
+    datePositionsData: datePositionsData,
+  })
+}
+
+async function updateUserLinkPositions() {
+  const userLinkPositionsData = []
+
+  for (let index in event.value.userLinks) {
+    userLinkPositionsData.push({
+      userLinkId: event.value.userLinks[index].id,
+      position: Number(index),
+    })
+  }
+
+  await _fetch('/api/updateUserLinkPositions', {
+    userLinkPositionsData: userLinkPositionsData,
+  })
+}
+
+async function deleteUserLink(userLink: EventUser) {
+  confirm('Êtes-vous sûr ?')
+
+  console.log(userLink)
 }
 </script>
 

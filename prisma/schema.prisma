@@ -36,6 +36,7 @@ model Date {
   title          String?
   comment        String?
   isLocked       Boolean        @default(false)
+  position       Int
   event          Event          @relation(fields: [eventId], references: [id])
   eventId        Int
   availabilities Availability[]
