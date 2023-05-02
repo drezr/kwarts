@@ -392,29 +392,31 @@ import '@vuepic/vue-datepicker/dist/main.css'
 
 const route = useRoute()
 
-const loggedUserId = useCookie('userId')
+const loggedUserId = useCookie<Number>('userId')
 const eventId: Number = Number(route.params.eventId)
 
-let event = await _fetch('/api/getEvent', {
+let requestEvent = await _fetch('/api/getEvent', {
   eventId: eventId,
 })
 
-if (!event) {
+if (!requestEvent) {
   logout()
 }
 
-event.dates.sort((a: Date, b: Date) => a.position - b.position)
-event.userLinks.sort((a: EventUser, b: EventUser) => a.position - b.position)
+requestEvent.dates.sort((a: Date, b: Date) => a.position - b.position)
+requestEvent.userLinks.sort(
+  (a: EventUser, b: EventUser) => a.position - b.position
+)
 
-const isOwner = ref<Boolean>(event.ownerId == useCookie('userId').value)
-event = ref(event)
+const isOwner = ref<Boolean>(requestEvent.ownerId == useCookie('userId').value)
+let event = ref<Event>(requestEvent)
 let dragging = ref<Boolean>(false)
 let showConfigModal = ref<Boolean>(false)
 let modalTab = ref<String>('general')
 let fetchThrottleTimer: any = null
 let fetchIsLoading = ref<Boolean>(false)
 
-const userLinksLoggedUserFirst = computed(() => {
+const userLinksLoggedUserFirst = computed<[EventUser]>(() => {
   let sortedUserLinks = JSON.parse(JSON.stringify(event.value.userLinks))
 
   const loggedUserLink = sortedUserLinks.find(
