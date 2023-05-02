@@ -2,13 +2,11 @@ import prisma from '~/server/prisma'
 import { v4 as uuidv4 } from 'uuid'
 
 export default defineEventHandler(async (event) => {
-  console.log()
-
   const params: any = getQuery(event)
 
   const email: string = params.email
   const password: string = params.password
-  const newToken: string = uuidv4()
+  const newToken: string = uuidv4().replaceAll('-', '')
 
   const user = await prisma.user.findUnique({
     where: {

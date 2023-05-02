@@ -8,11 +8,17 @@ export default defineEventHandler(async (e) => {
 
   if (!authorization || !authorization.isOwner) return null
 
-  const dateID = parseInt(params.dateID)
+  const dateId = parseInt(params.dateId)
+
+  await prisma.availability.deleteMany({
+    where: {
+      dateId: dateId,
+    },
+  })
 
   await prisma.date.delete({
     where: {
-      id: dateID,
+      id: dateId,
     },
   })
 

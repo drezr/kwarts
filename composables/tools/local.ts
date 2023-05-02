@@ -54,6 +54,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    date: {
+      fr: 'Date',
+      nl: '',
+      de: '',
+      en: '',
+    },
     people: {
       fr: 'Personnes',
       nl: '',
@@ -74,6 +80,12 @@ const localisation = {
     },
     alias: {
       fr: 'Alias',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    areyousure: {
+      fr: 'Êtes-vous sûr(e) ?',
       nl: '',
       de: '',
       en: '',

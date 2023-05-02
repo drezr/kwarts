@@ -270,7 +270,7 @@
                             class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
                             :placeholder="_local(['common', 'title'])"
                             maxlength="18"
-                            style="height: 38px"
+                            style="height: 38px; width: 155px"
                             @input="updateDate(element)"
                           />
 
@@ -281,18 +281,63 @@
                             locale="fr"
                             teleport-center
                             auto-apply
-                            placeholder="Select Date"
+                            :placeholder="_local(['common', 'date'])"
                             :enable-time-picker="false"
                             month-name-format="long"
-                            style="width: 30%; min-width: 150px"
+                            style="width: 30%; min-width: 130px"
                             menu-class-name="dp-custom-menu"
                             :clearable="false"
                             @update:model-value="updateDate(element)"
                           ></VueDatePicker>
                         </div>
+
+                        <span
+                          v-html="_icon('trash-fill', _color.pick('red'), 16)"
+                          class="cursor-pointer hover:brightness-110 ml-2"
+                          @click="deleteDate(element)"
+                        ></span>
                       </div>
                     </template>
                   </draggable>
+
+                  <div class="mb-3 flex items-center" v-if="showAddDate">
+                    <span
+                      v-html="_icon('x-lg', 'black', 16)"
+                      class="cursor-pointer hover:brightness-110 mr-2"
+                      @click="showAddDate = false"
+                    ></span>
+
+                    <div class="flex flex-grow flex-wrap">
+                      <input
+                        v-model="newDateTitle"
+                        type="text"
+                        class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+                        :placeholder="_local(['common', 'title'])"
+                        maxlength="18"
+                        style="height: 38px; width: 155px"
+                      />
+
+                      <VueDatePicker
+                        v-model="newDateDate"
+                        class="flex-grow mx-1"
+                        locale="fr"
+                        teleport-center
+                        auto-apply
+                        :placeholder="_local(['common', 'date'])"
+                        :enable-time-picker="false"
+                        month-name-format="long"
+                        style="width: 30%; min-width: 130px"
+                        menu-class-name="dp-custom-menu"
+                        :clearable="false"
+                      ></VueDatePicker>
+                    </div>
+
+                    <span
+                      v-html="_icon('save-fill', _color.pick('green'), 20)"
+                      class="cursor-pointer hover:brightness-110 ml-1"
+                      @click="createDate()"
+                    ></span>
+                  </div>
                 </div>
 
                 <div
@@ -326,9 +371,10 @@
                           <input
                             type="email"
                             v-model="element.user.email"
-                            class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
+                            class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-100 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
                             :placeholder="_local(['common', 'email'])"
                             style="height: 38px; width: 150px"
+                            disabled
                           />
 
                           <input
@@ -341,13 +387,57 @@
                         </div>
 
                         <span
-                          v-html="_icon('trash-fill', _color.pick('red'), 16)"
+                          v-html="
+                            _icon(
+                              'trash-fill',
+                              _color.pick(
+                                element.userId == loggedUserId ? 'grey' : 'red'
+                              ),
+                              16
+                            )
+                          "
                           class="cursor-pointer hover:brightness-110 ml-2"
+                          :class="{
+                            'pointer-events-none':
+                              element.userId == loggedUserId,
+                          }"
                           @click="deleteUserLink(element)"
                         ></span>
                       </div>
                     </template>
                   </draggable>
+
+                  <div class="mb-3 flex items-center" v-if="showAddUser">
+                    <span
+                      v-html="_icon('x-lg', 'black', 16)"
+                      class="cursor-pointer hover:brightness-110 mr-2"
+                      @click="showAddUser = false"
+                    ></span>
+
+                    <div class="flex flex-grow flex-wrap">
+                      <input
+                        v-model="newUserEmail"
+                        type="email"
+                        class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
+                        :placeholder="_local(['common', 'email'])"
+                        style="height: 38px; width: 150px"
+                      />
+
+                      <input
+                        v-model="newUserAlias"
+                        type="text"
+                        class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
+                        :placeholder="_local(['common', 'alias'])"
+                        style="height: 38px; width: 150px"
+                      />
+                    </div>
+
+                    <span
+                      v-html="_icon('save-fill', _color.pick('green'), 20)"
+                      class="cursor-pointer hover:brightness-110 ml-1"
+                      @click="createUser()"
+                    ></span>
+                  </div>
                 </div>
 
                 <div
@@ -360,6 +450,11 @@
                     v-if="modalTab != 'general'"
                     v-html="_icon('plus-square-fill', 'green', 30)"
                     class="cursor-pointer hover:brightness-110"
+                    @click="
+                      modalTab == 'dates'
+                        ? (showAddDate = true)
+                        : (showAddUser = true)
+                    "
                   ></span>
 
                   <span
@@ -395,26 +490,35 @@ const route = useRoute()
 const loggedUserId = useCookie<Number>('userId')
 const eventId: Number = Number(route.params.eventId)
 
-let requestEvent = await _fetch('/api/getEvent', {
+let requestedEvent = await _fetch('/api/getEvent', {
   eventId: eventId,
 })
 
-if (!requestEvent) {
+if (!requestedEvent) {
   logout()
 }
 
-requestEvent.dates.sort((a: Date, b: Date) => a.position - b.position)
-requestEvent.userLinks.sort(
+requestedEvent.dates.sort((a: Date, b: Date) => a.position - b.position)
+requestedEvent.userLinks.sort(
   (a: EventUser, b: EventUser) => a.position - b.position
 )
 
-const isOwner = ref<Boolean>(requestEvent.ownerId == useCookie('userId').value)
-let event = ref<Event>(requestEvent)
+const isOwner = ref<Boolean>(
+  requestedEvent.ownerId == useCookie('userId').value
+)
+let event = ref<Event>(requestedEvent)
 let dragging = ref<Boolean>(false)
 let showConfigModal = ref<Boolean>(false)
 let modalTab = ref<String>('general')
 let fetchThrottleTimer: any = null
 let fetchIsLoading = ref<Boolean>(false)
+
+let showAddUser = ref<Boolean>(false)
+let showAddDate = ref<Boolean>(false)
+let newDateTitle = ref<String>()
+let newDateDate = ref<Date>()
+let newUserEmail = ref<String>()
+let newUserAlias = ref<String>()
 
 const userLinksLoggedUserFirst = computed<[EventUser]>(() => {
   let sortedUserLinks = JSON.parse(JSON.stringify(event.value.userLinks))
@@ -563,6 +667,7 @@ function updateDate(date: Date) {
 
 async function updateDatePositions() {
   const datePositionsData = []
+  fetchIsLoading.value = true
 
   for (let index in event.value.dates) {
     datePositionsData.push({
@@ -574,10 +679,15 @@ async function updateDatePositions() {
   await _fetch('/api/updateDatePositions', {
     datePositionsData: datePositionsData,
   })
+
+  setTimeout(() => {
+    fetchIsLoading.value = false
+  }, 500)
 }
 
 async function updateUserLinkPositions() {
   const userLinkPositionsData = []
+  fetchIsLoading.value = true
 
   for (let index in event.value.userLinks) {
     userLinkPositionsData.push({
@@ -589,12 +699,87 @@ async function updateUserLinkPositions() {
   await _fetch('/api/updateUserLinkPositions', {
     userLinkPositionsData: userLinkPositionsData,
   })
+
+  setTimeout(() => {
+    fetchIsLoading.value = false
+  }, 500)
 }
 
 async function deleteUserLink(userLink: EventUser) {
-  confirm('Êtes-vous sûr ?')
+  if (confirm(_local(['common', 'areyousure']))) {
+    fetchIsLoading.value = true
+    await _fetch('/api/deleteUserLink', {
+      userLinkId: userLink.id,
+      userId: userLink.user.id,
+      eventId: event.value.id,
+    })
 
-  console.log(userLink)
+    event.value.userLinks = event.value.userLinks.filter(
+      (ul: EventUser) => userLink.id != ul.id
+    )
+
+    for (let date of event.value.dates) {
+      date.availabilities = date.availabilities.filter(
+        (a) => a.userId != userLink.user.id
+      )
+    }
+
+    setTimeout(() => {
+      fetchIsLoading.value = false
+    }, 500)
+  }
+}
+
+async function deleteDate(date: Date) {
+  if (confirm(_local(['common', 'areyousure']))) {
+    fetchIsLoading.value = true
+
+    await _fetch('/api/deleteDate', {
+      dateId: date.id,
+    })
+
+    event.value.dates = event.value.dates.filter((d: Date) => date.id != d.id)
+
+    setTimeout(() => {
+      fetchIsLoading.value = false
+    }, 500)
+  }
+}
+
+async function createUser() {
+  fetchIsLoading.value = true
+  showAddUser.value = false
+
+  const newUserLink = await _fetch('/api/createUser', {
+    eventId: event.value.id,
+    email: newUserEmail.value,
+    alias: newUserAlias.value,
+  })
+
+  event.value.userLinks.push(newUserLink)
+
+  setTimeout(() => {
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+async function createDate() {
+  fetchIsLoading.value = true
+  showAddDate.value = false
+
+  if (newDateDate.value) {
+    const newDate = await _fetch('/api/createDate', {
+      eventId: event.value.id,
+      title: newDateTitle,
+      date: newDateDate.value.toISOString(),
+    })
+
+    event.value.dates.push(newDate)
+  }
+
+  setTimeout(() => {
+    fetchIsLoading.value = false
+  }, 500)
 }
 </script>
 
@@ -639,5 +824,9 @@ async function deleteUserLink(userLink: EventUser) {
 .dp-custom-menu {
   box-shadow: 0 0 0 10px rgb(243, 243, 243);
   border-radius: 15px;
+}
+
+.dp__input {
+  padding-right: 5px;
 }
 </style>
