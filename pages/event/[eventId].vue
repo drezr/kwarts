@@ -59,10 +59,11 @@
 
               <div
                 v-for="userLink in userLinksLoggedUserFirst"
-                class="w-24 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2"
+                class="w-24 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2"
                 :class="{
                   'mb-4': userLink.userId == loggedUserId,
-                  'bg-blue-50': userLink.userId != loggedUserId && !isOwner,
+                  'bg-slate-150': userLink.userId != loggedUserId && !isOwner,
+                  'bg-white': userLink.userId == loggedUserId || isOwner,
                   'opacity-30': date.isLocked,
                   'pointer-events-none':
                     date.isLocked ||
@@ -421,6 +422,11 @@
                         v-model="newUserEmail"
                         type="email"
                         class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
+                        :class="[
+                          {
+                            'focus:ring-red-600': !isValidEmail(newUserEmail),
+                          },
+                        ]"
                         :placeholder="_local(['common', 'email'])"
                         style="height: 38px; width: 150px"
                       />
@@ -435,8 +441,17 @@
                     </div>
 
                     <span
-                      v-html="_icon('save-fill', 'green', 20)"
+                      v-html="
+                        _icon(
+                          'save-fill',
+                          isValidEmail(newUserEmail) ? 'green' : 'grey',
+                          20
+                        )
+                      "
                       class="cursor-pointer hover:brightness-110 ml-1"
+                      :class="[
+                        { 'pointer-events-none': !isValidEmail(newUserEmail) },
+                      ]"
                       @click="createUser()"
                     ></span>
                   </div>
@@ -593,13 +608,13 @@ function toggleNewElement() {
     showAddDate.value = true
 
     setTimeout(() => {
-      modalDates.value.scrollTo(0, 99999)
+      modalDates.value.scrollTo(0, 9999999)
     }, 10)
   } else if (modalTab.value == 'people') {
     showAddUser.value = true
 
     setTimeout(() => {
-      modalPeople.value.scrollTo(0, 99999)
+      modalPeople.value.scrollTo(0, 9999999)
     }, 10)
   }
 }
