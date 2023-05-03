@@ -303,7 +303,7 @@
                   <div class="mb-3 flex items-center" v-if="showAddDate">
                     <span
                       v-html="_icon('x-lg', 'black', 16)"
-                      class="cursor-pointer hover:brightness-110 mr-2"
+                      class="cursor-pointer hover:opacity-70 mr-2"
                       @click="showAddDate = false"
                     ></span>
 
@@ -333,7 +333,7 @@
                     </div>
 
                     <span
-                      v-html="_icon('save-fill', _color.pick('green'), 20)"
+                      v-html="_icon('save-fill', 'green', 20)"
                       class="cursor-pointer hover:brightness-110 ml-1"
                       @click="createDate()"
                     ></span>
@@ -410,7 +410,7 @@
                   <div class="mb-3 flex items-center" v-if="showAddUser">
                     <span
                       v-html="_icon('x-lg', 'black', 16)"
-                      class="cursor-pointer hover:brightness-110 mr-2"
+                      class="cursor-pointer hover:opacity-70 mr-2"
                       @click="showAddUser = false"
                     ></span>
 
@@ -433,7 +433,7 @@
                     </div>
 
                     <span
-                      v-html="_icon('save-fill', _color.pick('green'), 20)"
+                      v-html="_icon('save-fill', 'green', 20)"
                       class="cursor-pointer hover:brightness-110 ml-1"
                       @click="createUser()"
                     ></span>
@@ -516,7 +516,7 @@ let fetchIsLoading = ref<Boolean>(false)
 let showAddUser = ref<Boolean>(false)
 let showAddDate = ref<Boolean>(false)
 let newDateTitle = ref<String>()
-let newDateDate = ref<Date>()
+let newDateDate = ref<Date | null>()
 let newUserEmail = ref<String>()
 let newUserAlias = ref<String>()
 
@@ -534,6 +534,14 @@ const userLinksLoggedUserFirst = computed<[EventUser]>(() => {
 
   return sortedUserLinks
 })
+
+async function logout() {
+  useCookie('userId').value = null
+  useCookie('token').value = null
+  useCookie('eventId').value = null
+
+  navigateTo('/')
+}
 
 function selectAvailabilityIcon(
   status: string,
@@ -567,59 +575,6 @@ function selectAvailabilityIcon(
   }
 }
 
-async function setAivalability(
-  date: Date,
-  userLink: EventUser,
-  isAvailable: boolean
-) {
-  const availability = date.availabilities.find(
-    (a: Availability) => a.userId == userLink.userId
-  )
-
-  if (availability) {
-    availability.isAvailable = isAvailable
-
-    const newAvailability: Availability = await _fetch(
-      '/api/updateAvailability',
-      {
-        isAvailable: isAvailable,
-        availabilityId: availability.id,
-        userId: userLink.userId,
-      }
-    )
-  } else {
-    // Request new availabilty
-
-    const newAvailability: Availability = await _fetch(
-      '/api/createAvailability',
-      {
-        isAvailable: isAvailable,
-        dateId: date.id,
-        userId: userLink.userId,
-      }
-    )
-
-    date.availabilities.push(newAvailability)
-  }
-}
-
-async function lockDate(date: Date) {
-  date.isLocked = !date.isLocked
-
-  await _fetch('/api/lockDate', {
-    isLocked: date.isLocked,
-    dateId: date.id,
-  })
-}
-
-async function logout() {
-  useCookie('userId').value = null
-  useCookie('token').value = null
-  useCookie('eventId').value = null
-
-  navigateTo('/')
-}
-
 function toggleConfigModal() {
   if (showConfigModal.value) {
     document
@@ -631,6 +586,12 @@ function toggleConfigModal() {
 
   showConfigModal.value = !showConfigModal.value
 }
+
+/*
+ CRUD METHODS
+*/
+
+// Event
 
 async function updateEventName() {
   fetchIsLoading.value = true
@@ -646,39 +607,22 @@ async function updateEventName() {
   }, 500)
 }
 
-function updateDate(date: Date) {
+// User / EventUser
+
+async function createUser() {
   fetchIsLoading.value = true
-  clearTimeout(fetchThrottleTimer)
+  showAddUser.value = false
 
-  fetchThrottleTimer = setTimeout(async () => {
-    if (typeof date.date == 'string') {
-      date.date = new Date(date.date)
-    }
-
-    await _fetch('/api/updateDate', {
-      dateId: date.id,
-      date: date.date.toISOString(),
-      title: date.title,
-    })
-
-    fetchIsLoading.value = false
-  }, 500)
-}
-
-async function updateDatePositions() {
-  const datePositionsData = []
-  fetchIsLoading.value = true
-
-  for (let index in event.value.dates) {
-    datePositionsData.push({
-      dateId: event.value.dates[index].id,
-      position: Number(index),
-    })
-  }
-
-  await _fetch('/api/updateDatePositions', {
-    datePositionsData: datePositionsData,
+  const newUserLink = await _fetch('/api/createUser', {
+    eventId: event.value.id,
+    email: newUserEmail.value,
+    alias: newUserAlias.value,
   })
+
+  event.value.userLinks.push(newUserLink)
+
+  newUserEmail.value = ''
+  newUserAlias.value = ''
 
   setTimeout(() => {
     fetchIsLoading.value = false
@@ -730,6 +674,78 @@ async function deleteUserLink(userLink: EventUser) {
   }
 }
 
+// Date
+
+async function createDate() {
+  fetchIsLoading.value = true
+  showAddDate.value = false
+
+  if (newDateDate.value) {
+    const newDate = await _fetch('/api/createDate', {
+      eventId: event.value.id,
+      title: newDateTitle.value,
+      date: newDateDate.value.toISOString(),
+    })
+
+    event.value.dates.push(newDate)
+
+    newDateTitle.value = ''
+    newDateDate.value = null
+  }
+
+  setTimeout(() => {
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+function updateDate(date: Date) {
+  fetchIsLoading.value = true
+  clearTimeout(fetchThrottleTimer)
+
+  fetchThrottleTimer = setTimeout(async () => {
+    if (typeof date.date == 'string') {
+      date.date = new Date(date.date)
+    }
+
+    await _fetch('/api/updateDate', {
+      dateId: date.id,
+      date: date.date.toISOString(),
+      title: date.title,
+    })
+
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+async function updateDatePositions() {
+  const datePositionsData = []
+  fetchIsLoading.value = true
+
+  for (let index in event.value.dates) {
+    datePositionsData.push({
+      dateId: event.value.dates[index].id,
+      position: Number(index),
+    })
+  }
+
+  await _fetch('/api/updateDatePositions', {
+    datePositionsData: datePositionsData,
+  })
+
+  setTimeout(() => {
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+async function lockDate(date: Date) {
+  date.isLocked = !date.isLocked
+
+  await _fetch('/api/lockDate', {
+    isLocked: date.isLocked,
+    dateId: date.id,
+  })
+}
+
 async function deleteDate(date: Date) {
   if (confirm(_local(['common', 'areyousure']))) {
     fetchIsLoading.value = true
@@ -746,40 +762,42 @@ async function deleteDate(date: Date) {
   }
 }
 
-async function createUser() {
-  fetchIsLoading.value = true
-  showAddUser.value = false
+// Aivalability
 
-  const newUserLink = await _fetch('/api/createUser', {
-    eventId: event.value.id,
-    email: newUserEmail.value,
-    alias: newUserAlias.value,
-  })
+async function setAivalability(
+  date: Date,
+  userLink: EventUser,
+  isAvailable: boolean
+) {
+  const availability = date.availabilities.find(
+    (a: Availability) => a.userId == userLink.userId
+  )
 
-  event.value.userLinks.push(newUserLink)
+  if (availability) {
+    availability.isAvailable = isAvailable
 
-  setTimeout(() => {
-    fetchIsLoading.value = false
-  }, 500)
-}
+    const newAvailability: Availability = await _fetch(
+      '/api/updateAvailability',
+      {
+        isAvailable: isAvailable,
+        availabilityId: availability.id,
+        userId: userLink.userId,
+      }
+    )
+  } else {
+    // Request new availabilty
 
-async function createDate() {
-  fetchIsLoading.value = true
-  showAddDate.value = false
+    const newAvailability: Availability = await _fetch(
+      '/api/createAvailability',
+      {
+        isAvailable: isAvailable,
+        dateId: date.id,
+        userId: userLink.userId,
+      }
+    )
 
-  if (newDateDate.value) {
-    const newDate = await _fetch('/api/createDate', {
-      eventId: event.value.id,
-      title: newDateTitle,
-      date: newDateDate.value.toISOString(),
-    })
-
-    event.value.dates.push(newDate)
+    date.availabilities.push(newAvailability)
   }
-
-  setTimeout(() => {
-    fetchIsLoading.value = false
-  }, 500)
 }
 </script>
 
