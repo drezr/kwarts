@@ -239,6 +239,7 @@
                 <div
                   class="modal-body p-5 w-full h-full overflow-y-auto"
                   v-show="modalTab == 'dates'"
+                  ref="modalDates"
                 >
                   <draggable
                     v-model="event.dates"
@@ -343,6 +344,7 @@
                 <div
                   class="modal-body p-5 w-full h-full overflow-y-auto"
                   v-show="modalTab == 'people'"
+                  ref="modalPeople"
                 >
                   <draggable
                     v-model="event.userLinks"
@@ -450,11 +452,7 @@
                     v-if="modalTab != 'general'"
                     v-html="_icon('plus-square-fill', 'green', 30)"
                     class="cursor-pointer hover:brightness-110"
-                    @click="
-                      modalTab == 'dates'
-                        ? (showAddDate = true)
-                        : (showAddUser = true)
-                    "
+                    @click="toggleNewElement()"
                   ></span>
 
                   <span
@@ -519,6 +517,9 @@ let newDateTitle = ref<String>()
 let newDateDate = ref<Date | null>()
 let newUserEmail = ref<String>()
 let newUserAlias = ref<String>()
+
+const modalDates = ref()
+const modalPeople = ref()
 
 const userLinksLoggedUserFirst = computed<[EventUser]>(() => {
   let sortedUserLinks = JSON.parse(JSON.stringify(event.value.userLinks))
@@ -585,6 +586,22 @@ function toggleConfigModal() {
   }
 
   showConfigModal.value = !showConfigModal.value
+}
+
+function toggleNewElement() {
+  if (modalTab.value == 'dates') {
+    showAddDate.value = true
+
+    setTimeout(() => {
+      modalDates.value.scrollTo(0, 99999)
+    }, 10)
+  } else if (modalTab.value == 'people') {
+    showAddUser.value = true
+
+    setTimeout(() => {
+      modalPeople.value.scrollTo(0, 99999)
+    }, 10)
+  }
 }
 
 /*
