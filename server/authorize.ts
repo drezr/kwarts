@@ -21,7 +21,7 @@ async function authorize(authData: any) {
     return {
       eventUser: eventUser,
       event: event,
-      isOwner: eventUser.id == event.ownerId,
+      isOwner: eventUser.userId == event.ownerId,
     }
   }
 
