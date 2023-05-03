@@ -91,10 +91,42 @@ const localisation = {
       en: '',
     },
   },
+  email_text: {
+    send_password_title: {
+      fr: "Votre mot de passe pour l'évènement",
+      nl: '',
+      de: '',
+      en: '',
+    },
+    send_password_content: {
+      fr: "Voici vos informations de connexion afin de donner vos disponibilités pour l'évènement",
+      nl: '',
+      de: '',
+      en: '',
+    },
+    send_password_hello: {
+      fr: 'Bonjour',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    send_password_seeyousoon: {
+      fr: 'À bientôt',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    send_password_clickhere: {
+      fr: "Cliquez ici pour accèder à l'èvenement",
+      nl: '',
+      de: '',
+      en: '',
+    },
+  },
 }
 
 export const getLocal = (hierarchy: Array<string>) => {
-  const loggedUser: User = useState<User>('loggedUser').value
+  // const loggedUser: User = useState<User>('loggedUser').value
   const chosenLanguage: string = 'fr'
   let target: any = localisation
 

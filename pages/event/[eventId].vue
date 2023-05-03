@@ -10,6 +10,8 @@
         </span>
       </div>
 
+      <button @click="sendEmail()">Send Email</button>
+
       <div class="px-6 flex items-center">
         <button
           @click="logout()"
@@ -544,6 +546,13 @@ let newUserAlias = ref<String>()
 
 const modalDates = ref()
 const modalPeople = ref()
+
+async function sendEmail() {
+  await _fetch('/api/sendPassword', {
+    eventId: event.value.id,
+    userId: loggedUserId,
+  })
+}
 
 const userLinksLoggedUserFirst = computed<[EventUser]>(() => {
   let sortedUserLinks = JSON.parse(JSON.stringify(event.value.userLinks))
