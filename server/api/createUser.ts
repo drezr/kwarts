@@ -27,6 +27,17 @@ export default defineEventHandler(async (e) => {
         password: uuidv4().replaceAll('-', ''),
       },
     })
+  } else {
+    const userLinkExist = await prisma.eventUser.findMany({
+      where: {
+        userId: user.id,
+        eventId: eventId,
+      },
+    })
+
+    if (userLinkExist.length != 0) {
+      return null
+    }
   }
 
   const eventUserCount = await prisma.eventUser.findMany({

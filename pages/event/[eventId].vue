@@ -424,7 +424,11 @@
                         class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
                         :class="[
                           {
-                            'focus:ring-red-600': !isValidEmail(newUserEmail),
+                            'focus:ring-red-600':
+                              !isValidEmail(newUserEmail) ||
+                              event.userLinks.find(
+                                (u) => u.user.email == newUserEmail
+                              ),
                           },
                         ]"
                         :placeholder="_local(['common', 'email'])"
@@ -444,7 +448,12 @@
                       v-html="
                         _icon(
                           'save-fill',
-                          isValidEmail(newUserEmail) ? 'green' : 'grey',
+                          !isValidEmail(newUserEmail) ||
+                            event.userLinks.find(
+                              (u) => u.user.email == newUserEmail
+                            )
+                            ? 'grey'
+                            : 'green',
                           20
                         )
                       "
