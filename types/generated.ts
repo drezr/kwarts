@@ -50,6 +50,8 @@ export interface EventUser {
     position: number,
     alias: string,
     password: string,
+    isPasswordSent: boolean,
+    isHidden: boolean,
     token?: string,
     event: Event,
     eventId: number,

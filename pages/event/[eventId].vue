@@ -10,8 +10,6 @@
         </span>
       </div>
 
-      <button @click="sendEmail()">Send Email</button>
-
       <div class="px-6 flex items-center">
         <button
           @click="logout()"
@@ -373,14 +371,44 @@
                         ></span>
 
                         <div class="flex flex-grow flex-wrap">
-                          <input
-                            type="email"
-                            v-model="element.user.email"
-                            class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-100 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
+                          <div
+                            class="cursor-pointer flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset text-sm leading-6 hover:bg-slate-100"
+                            :class="[
+                              { 'ring-red-300': !element.isPasswordSent },
+                              { 'ring-green-600': element.isPasswordSent },
+                            ]"
                             :placeholder="_local(['common', 'email'])"
                             style="height: 38px; width: 150px"
-                            disabled
-                          />
+                            @click="sendPassword(element)"
+                            :title="_local(['common', 'sendPassword'])"
+                          >
+                            {{ element.user.email }}
+                          </div>
+
+                          <div
+                            class="cursor-pointer rounded-full w-5 h-5 relative flex items-center justify-center"
+                            style="top: -4px; left: -20px; margin-right: -20px"
+                            :class="[
+                              { 'bg-red-500': !element.isPasswordSent },
+                              { 'bg-green-600': element.isPasswordSent },
+                            ]"
+                            :title="
+                              element.isPasswordSent
+                                ? _local(['common', 'passwordSent'])
+                                : _local(['common', 'passwordNotSent'])
+                            "
+                            @click="sendPassword(element)"
+                          >
+                            <span
+                              v-html="
+                                _icon(
+                                  element.isPasswordSent ? 'check' : 'x',
+                                  'white',
+                                  18
+                                )
+                              "
+                            ></span>
+                          </div>
 
                           <input
                             type="text"
@@ -547,13 +575,6 @@ let newUserAlias = ref<String>()
 const modalDates = ref()
 const modalPeople = ref()
 
-async function sendEmail() {
-  await _fetch('/api/sendPassword', {
-    eventId: event.value.id,
-    userId: loggedUserId,
-  })
-}
-
 const userLinksLoggedUserFirst = computed<[EventUser]>(() => {
   let sortedUserLinks = JSON.parse(JSON.stringify(event.value.userLinks))
 
@@ -575,6 +596,17 @@ async function logout() {
   useCookie('eventId').value = null
 
   navigateTo('/')
+}
+
+async function sendPassword(eventUser: EventUser) {
+  if (confirm(_local(['common', 'sendPasswordConfirm']))) {
+    await _fetch('/api/sendPassword', {
+      eventId: event.value.id,
+      userId: eventUser.user.id,
+    })
+
+    eventUser.isPasswordSent = true
+  }
 }
 
 function selectAvailabilityIcon(
@@ -673,6 +705,10 @@ async function createUser() {
 
   newUserEmail.value = ''
   newUserAlias.value = ''
+
+  setTimeout(() => {
+    modalPeople.value.scrollTo(0, 9999999)
+  }, 10)
 
   setTimeout(() => {
     fetchIsLoading.value = false

@@ -65,5 +65,14 @@ export default defineEventHandler(async (e) => {
     html: emailContent,
   })
 
+  await prisma.eventUser.update({
+    where: {
+      id: eventUser?.id,
+    },
+    data: {
+      isPasswordSent: true,
+    }
+  })
+
   return 'Success'
 })

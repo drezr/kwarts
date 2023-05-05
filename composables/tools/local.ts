@@ -90,6 +90,30 @@ const localisation = {
       de: '',
       en: '',
     },
+    sendPassword: {
+      fr: 'Envoyer le mot de passe par email',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    sendPasswordConfirm: {
+      fr: 'Voulez-vous envoyer le mot de passe par email ?',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    passwordSent: {
+      fr: 'Le mot de passe a été envoyé par email.',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    passwordNotSent: {
+      fr: 'Le mot de passe n\'a pas encore été envoyé.\nCliquez sur l\'adresse email pour l\'envoyer.',
+      nl: '',
+      de: '',
+      en: '',
+    },
   },
   email_text: {
     send_password_title: {

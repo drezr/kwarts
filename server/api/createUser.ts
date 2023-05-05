@@ -59,6 +59,8 @@ export default defineEventHandler(async (e) => {
       id: true,
       alias: true,
       position: true,
+      isHidden: true,
+      isPasswordSent: true,
       user: true,
       userId: true,
     },
