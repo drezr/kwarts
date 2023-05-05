@@ -114,6 +114,30 @@ const localisation = {
       de: '',
       en: '',
     },
+    isHiddenTooltip: {
+      fr: 'Cet utilisateur est invisible dans la liste.\nCliquez ici pour le rendre visible.',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    isVisibleTooltip: {
+      fr: 'Cet utilisateur est visible dans la liste.\nCliquez ici pour le rendre invisible.',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    isLockedTooltip: {
+      fr: 'Cette date est verrouillée.\nCliquez ici pour la déverrouiller.',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    isNotLockedTooltip: {
+      fr: 'Cette date est déverrouillée.\nCliquez ici pour la verrouiller.',
+      nl: '',
+      de: '',
+      en: '',
+    },
   },
   email_text: {
     send_password_title: {

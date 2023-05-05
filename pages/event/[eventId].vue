@@ -43,7 +43,7 @@
           <div class="flex mx-auto">
             <div v-for="date in event.dates" class="flex flex-col items-center">
               <span
-                v-if="isOwner"
+                v-if="isOwner && userLinksLoggedUserFirst.length > 0"
                 v-html="
                   _icon(
                     date.isLocked ? 'lock-fill' : 'unlock-fill',
@@ -276,6 +276,33 @@
                             @input="updateDate(element)"
                           />
 
+                          <div
+                            class="cursor-pointer rounded-full w-5 h-5 relative flex items-center justify-center hover:brightness-110"
+                            style="top: -4px; left: -20px; margin-right: -20px"
+                            :class="[
+                              { 'bg-orange-500': element.isLocked },
+                              { 'bg-green-600': !element.isLocked },
+                            ]"
+                            :title="
+                              !element.isHidden
+                                ? _local(['common', 'isLockedTooltip'])
+                                : _local(['common', 'isNotLockedTooltip'])
+                            "
+                            @click="lockDate(element)"
+                          >
+                            <span
+                              v-html="
+                                _icon(
+                                  element.isLocked
+                                    ? 'lock-fill'
+                                    : 'unlock-fill',
+                                  'white',
+                                  12
+                                )
+                              "
+                            ></span>
+                          </div>
+
                           <VueDatePicker
                             v-model="element.date"
                             class="flex-grow mx-1"
@@ -386,7 +413,7 @@
                           </div>
 
                           <div
-                            class="cursor-pointer rounded-full w-5 h-5 relative flex items-center justify-center"
+                            class="cursor-pointer rounded-full w-5 h-5 relative flex items-center justify-center hover:brightness-110"
                             style="top: -4px; left: -20px; margin-right: -20px"
                             :class="[
                               { 'bg-red-500': !element.isPasswordSent },
@@ -417,6 +444,33 @@
                             :placeholder="_local(['common', 'alias'])"
                             style="height: 38px; width: 150px"
                           />
+
+                          <div
+                            class="cursor-pointer rounded-full w-5 h-5 relative flex items-center justify-center hover:brightness-110"
+                            style="top: -4px; left: -20px; margin-right: -20px"
+                            :class="[
+                              { 'bg-orange-500': element.isHidden },
+                              { 'bg-blue-500': !element.isHidden },
+                            ]"
+                            :title="
+                              element.isHidden
+                                ? _local(['common', 'isHiddenTooltip'])
+                                : _local(['common', 'isVisibleTooltip'])
+                            "
+                            @click="updateUserLinkIsHidden(element)"
+                          >
+                            <span
+                              v-html="
+                                _icon(
+                                  !element.isHidden
+                                    ? 'eye-fill'
+                                    : 'eye-slash-fill',
+                                  'white',
+                                  14
+                                )
+                              "
+                            ></span>
+                          </div>
                         </div>
 
                         <span
@@ -587,6 +641,8 @@ const userLinksLoggedUserFirst = computed<[EventUser]>(() => {
   )
   sortedUserLinks.unshift(loggedUserLink)
 
+  sortedUserLinks = sortedUserLinks.filter((u: EventUser) => !u.isHidden)
+
   return sortedUserLinks
 })
 
@@ -728,6 +784,21 @@ async function updateUserLinkPositions() {
 
   await _fetch('/api/updateUserLinkPositions', {
     userLinkPositionsData: userLinkPositionsData,
+  })
+
+  setTimeout(() => {
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+async function updateUserLinkIsHidden(userLink: EventUser) {
+  fetchIsLoading.value = true
+
+  userLink.isHidden = !userLink.isHidden
+
+  await _fetch('/api/updateUserLinkIsHidden', {
+    userLinkId: userLink.id,
+    isHidden: userLink.isHidden,
   })
 
   setTimeout(() => {
