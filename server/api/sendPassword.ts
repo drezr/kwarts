@@ -60,7 +60,7 @@ export default defineEventHandler(async (e) => {
 
   await transporter.sendMail({
     from: `"Contact" <${process.env.EMAIL_USER}>`,
-    to: 'dumontrn@gmail.com',
+    to: user?.email,
     subject: _local(['email_text', 'send_password_title']),
     html: emailContent,
   })
