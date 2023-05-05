@@ -104,7 +104,7 @@
                   >
                     <div
                       class="grow flex items-center justify-center py-2 cursor-pointer hover:animate-pulse"
-                      @click="setAivalability(date, userLink, true)"
+                      @click="setAvailability(date, userLink, true)"
                     >
                       <span
                         v-html="selectAvailabilityIcon('on', date, userLink)"
@@ -113,7 +113,7 @@
 
                     <div
                       class="grow flex items-center justify-center py-2 cursor-pointer hover:animate-pulse"
-                      @click="setAivalability(date, userLink, false)"
+                      @click="setAvailability(date, userLink, false)"
                     >
                       <span
                         v-html="selectAvailabilityIcon('off', date, userLink)"
@@ -812,9 +812,9 @@ async function deleteDate(date: Date) {
   }
 }
 
-// Aivalability
+// Availability
 
-async function setAivalability(
+async function setAvailability(
   date: Date,
   userLink: EventUser,
   isAvailable: boolean
