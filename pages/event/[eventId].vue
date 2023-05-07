@@ -463,6 +463,7 @@
                             class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
                             :placeholder="_local(['common', 'alias'])"
                             style="height: 38px; width: 150px"
+                            @input="updateUserAlias(element)"
                           />
 
                           <div
@@ -855,6 +856,20 @@ async function updateUserLinkIsHidden(userLink: EventUser) {
   })
 
   setTimeout(() => {
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+async function updateUserAlias(userLink: EventUser) {
+  fetchIsLoading.value = true
+  clearTimeout(fetchThrottleTimer)
+
+  fetchThrottleTimer = setTimeout(async () => {
+    await _fetch('/api/updateUserAlias', {
+      userLinkId: userLink.id,
+      alias: userLink.alias,
+    })
+
     fetchIsLoading.value = false
   }, 500)
 }
