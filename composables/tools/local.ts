@@ -84,6 +84,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    sortUsersByName: {
+      fr: 'Trier par nom',
+      nl: '',
+      de: '',
+      en: '',
+    },
     areyousure: {
       fr: 'Êtes-vous sûr(e) ?',
       nl: '',
@@ -109,7 +115,7 @@ const localisation = {
       en: '',
     },
     passwordNotSent: {
-      fr: 'Le mot de passe n\'a pas encore été envoyé.\nCliquez sur l\'adresse email pour l\'envoyer.',
+      fr: "Le mot de passe n'a pas encore été envoyé.\nCliquez sur l'adresse email pour l'envoyer.",
       nl: '',
       de: '',
       en: '',

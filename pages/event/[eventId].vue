@@ -344,6 +344,7 @@
                         :placeholder="_local(['common', 'title'])"
                         maxlength="18"
                         style="height: 38px; width: 155px"
+                        ref="newDateTitleInput"
                       />
 
                       <VueDatePicker
@@ -358,12 +359,18 @@
                         style="width: 30%; min-width: 130px"
                         menu-class-name="dp-custom-menu"
                         :clearable="false"
+                        :format="
+                          _date.formatDatetime(newDateDate?.toDateString())
+                        "
                       ></VueDatePicker>
                     </div>
 
                     <span
-                      v-html="_icon('save-fill', 'green', 20)"
+                      v-html="
+                        _icon('save-fill', !newDateDate ? 'grey' : 'green', 20)
+                      "
                       class="cursor-pointer hover:brightness-110 ml-1"
+                      :class="[{ 'pointer-events-none': !newDateDate }]"
                       @click="createDate()"
                     ></span>
                   </div>
@@ -374,6 +381,13 @@
                   v-show="modalTab == 'people'"
                   ref="modalPeople"
                 >
+                  <button
+                    class="bg-slate-900 flex w-full justify-center rounded-md px-3 py-1.5 mb-4 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    @click="sortUsersByName()"
+                  >
+                    {{ _local(['common', 'sortUsersByName']) }}
+                  </button>
+
                   <draggable
                     v-model="event.userLinks"
                     @start="dragging = true"
@@ -399,7 +413,7 @@
 
                         <div class="flex flex-grow flex-wrap">
                           <div
-                            class="cursor-pointer flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset text-sm leading-6 hover:bg-slate-100"
+                            class="overflow-hidden cursor-pointer flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset text-sm leading-6 hover:bg-slate-100"
                             :class="[
                               { 'ring-red-300': !element.isPasswordSent },
                               { 'ring-green-600': element.isPasswordSent },
@@ -517,6 +531,7 @@
                         ]"
                         :placeholder="_local(['common', 'email'])"
                         style="height: 38px; width: 150px"
+                        ref="newUserEmailInput"
                       />
 
                       <input
@@ -628,6 +643,8 @@ let newUserAlias = ref<String>()
 
 const modalDates = ref()
 const modalPeople = ref()
+const newDateTitleInput = ref()
+const newUserEmailInput = ref()
 
 const userLinksLoggedUserFirst = computed<[EventUser]>(() => {
   let sortedUserLinks = JSON.parse(JSON.stringify(event.value.userLinks))
@@ -714,12 +731,14 @@ function toggleNewElement() {
     showAddDate.value = true
 
     setTimeout(() => {
+      newDateTitleInput.value.focus()
       modalDates.value.scrollTo(0, 9999999)
     }, 10)
   } else if (modalTab.value == 'people') {
     showAddUser.value = true
 
     setTimeout(() => {
+      newUserEmailInput.value.focus()
       modalPeople.value.scrollTo(0, 9999999)
     }, 10)
   }
@@ -750,6 +769,8 @@ async function updateEventName() {
 async function createUser() {
   fetchIsLoading.value = true
   showAddUser.value = false
+
+  newUserEmail.value = newUserEmail.value?.replace(/\s/g, '')
 
   const newUserLink = await _fetch('/api/createUser', {
     eventId: event.value.id,
@@ -789,6 +810,16 @@ async function updateUserLinkPositions() {
   setTimeout(() => {
     fetchIsLoading.value = false
   }, 500)
+}
+
+async function sortUsersByName() {
+  event.value.userLinks.sort((a: EventUser, b: EventUser) =>
+    a.alias.localeCompare(b.alias)
+  )
+
+  setTimeout(() => {
+    updateUserLinkPositions()
+  }, 10)
 }
 
 async function updateUserLinkIsHidden(userLink: EventUser) {
