@@ -11,5 +11,4 @@ dist
 /prisma/dev.db-journal
 prisma/dev.db
 /prisma/dev.db
-prisma/dev.db
 *.db
