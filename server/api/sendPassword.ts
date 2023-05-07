@@ -59,7 +59,7 @@ export default defineEventHandler(async (e) => {
   })
 
   await transporter.sendMail({
-    from: `"Contact" <${process.env.EMAIL_USER}>`,
+    from: `${process.env.EMAIL_AUTHOR} <${process.env.EMAIL_USER}>`,
     to: user?.email,
     subject: _local(['email_text', 'send_password_title']),
     html: emailContent,
@@ -71,7 +71,7 @@ export default defineEventHandler(async (e) => {
     },
     data: {
       isPasswordSent: true,
-    }
+    },
   })
 
   return 'Success'
