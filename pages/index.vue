@@ -83,24 +83,6 @@
             {{ _local(['common', 'signin']) }}
           </button>
         </div>
-
-        <div>
-          <button
-            class="flex w-full justify-center rounded-md bg-green-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            @click="initDatabase()"
-          >
-            Init Database
-          </button>
-        </div>
-
-        <div>
-          <button
-            class="flex w-full justify-center rounded-md bg-red-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            @click="clearDatabase()"
-          >
-            Clear Database
-          </button>
-        </div>
       </div>
     </div>
   </div>
