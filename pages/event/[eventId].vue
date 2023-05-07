@@ -271,6 +271,22 @@
                         ></span>
 
                         <div class="flex flex-grow flex-wrap">
+                          <VueDatePicker
+                            v-model="element.date"
+                            class="flex-grow mx-1"
+                            :format="_date.formatDatetime(element.date)"
+                            locale="fr"
+                            teleport-center
+                            auto-apply
+                            :placeholder="_local(['common', 'date'])"
+                            :enable-time-picker="false"
+                            month-name-format="long"
+                            style="width: 30%; min-width: 130px"
+                            menu-class-name="dp-custom-menu"
+                            :clearable="false"
+                            @update:model-value="updateDate(element)"
+                          ></VueDatePicker>
+
                           <input
                             type="text"
                             v-model="element.title"
@@ -307,22 +323,6 @@
                               "
                             ></span>
                           </div>
-
-                          <VueDatePicker
-                            v-model="element.date"
-                            class="flex-grow mx-1"
-                            :format="_date.formatDatetime(element.date)"
-                            locale="fr"
-                            teleport-center
-                            auto-apply
-                            :placeholder="_local(['common', 'date'])"
-                            :enable-time-picker="false"
-                            month-name-format="long"
-                            style="width: 30%; min-width: 130px"
-                            menu-class-name="dp-custom-menu"
-                            :clearable="false"
-                            @update:model-value="updateDate(element)"
-                          ></VueDatePicker>
                         </div>
 
                         <span
@@ -342,16 +342,6 @@
                     ></span>
 
                     <div class="flex flex-grow flex-wrap">
-                      <input
-                        v-model="newDateTitle"
-                        type="text"
-                        class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-                        :placeholder="_local(['common', 'title'])"
-                        maxlength="18"
-                        style="height: 38px; width: 155px"
-                        ref="newDateTitleInput"
-                      />
-
                       <VueDatePicker
                         v-model="newDateDate"
                         class="flex-grow mx-1"
@@ -368,6 +358,17 @@
                           _date.formatDatetime(newDateDate?.toDateString())
                         "
                       ></VueDatePicker>
+
+                      <input
+                        v-model="newDateTitle"
+                        type="text"
+                        class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+                        :placeholder="_local(['common', 'title'])"
+                        maxlength="18"
+                        style="height: 38px; width: 155px"
+                        ref="newDateTitleInput"
+                        @keyup.enter="newDateDate ? createDate() : null"
+                      />
                     </div>
 
                     <span
@@ -537,6 +538,14 @@
                         :placeholder="_local(['common', 'email'])"
                         style="height: 38px; width: 150px"
                         ref="newUserEmailInput"
+                        @keyup.enter="
+                          isValidEmail(newUserEmail) &&
+                          !event.userLinks.find(
+                            (u) => u.user.email == newUserEmail
+                          )
+                            ? createUser()
+                            : null
+                        "
                       />
 
                       <input
@@ -545,6 +554,14 @@
                         class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
                         :placeholder="_local(['common', 'alias'])"
                         style="height: 38px; width: 150px"
+                        @keyup.enter="
+                          isValidEmail(newUserEmail) &&
+                          !event.userLinks.find(
+                            (u) => u.user.email == newUserEmail
+                          )
+                            ? createUser()
+                            : null
+                        "
                       />
                     </div>
 
