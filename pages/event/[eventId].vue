@@ -20,112 +20,117 @@
       </div>
     </div>
 
-    <div class="flex w-full justify-center" style="height: calc(100vh - 81px)">
-      <div class="mx-auto overflow-x-auto h-full">
-        <div class="flex py-6">
-          <div class="flex flex-col items-center">
-            <span
-              v-if="isOwner"
-              v-html="_icon('gear-fill', _color.pick('blue'), 24)"
-              class="mb-1 cursor-pointer hover:brightness-110"
-              @click="toggleConfigModal()"
-            ></span>
-            <div
-              v-for="userLink in userLinksLoggedUserFirst"
-              class="opacity-90 w-36 px-1 rounded-md text-slate-950 bg-slate-100 shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2 flex items-center justify-center font-semibold text-center overflow-hidden break-normal"
-              :class="{ 'mb-4': userLink.userId == loggedUserId }"
-              style="height: 81px"
-            >
-              {{ userLink.alias }}
-            </div>
-          </div>
-
-          <div class="flex mx-auto">
-            <div v-for="date in event.dates" class="flex flex-col items-center">
+    <div>
+      <div class="flex justify-center">
+        <div class="mx-auto overflow-x-auto">
+          <div class="flex py-6">
+            <div class="flex flex-col items-center">
               <span
-                v-if="isOwner && userLinksLoggedUserFirst.length > 0"
-                v-html="
-                  _icon(
-                    date.isLocked ? 'lock-fill' : 'unlock-fill',
-                    date.isLocked
-                      ? _color.pick('orange')
-                      : _color.pick('green'),
-                    24
-                  )
-                "
+                v-if="isOwner"
+                v-html="_icon('gear-fill', _color.pick('blue'), 24)"
                 class="mb-1 cursor-pointer hover:brightness-110"
-                @click="lockDate(date)"
+                @click="toggleConfigModal()"
               ></span>
-
               <div
                 v-for="userLink in userLinksLoggedUserFirst"
-                class="w-24 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2"
-                :class="{
-                  'mb-4': userLink.userId == loggedUserId,
-                  'bg-slate-150': userLink.userId != loggedUserId && !isOwner,
-                  'bg-white': userLink.userId == loggedUserId || isOwner,
-                  'opacity-30': date.isLocked,
-                  'pointer-events-none':
-                    date.isLocked ||
-                    (userLink.userId != loggedUserId && !isOwner),
-                }"
+                class="opacity-90 w-36 px-1 rounded-md text-slate-950 bg-slate-100 shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2 flex items-center justify-center font-semibold text-center overflow-hidden break-normal"
+                :class="{ 'mb-4': userLink.userId == loggedUserId }"
+                style="height: 81px"
               >
-                <div class="divide-y">
-                  <div
-                    class="text-slate-900 text-sm flex items-center justify-center overflow-hidden"
-                  >
-                    <span
-                      class="h-10 text-center inline-flex flex-col justify-center font-bold"
-                    >
-                      <span
-                        v-if="date.title"
-                        class="text-slate-600 font-semibold whitespace-nowrap"
-                      >
-                        <small>{{ date.title }}</small>
-                      </span>
+                {{ userLink.alias }}
+              </div>
+            </div>
 
-                      <span
-                        class="relative"
-                        :class="[{ 'bottom-1': date.title }]"
-                      >
-                        {{ _date.formatDatetime(String(date.date)) }}
-                      </span>
-                    </span>
-                  </div>
+            <div class="flex mx-auto">
+              <div
+                v-for="date in event.dates"
+                class="flex flex-col items-center"
+              >
+                <span
+                  v-if="isOwner && userLinksLoggedUserFirst.length > 0"
+                  v-html="
+                    _icon(
+                      date.isLocked ? 'lock-fill' : 'unlock-fill',
+                      date.isLocked
+                        ? _color.pick('orange')
+                        : _color.pick('green'),
+                      24
+                    )
+                  "
+                  class="mb-1 cursor-pointer hover:brightness-110"
+                  @click="lockDate(date)"
+                ></span>
 
-                  <div
-                    class="flex divide-x"
-                    v-if="
-                      (userLink.userId == loggedUserId || isOwner) &&
-                      !date.isLocked
-                    "
-                  >
+                <div
+                  v-for="userLink in userLinksLoggedUserFirst"
+                  class="w-24 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2"
+                  :class="{
+                    'mb-4': userLink.userId == loggedUserId,
+                    'bg-slate-150': userLink.userId != loggedUserId && !isOwner,
+                    'bg-white': userLink.userId == loggedUserId || isOwner,
+                    'opacity-30': date.isLocked,
+                    'pointer-events-none':
+                      date.isLocked ||
+                      (userLink.userId != loggedUserId && !isOwner),
+                  }"
+                >
+                  <div class="divide-y">
                     <div
-                      class="grow flex items-center justify-center py-2 cursor-pointer hover:animate-pulse"
-                      @click="setAvailability(date, userLink, true)"
+                      class="text-slate-900 text-sm flex items-center justify-center overflow-hidden"
                     >
                       <span
-                        v-html="selectAvailabilityIcon('on', date, userLink)"
-                      ></span>
+                        class="h-10 text-center inline-flex flex-col justify-center font-bold"
+                      >
+                        <span
+                          v-if="date.title"
+                          class="text-slate-600 font-semibold whitespace-nowrap"
+                        >
+                          <small>{{ date.title }}</small>
+                        </span>
+
+                        <span
+                          class="relative"
+                          :class="[{ 'bottom-1': date.title }]"
+                        >
+                          {{ _date.formatDatetime(String(date.date)) }}
+                        </span>
+                      </span>
                     </div>
 
                     <div
-                      class="grow flex items-center justify-center py-2 cursor-pointer hover:animate-pulse"
-                      @click="setAvailability(date, userLink, false)"
+                      class="flex divide-x"
+                      v-if="
+                        (userLink.userId == loggedUserId || isOwner) &&
+                        !date.isLocked
+                      "
                     >
-                      <span
-                        v-html="selectAvailabilityIcon('off', date, userLink)"
-                      ></span>
-                    </div>
-                  </div>
+                      <div
+                        class="grow flex items-center justify-center py-2 cursor-pointer hover:animate-pulse"
+                        @click="setAvailability(date, userLink, true)"
+                      >
+                        <span
+                          v-html="selectAvailabilityIcon('on', date, userLink)"
+                        ></span>
+                      </div>
 
-                  <div v-else>
-                    <div class="grow flex items-center justify-center py-2">
-                      <span
-                        v-html="
-                          selectAvailabilityIcon('unknown', date, userLink)
-                        "
-                      ></span>
+                      <div
+                        class="grow flex items-center justify-center py-2 cursor-pointer hover:animate-pulse"
+                        @click="setAvailability(date, userLink, false)"
+                      >
+                        <span
+                          v-html="selectAvailabilityIcon('off', date, userLink)"
+                        ></span>
+                      </div>
+                    </div>
+
+                    <div v-else>
+                      <div class="grow flex items-center justify-center py-2">
+                        <span
+                          v-html="
+                            selectAvailabilityIcon('unknown', date, userLink)
+                          "
+                        ></span>
+                      </div>
                     </div>
                   </div>
                 </div>
