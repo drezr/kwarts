@@ -14,7 +14,8 @@ WEBSITE_HOST="YOUR_WEBSITE_HOST"
 Then, run:
 
 ```bash
-sh setup.sh
+npm install
+sh migrate.sh init
 ```
 
 ## Development Server
