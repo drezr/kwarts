@@ -1,6 +1,6 @@
 ## Setup
 
-Create a `/.env` file with:
+Create a `.env` file on the root of the project with:
 
 ```
 DATABASE_URL="file:PATH_TO_DB"
