@@ -115,13 +115,13 @@ const localisation = {
       en: '',
     },
     passwordSent: {
-      fr: 'Le mot de passe a été envoyé par email.',
+      fr: 'Le mot de passe a été envoyé par email. Cliquez ici pour le réenvoyer.',
       nl: '',
       de: '',
       en: '',
     },
     passwordNotSent: {
-      fr: "Le mot de passe n'a pas encore été envoyé.\nCliquez sur l'adresse email pour l'envoyer.",
+      fr: "Le mot de passe n'a pas encore été envoyé.\nCliquez ici pour l'envoyer par email.",
       nl: '',
       de: '',
       en: '',
