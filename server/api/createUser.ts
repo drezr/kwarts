@@ -13,11 +13,15 @@ export default defineEventHandler(async (e) => {
   const alias: string = params.alias
   const eventId: number = parseInt(params.eventId)
 
-  let user = await prisma.user.findUnique({
-    where: {
-      email: email,
-    },
-  })
+  let user = null
+
+  if (email) {
+    user = await prisma.user.findFirst({
+      where: {
+        email: email,
+      },
+    })
+  }
 
   if (!user) {
     user = await prisma.user.create({

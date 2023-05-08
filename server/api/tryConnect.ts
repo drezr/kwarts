@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   const password: string = params.password
   const newToken: string = uuidv4().replaceAll('-', '')
 
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.findFirst({
     where: {
       email: email,
     },

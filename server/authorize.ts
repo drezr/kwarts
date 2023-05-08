@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 async function authorize(authData: any) {
   const eventUser = await prisma.eventUser.findFirst({
     where: {
-      userId: authData.userId,
+      userId: authData.loggedUserId,
       eventId: authData.eventId,
       token: authData.token,
     },

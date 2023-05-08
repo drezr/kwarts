@@ -299,7 +299,7 @@
 
                           <div
                             class="cursor-pointer rounded-full w-5 h-5 relative flex items-center justify-center hover:brightness-110"
-                            style="top: -4px; left: -20px; margin-right: -20px"
+                            style="top: -6px; left: -20px; margin-right: -20px"
                             :class="[
                               { 'bg-orange-500': element.isLocked },
                               { 'bg-green-600': !element.isLocked },
@@ -388,9 +388,13 @@
                   ref="modalPeople"
                 >
                   <button
-                    class="bg-slate-900 flex w-full justify-center rounded-md px-3 py-1.5 mb-4 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    class="bg-purple-900 hover:bg-purple-800 flex w-full justify-center rounded-md px-3 py-1.5 mb-4 text-sm font-semibold leading-6 text-white shadow-sm"
                     @click="sortUsersByName()"
                   >
+                    <span
+                      v-html="_icon('sort-alpha-down', 'white', 24)"
+                      class="mr-2"
+                    ></span>
                     {{ _local(['common', 'sortUsersByName']) }}
                   </button>
 
@@ -418,23 +422,16 @@
                         ></span>
 
                         <div class="flex flex-grow flex-wrap">
-                          <div
-                            class="overflow-hidden cursor-pointer flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset text-sm leading-6 hover:bg-slate-100"
-                            :class="[
-                              { 'ring-red-300': !element.isPasswordSent },
-                              { 'ring-green-600': element.isPasswordSent },
-                            ]"
+                          <input
+                            class="overflow-hidden flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 ring-gray-300 shadow-sm ring-1 ring-inset text-sm leading-6 focus:ring-slate-600"
                             :placeholder="_local(['common', 'email'])"
                             style="height: 38px; width: 150px"
-                            @click="sendPassword(element)"
-                            :title="_local(['common', 'sendPassword'])"
-                          >
-                            {{ element.user.email }}
-                          </div>
+                            v-model="element.user.email"
+                          />
 
                           <div
                             class="cursor-pointer rounded-full w-5 h-5 relative flex items-center justify-center hover:brightness-110"
-                            style="top: -4px; left: -20px; margin-right: -20px"
+                            style="top: -6px; left: -20px; margin-right: -20px"
                             :class="[
                               { 'bg-red-500': !element.isPasswordSent },
                               { 'bg-green-600': element.isPasswordSent },
@@ -457,6 +454,24 @@
                             ></span>
                           </div>
 
+                          <div
+                            v-if="element.user.email != getEmail(element)"
+                            class="cursor-pointer rounded-md w-5 h-5 relative flex items-center justify-center hover:brightness-110"
+                            style="top: 24px; left: -20px; margin-right: -20px"
+                            :class="
+                              isValidEmail(element.user.email) &&
+                              !cloneEvent.userLinks.find(
+                                (u: EventUser) => u.user.email == element.user.email
+                              )
+                                ? 'bg-green-600'
+                                : 'bg-gray-500 pointer-events-none'
+                            "
+                            :title="_local(['common', 'updateEmail'])"
+                            @click="updateUserEmail(element)"
+                          >
+                            <span v-html="_icon('save', 'white', 14)"></span>
+                          </div>
+
                           <input
                             type="text"
                             v-model="element.alias"
@@ -468,7 +483,7 @@
 
                           <div
                             class="cursor-pointer rounded-full w-5 h-5 relative flex items-center justify-center hover:brightness-110"
-                            style="top: -4px; left: -20px; margin-right: -20px"
+                            style="top: -6px; left: -20px; margin-right: -20px"
                             :class="[
                               { 'bg-orange-500': element.isHidden },
                               { 'bg-blue-500': !element.isHidden },
@@ -526,12 +541,17 @@
                       <input
                         v-model="newUserEmail"
                         type="email"
-                        class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
+                        class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset text-sm leading-6"
                         :class="[
                           {
                             'focus:ring-red-600':
-                              !isValidEmail(newUserEmail) ||
+                              (newUserEmail && !isValidEmail(newUserEmail)) ||
                               event.userLinks.find(
+                                (u) => u.user.email == newUserEmail
+                              ),
+                            'focus:ring-green-700':
+                              isValidEmail(newUserEmail) &&
+                              !event.userLinks.find(
                                 (u) => u.user.email == newUserEmail
                               ),
                           },
@@ -540,10 +560,13 @@
                         style="height: 38px; width: 150px"
                         ref="newUserEmailInput"
                         @keyup.enter="
-                          isValidEmail(newUserEmail) &&
-                          !event.userLinks.find(
-                            (u) => u.user.email == newUserEmail
-                          )
+                          newUserAlias &&
+                          ((newUserEmail &&
+                            isValidEmail(newUserEmail) &&
+                            !event.userLinks.find(
+                              (u) => u.user.email == newUserEmail
+                            )) ||
+                            !newUserEmail)
                             ? createUser()
                             : null
                         "
@@ -556,10 +579,13 @@
                         :placeholder="_local(['common', 'alias'])"
                         style="height: 38px; width: 150px"
                         @keyup.enter="
-                          isValidEmail(newUserEmail) &&
-                          !event.userLinks.find(
-                            (u) => u.user.email == newUserEmail
-                          )
+                          newUserAlias &&
+                          ((newUserEmail &&
+                            isValidEmail(newUserEmail) &&
+                            !event.userLinks.find(
+                              (u) => u.user.email == newUserEmail
+                            )) ||
+                            !newUserEmail)
                             ? createUser()
                             : null
                         "
@@ -570,18 +596,31 @@
                       v-html="
                         _icon(
                           'save-fill',
-                          !isValidEmail(newUserEmail) ||
-                            event.userLinks.find(
-                              (u) => u.user.email == newUserEmail
-                            )
-                            ? 'grey'
-                            : 'green',
+                          newUserAlias &&
+                            ((newUserEmail &&
+                              isValidEmail(newUserEmail) &&
+                              !event.userLinks.find(
+                                (u) => u.user.email == newUserEmail
+                              )) ||
+                              !newUserEmail)
+                            ? 'green'
+                            : 'grey',
                           20
                         )
                       "
                       class="cursor-pointer hover:brightness-110 ml-1"
                       :class="[
-                        { 'pointer-events-none': !isValidEmail(newUserEmail) },
+                        {
+                          'pointer-events-none': !(
+                            newUserAlias &&
+                            ((newUserEmail &&
+                              isValidEmail(newUserEmail) &&
+                              !event.userLinks.find(
+                                (u) => u.user.email == newUserEmail
+                              )) ||
+                              !newUserEmail)
+                          ),
+                        },
                       ]"
                       @click="createUser()"
                     ></span>
@@ -651,6 +690,7 @@ const isOwner = ref<Boolean>(
   requestedEvent.ownerId == useCookie('userId').value
 )
 let event = ref<Event>(requestedEvent)
+let cloneEvent = JSON.parse(JSON.stringify(event.value))
 let dragging = ref<Boolean>(false)
 let showConfigModal = ref<Boolean>(false)
 let modalTab = ref<String>('general')
@@ -686,23 +726,20 @@ const userLinksLoggedUserFirst = computed<[EventUser]>(() => {
   return sortedUserLinks
 })
 
+function getEmail(userLink: EventUser) {
+  const targetLink = cloneEvent.userLinks.find(
+    (ul: EventUser) => userLink.id == ul.id
+  )
+
+  return targetLink?.user.email
+}
+
 async function logout() {
   useCookie('userId').value = null
   useCookie('token').value = null
   useCookie('eventId').value = null
 
   navigateTo('/')
-}
-
-async function sendPassword(eventUser: EventUser) {
-  if (confirm(_local(['common', 'sendPasswordConfirm']))) {
-    await _fetch('/api/sendPassword', {
-      eventId: event.value.id,
-      userId: eventUser.user.id,
-    })
-
-    eventUser.isPasswordSent = true
-  }
 }
 
 function selectAvailabilityIcon(
@@ -779,6 +816,7 @@ async function updateEventName() {
 
   fetchThrottleTimer = setTimeout(async () => {
     await _fetch('/api/updateEventName', {
+      loggedUserId: loggedUserId,
       eventId: event.value.id,
       newEventName: event.value.name,
     })
@@ -789,6 +827,18 @@ async function updateEventName() {
 
 // User / EventUser
 
+async function sendPassword(eventUser: EventUser) {
+  if (confirm(_local(['common', 'sendPasswordConfirm']))) {
+    await _fetch('/api/sendPassword', {
+      loggedUserId: loggedUserId,
+      eventId: event.value.id,
+      userId: eventUser.user.id,
+    })
+
+    eventUser.isPasswordSent = true
+  }
+}
+
 async function createUser() {
   fetchIsLoading.value = true
   showAddUser.value = false
@@ -796,6 +846,7 @@ async function createUser() {
   newUserEmail.value = newUserEmail.value?.replace(/\s/g, '')
 
   const newUserLink = await _fetch('/api/createUser', {
+    loggedUserId: loggedUserId,
     eventId: event.value.id,
     email: newUserEmail.value,
     alias: newUserAlias.value,
@@ -827,6 +878,8 @@ async function updateUserLinkPositions() {
   }
 
   await _fetch('/api/updateUserLinkPositions', {
+    loggedUserId: loggedUserId,
+    eventId: event.value.id,
     userLinkPositionsData: userLinkPositionsData,
   })
 
@@ -851,6 +904,8 @@ async function updateUserLinkIsHidden(userLink: EventUser) {
   userLink.isHidden = !userLink.isHidden
 
   await _fetch('/api/updateUserLinkIsHidden', {
+    loggedUserId: loggedUserId,
+    eventId: event.value.id,
     userLinkId: userLink.id,
     isHidden: userLink.isHidden,
   })
@@ -866,9 +921,33 @@ async function updateUserAlias(userLink: EventUser) {
 
   fetchThrottleTimer = setTimeout(async () => {
     await _fetch('/api/updateUserAlias', {
+      loggedUserId: loggedUserId,
+      eventId: event.value.id,
       userLinkId: userLink.id,
       alias: userLink.alias,
     })
+
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+async function updateUserEmail(userLink: EventUser) {
+  fetchIsLoading.value = true
+  clearTimeout(fetchThrottleTimer)
+
+  userLink.user.email = userLink.user.email?.replace(/\s/g, '')
+
+  fetchThrottleTimer = setTimeout(async () => {
+    await _fetch('/api/updateUserEmail', {
+      loggedUserId: loggedUserId,
+      userLinkId: userLink.id,
+      userId: userLink.user.id,
+      eventId: event.value.id,
+      email: userLink.user.email,
+    })
+
+    userLink.isPasswordSent = false
+    cloneEvent = JSON.parse(JSON.stringify(event.value))
 
     fetchIsLoading.value = false
   }, 500)
@@ -878,6 +957,7 @@ async function deleteUserLink(userLink: EventUser) {
   if (confirm(_local(['common', 'areyousure']))) {
     fetchIsLoading.value = true
     await _fetch('/api/deleteUserLink', {
+      loggedUserId: loggedUserId,
       userLinkId: userLink.id,
       userId: userLink.user.id,
       eventId: event.value.id,
@@ -907,6 +987,7 @@ async function createDate() {
 
   if (newDateDate.value) {
     const newDate = await _fetch('/api/createDate', {
+      loggedUserId: loggedUserId,
       eventId: event.value.id,
       title: newDateTitle.value,
       date: newDateDate.value.toISOString(),
@@ -933,6 +1014,8 @@ function updateDate(date: Date) {
     }
 
     await _fetch('/api/updateDate', {
+      loggedUserId: loggedUserId,
+      eventId: event.value.id,
       dateId: date.id,
       date: date.date.toISOString(),
       title: date.title,
@@ -954,6 +1037,8 @@ async function updateDatePositions() {
   }
 
   await _fetch('/api/updateDatePositions', {
+    loggedUserId: loggedUserId,
+    eventId: event.value.id,
     datePositionsData: datePositionsData,
   })
 
@@ -966,6 +1051,8 @@ async function lockDate(date: Date) {
   date.isLocked = !date.isLocked
 
   await _fetch('/api/lockDate', {
+    loggedUserId: loggedUserId,
+    eventId: event.value.id,
     isLocked: date.isLocked,
     dateId: date.id,
   })
@@ -976,6 +1063,8 @@ async function deleteDate(date: Date) {
     fetchIsLoading.value = true
 
     await _fetch('/api/deleteDate', {
+      loggedUserId: loggedUserId,
+      eventId: event.value.id,
       dateId: date.id,
     })
 
@@ -1004,6 +1093,8 @@ async function setAvailability(
     const newAvailability: Availability = await _fetch(
       '/api/updateAvailability',
       {
+        loggedUserId: loggedUserId,
+        eventId: event.value.id,
         isAvailable: isAvailable,
         availabilityId: availability.id,
         userId: userLink.userId,
@@ -1015,6 +1106,8 @@ async function setAvailability(
     const newAvailability: Availability = await _fetch(
       '/api/createAvailability',
       {
+        loggedUserId: loggedUserId,
+        eventId: event.value.id,
         isAvailable: isAvailable,
         dateId: date.id,
         userId: userLink.userId,

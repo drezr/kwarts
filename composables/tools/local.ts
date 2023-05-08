@@ -85,13 +85,19 @@ const localisation = {
       en: '',
     },
     sortUsersByName: {
-      fr: 'Trier par nom',
+      fr: 'Trier par ordre alphabétique',
       nl: '',
       de: '',
       en: '',
     },
     areyousure: {
       fr: 'Êtes-vous sûr(e) ?',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    updateEmail: {
+      fr: 'Mettre à jour l\'adresse email',
       nl: '',
       de: '',
       en: '',

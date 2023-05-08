@@ -1,6 +1,6 @@
 interface User {
   id: number,
-  email: string,
+  email?: string,
   chosenLanguage: string,
   password?: string,
   token?: string,
