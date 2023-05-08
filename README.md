@@ -1,17 +1,5 @@
 ## Setup
 
-Run:
-
-```bash
-sh setup.sh
-```
-
-On `schema.prisma` updates, run:
-
-```bash
-sh migrate.sh MIGRATIONNUMBER
-```
-
 Create a `kwarts/.env` file with:
 
 ```
@@ -21,6 +9,12 @@ EMAIL_PORT="YOUR_EMAIL_PORT"
 EMAIL_USER="YOUR_EMAIL_USER"
 EMAIL_PASSWORD="YOUR_EMAIL_PASSWORD"
 WEBSITE_HOST="YOUR_WEBSITE_HOST"
+```
+
+Then, run:
+
+```bash
+sh setup.sh
 ```
 
 ## Development Server
@@ -37,4 +31,12 @@ Build the application for production:
 
 ```bash
 npm run build
+```
+
+## Database migrations
+
+On `schema.prisma` updates, run:
+
+```bash
+sh migrate.sh MIGRATIONNUMBER
 ```
