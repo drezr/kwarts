@@ -115,7 +115,7 @@ const localisation = {
       en: '',
     },
     passwordSent: {
-      fr: 'Le mot de passe a été envoyé par email. Cliquez ici pour le réenvoyer.',
+      fr: 'Le mot de passe a été envoyé par email.\nCliquez ici pour le réenvoyer.',
       nl: '',
       de: '',
       en: '',
