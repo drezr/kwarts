@@ -1,6 +1,6 @@
 ## Setup
 
-Create a `kwarts/.env` file with:
+Create a `/.env` file with:
 
 ```
 DATABASE_URL="file:PATH_TO_DB"
