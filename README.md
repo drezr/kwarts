@@ -6,13 +6,13 @@ Run:
 sh setup.sh
 ```
 
-On `schema.prisma` updates run:
+On `schema.prisma` updates, run:
 
 ```bash
 sh migrate.sh MIGRATIONNUMBER
 ```
 
-Create `kwarts/.env` file with:
+Create a `kwarts/.env` file with:
 
 ```
 DATABASE_URL="file:PATH_TO_DB"
