@@ -33,7 +33,7 @@
               ></span>
               <div
                 v-for="userLink in userLinksLoggedUserFirst"
-                class="opacity-90 w-36 px-1 rounded-md text-slate-950 bg-slate-100 shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2 flex items-center justify-center font-semibold text-center overflow-hidden break-normal"
+                class="opacity-90 w-44 px-1 rounded-md text-slate-950 bg-slate-100 shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2 flex items-center justify-center font-semibold text-center overflow-hidden break-normal"
                 :class="{ 'mb-4': userLink.userId == loggedUserId }"
                 style="height: 81px"
               >
