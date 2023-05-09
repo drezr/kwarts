@@ -1,137 +1,124 @@
 <template>
-  <div class="bg-gradient-to-b from-slate-200">
-    <div class="flex pl-3 py-3 justify-between">
-      <div class="flex items-center">
-        <div class="p-1 rounded-full mr-3">
-          <img src="/kwarts_logo_mini.png" class="w-12" />
+  <Header :event="event" />
+
+  <div class="flex justify-center">
+    <div class="mx-auto overflow-x-auto">
+      <div class="flex py-6">
+        <div class="flex flex-col items-center" :class="[{ 'mt-7': !isOwner }]">
+          <span
+            v-if="isOwner"
+            v-html="_icon('gear-fill', _color.pick('blue'), 24)"
+            class="mb-1 cursor-pointer hover:brightness-110"
+            @click="toggleConfigModal()"
+          ></span>
+
+          <div
+            v-for="userLink in userLinksLoggedUserFirst"
+            class="opacity-90 w-44 px-1 rounded-md text-slate-950 bg-slate-100 shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2 flex items-center justify-center font-semibold text-center overflow-hidden break-normal"
+            :class="[{ 'mb-4': userLink.userId == loggedUserId }]"
+            style="height: 81px"
+          >
+            {{ userLink.alias }}
+          </div>
         </div>
-        <span class="text-xl font-semibold text-slate-700">
-          {{ event.name }}
-        </span>
-      </div>
 
-      <div class="px-6 flex items-center">
-        <button
-          @click="logout()"
-          class="text-slate-500 hover:text-slate-400 ml-3"
-        >
-          {{ _local(['common', 'signout']) }}
-        </button>
-      </div>
-    </div>
-
-    <div>
-      <div class="flex justify-center">
-        <div class="mx-auto overflow-x-auto">
-          <div class="flex py-6">
-            <div class="flex flex-col items-center">
+        <div class="flex mx-auto">
+          <div v-for="date in event.dates" class="flex flex-col items-center">
+            <div class="flex">
               <span
-                v-if="isOwner"
-                v-html="_icon('gear-fill', _color.pick('blue'), 24)"
-                class="mb-1 cursor-pointer hover:brightness-110"
-                @click="toggleConfigModal()"
+                v-if="isOwner && userLinksLoggedUserFirst.length > 0"
+                v-html="
+                  _icon(
+                    date.isLocked ? 'lock-fill' : 'unlock-fill',
+                    date.isLocked
+                      ? _color.pick('orange')
+                      : _color.pick('green'),
+                    24
+                  )
+                "
+                :title="
+                  date.isLocked
+                    ? _local(['common', 'isLockedTooltip'])
+                    : _local(['common', 'isNotLockedTooltip'])
+                "
+                class="mb-1 mr-2 cursor-pointer hover:brightness-110"
+                @click="lockDate(date)"
               ></span>
-              <div
-                v-for="userLink in userLinksLoggedUserFirst"
-                class="opacity-90 w-44 px-1 rounded-md text-slate-950 bg-slate-100 shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2 flex items-center justify-center font-semibold text-center overflow-hidden break-normal"
-                :class="{ 'mb-4': userLink.userId == loggedUserId }"
-                style="height: 81px"
-              >
-                {{ userLink.alias }}
-              </div>
+
+              <span
+                v-html="_icon('list', _color.pick('blue'), 24)"
+                class="mt-1 cursor-pointer hover:brightness-110"
+                :title="_local(['common', 'summary'])"
+              ></span>
             </div>
 
-            <div class="flex mx-auto">
-              <div
-                v-for="date in event.dates"
-                class="flex flex-col items-center"
-              >
-                <span
-                  v-if="isOwner && userLinksLoggedUserFirst.length > 0"
-                  v-html="
-                    _icon(
-                      date.isLocked ? 'lock-fill' : 'unlock-fill',
-                      date.isLocked
-                        ? _color.pick('orange')
-                        : _color.pick('green'),
-                      24
-                    )
-                  "
-                  class="mb-1 cursor-pointer hover:brightness-110"
-                  @click="lockDate(date)"
-                ></span>
+            <div
+              v-for="userLink in userLinksLoggedUserFirst"
+              class="w-24 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2"
+              :class="{
+                'mb-4': userLink.userId == loggedUserId,
+                'bg-slate-150': userLink.userId != loggedUserId && !isOwner,
+                'bg-white': userLink.userId == loggedUserId || isOwner,
+                'opacity-30': date.isLocked,
+                'pointer-events-none':
+                  date.isLocked ||
+                  (userLink.userId != loggedUserId && !isOwner),
+              }"
+            >
+              <div class="divide-y">
+                <div
+                  class="text-slate-900 text-sm flex items-center justify-center overflow-hidden"
+                >
+                  <span
+                    class="h-10 text-center inline-flex flex-col justify-center font-bold"
+                  >
+                    <span
+                      v-if="date.title"
+                      class="text-slate-600 font-semibold whitespace-nowrap"
+                    >
+                      <small>{{ date.title }}</small>
+                    </span>
+
+                    <span
+                      class="relative"
+                      :class="[{ 'bottom-1': date.title }]"
+                    >
+                      {{ _date.formatDatetime(String(date.date)) }}
+                    </span>
+                  </span>
+                </div>
 
                 <div
-                  v-for="userLink in userLinksLoggedUserFirst"
-                  class="w-24 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2"
-                  :class="{
-                    'mb-4': userLink.userId == loggedUserId,
-                    'bg-slate-150': userLink.userId != loggedUserId && !isOwner,
-                    'bg-white': userLink.userId == loggedUserId || isOwner,
-                    'opacity-30': date.isLocked,
-                    'pointer-events-none':
-                      date.isLocked ||
-                      (userLink.userId != loggedUserId && !isOwner),
-                  }"
+                  class="flex divide-x"
+                  v-if="
+                    (userLink.userId == loggedUserId || isOwner) &&
+                    !date.isLocked
+                  "
                 >
-                  <div class="divide-y">
-                    <div
-                      class="text-slate-900 text-sm flex items-center justify-center overflow-hidden"
-                    >
-                      <span
-                        class="h-10 text-center inline-flex flex-col justify-center font-bold"
-                      >
-                        <span
-                          v-if="date.title"
-                          class="text-slate-600 font-semibold whitespace-nowrap"
-                        >
-                          <small>{{ date.title }}</small>
-                        </span>
+                  <div
+                    class="grow flex items-center justify-center py-2 cursor-pointer hover:animate-pulse"
+                    @click="setAvailability(date, userLink, true)"
+                  >
+                    <span
+                      v-html="selectAvailabilityIcon('on', date, userLink)"
+                    ></span>
+                  </div>
 
-                        <span
-                          class="relative"
-                          :class="[{ 'bottom-1': date.title }]"
-                        >
-                          {{ _date.formatDatetime(String(date.date)) }}
-                        </span>
-                      </span>
-                    </div>
+                  <div
+                    class="grow flex items-center justify-center py-2 cursor-pointer hover:animate-pulse"
+                    @click="setAvailability(date, userLink, false)"
+                  >
+                    <span
+                      v-html="selectAvailabilityIcon('off', date, userLink)"
+                    ></span>
+                  </div>
+                </div>
 
-                    <div
-                      class="flex divide-x"
-                      v-if="
-                        (userLink.userId == loggedUserId || isOwner) &&
-                        !date.isLocked
-                      "
-                    >
-                      <div
-                        class="grow flex items-center justify-center py-2 cursor-pointer hover:animate-pulse"
-                        @click="setAvailability(date, userLink, true)"
-                      >
-                        <span
-                          v-html="selectAvailabilityIcon('on', date, userLink)"
-                        ></span>
-                      </div>
-
-                      <div
-                        class="grow flex items-center justify-center py-2 cursor-pointer hover:animate-pulse"
-                        @click="setAvailability(date, userLink, false)"
-                      >
-                        <span
-                          v-html="selectAvailabilityIcon('off', date, userLink)"
-                        ></span>
-                      </div>
-                    </div>
-
-                    <div v-else>
-                      <div class="grow flex items-center justify-center py-2">
-                        <span
-                          v-html="
-                            selectAvailabilityIcon('unknown', date, userLink)
-                          "
-                        ></span>
-                      </div>
-                    </div>
+                <div v-else>
+                  <div class="grow flex items-center justify-center py-2">
+                    <span
+                      v-html="selectAvailabilityIcon('unknown', date, userLink)"
+                    ></span>
                   </div>
                 </div>
               </div>
@@ -140,325 +127,324 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <transition name="fade" v-if="isOwner">
-      <div v-show="showConfigModal" class="fixed inset-0 z-30">
-        <div
-          v-show="showConfigModal"
-          class="bg-filter bg-black opacity-50 fixed inset-0 w-full h-full z-20"
-          @click="toggleConfigModal()"
-        ></div>
+  <transition name="fade" v-if="isOwner">
+    <div v-show="showConfigModal" class="fixed inset-0 z-30">
+      <div
+        v-show="showConfigModal"
+        class="bg-filter bg-black opacity-50 fixed inset-0 w-full h-full z-20"
+        @click="toggleConfigModal()"
+      ></div>
 
-        <main class="flex flex-col items-center justify-center h-full w-full">
-          <transition name="fade-up-down">
+      <main class="flex flex-col items-center justify-center h-full w-full">
+        <transition name="fade-up-down">
+          <div
+            v-show="showConfigModal"
+            class="inline-block items-center z-30 w-full"
+            style="max-width: 426px"
+          >
             <div
-              v-show="showConfigModal"
-              class="inline-block items-center z-30 w-full"
-              style="max-width: 426px"
+              class="modal max-w-md mx-auto xl:max-w-xl lg:max-w-xl md:max-w-xl bg-white max-h-screen shadow-lg flex-row rounded relative"
             >
-              <div
-                class="modal max-w-md mx-auto xl:max-w-xl lg:max-w-xl md:max-w-xl bg-white max-h-screen shadow-lg flex-row rounded relative"
-              >
-                <div class="p-5 rounded-t flex justify-between items-center">
-                  <div class="text-slate-800 text-lg flex items-center">
-                    <span
-                      v-html="_icon('gear-fill', _color.pick('blue'), 24)"
-                      class="mr-3 relative"
-                      style="top: 2px"
-                    ></span>
-
-                    {{ _local(['common', 'eventConfig']) }}
-                  </div>
-
+              <div class="p-5 rounded-t flex justify-between items-center">
+                <div class="text-slate-800 text-lg flex items-center">
                   <span
-                    v-html="_icon('x-lg', _color.pick('grey'), 24)"
-                    class="cursor-pointer hover:brightness-110 ml-3"
-                    @click="toggleConfigModal()"
+                    v-html="_icon('gear-fill', _color.pick('blue'), 24)"
+                    class="mr-3 relative"
+                    style="top: 2px"
                   ></span>
+
+                  {{ _local(['common', 'eventConfig']) }}
                 </div>
 
-                <nav class="bg-slate-800 flex justify-center py-1 flex-wrap">
-                  <span
-                    class="text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer flex"
-                    :class="{ 'bg-slate-900': modalTab == 'general' }"
-                    @click="modalTab = 'general'"
-                  >
-                    <span
-                      v-html="_icon('sliders', 'white', 16)"
-                      class="mr-2 relative"
-                      style="top: 2px"
-                    ></span>
+                <span
+                  v-html="_icon('x-lg', _color.pick('grey'), 24)"
+                  class="cursor-pointer hover:brightness-110 ml-3"
+                  @click="toggleConfigModal()"
+                ></span>
+              </div>
 
-                    {{ _local(['common', 'general']) }}
-                  </span>
-
-                  <span
-                    class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer flex mx-1"
-                    :class="{ 'bg-slate-900': modalTab == 'dates' }"
-                    @click="modalTab = 'dates'"
-                  >
-                    <span
-                      v-html="_icon('calendar3', 'white', 16)"
-                      class="mr-2 relative"
-                      style="top: 2px"
-                    ></span>
-
-                    {{ _local(['common', 'dates']) }}
-                  </span>
-
-                  <span
-                    class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer flex"
-                    :class="{ 'bg-slate-900': modalTab == 'people' }"
-                    @click="modalTab = 'people'"
-                  >
-                    <span
-                      v-html="_icon('people', 'white', 16)"
-                      class="mr-2 relative"
-                      style="top: 2px"
-                    ></span>
-
-                    {{ _local(['common', 'people']) }}
-                  </span>
-                </nav>
-
-                <div
-                  class="modal-body p-5 w-full h-full overflow-y-auto"
-                  v-show="modalTab == 'general'"
+              <nav class="bg-slate-800 flex justify-center py-1 flex-wrap">
+                <span
+                  class="text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer flex"
+                  :class="{ 'bg-slate-900': modalTab == 'general' }"
+                  @click="modalTab = 'general'"
                 >
-                  <label
-                    for="eventName"
-                    class="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    {{ _local(['common', 'eventName']) }}
-                  </label>
+                  <span
+                    v-html="_icon('sliders', 'white', 16)"
+                    class="mr-2 relative"
+                    style="top: 2px"
+                  ></span>
 
-                  <div class="mt-2 flex items-center">
+                  {{ _local(['common', 'general']) }}
+                </span>
+
+                <span
+                  class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer flex mx-1"
+                  :class="{ 'bg-slate-900': modalTab == 'dates' }"
+                  @click="modalTab = 'dates'"
+                >
+                  <span
+                    v-html="_icon('calendar3', 'white', 16)"
+                    class="mr-2 relative"
+                    style="top: 2px"
+                  ></span>
+
+                  {{ _local(['common', 'dates']) }}
+                </span>
+
+                <span
+                  class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer flex"
+                  :class="{ 'bg-slate-900': modalTab == 'people' }"
+                  @click="modalTab = 'people'"
+                >
+                  <span
+                    v-html="_icon('people', 'white', 16)"
+                    class="mr-2 relative"
+                    style="top: 2px"
+                  ></span>
+
+                  {{ _local(['common', 'people']) }}
+                </span>
+              </nav>
+
+              <div
+                class="modal-body p-5 w-full h-full overflow-y-auto"
+                v-show="modalTab == 'general'"
+              >
+                <label
+                  for="eventName"
+                  class="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  {{ _local(['common', 'eventName']) }}
+                </label>
+
+                <div class="mt-2 flex items-center">
+                  <input
+                    v-model="event.name"
+                    name="eventName"
+                    class="flex-grow mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+                    @input="updateEventName()"
+                  />
+                </div>
+              </div>
+
+              <div
+                class="modal-body p-5 w-full h-full overflow-y-auto"
+                v-show="modalTab == 'dates'"
+                ref="modalDates"
+              >
+                <draggable
+                  v-model="event.dates"
+                  @start="dragging = true"
+                  @end="dragging = false"
+                  @change="updateDatePositions()"
+                  handle=".handle"
+                  item-key="id"
+                  v-bind="{
+                    animation: 200,
+                    group: 'description',
+                    disabled: false,
+                    ghostClass: 'ghost',
+                  }"
+                >
+                  <template #item="{ element }">
+                    <div class="mb-3 flex items-center">
+                      <span
+                        v-html="
+                          _icon('grip-horizontal', _color.pick('pink'), 16)
+                        "
+                        class="cursor-grab hover:brightness-110 mr-2 handle"
+                      ></span>
+
+                      <div class="flex flex-grow flex-wrap">
+                        <VueDatePicker
+                          v-model="element.date"
+                          class="flex-grow mx-1"
+                          :format="_date.formatDatetime(element.date)"
+                          locale="fr"
+                          teleport-center
+                          auto-apply
+                          :placeholder="_local(['common', 'date'])"
+                          :enable-time-picker="false"
+                          month-name-format="long"
+                          style="width: 30%; min-width: 130px"
+                          menu-class-name="dp-custom-menu"
+                          :clearable="false"
+                          @update:model-value="updateDate(element)"
+                        ></VueDatePicker>
+
+                        <input
+                          type="text"
+                          v-model="element.title"
+                          class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+                          :placeholder="_local(['common', 'title'])"
+                          maxlength="18"
+                          style="height: 38px; width: 155px"
+                          @input="updateDate(element)"
+                        />
+
+                        <div
+                          class="cursor-pointer rounded-full w-5 h-5 relative flex items-center justify-center hover:brightness-110"
+                          style="top: -6px; left: -20px; margin-right: -20px"
+                          :class="[
+                            { 'bg-orange-500': element.isLocked },
+                            { 'bg-green-600': !element.isLocked },
+                          ]"
+                          :title="
+                            element.isLocked
+                              ? _local(['common', 'isLockedTooltip'])
+                              : _local(['common', 'isNotLockedTooltip'])
+                          "
+                          @click="lockDate(element)"
+                        >
+                          <span
+                            v-html="
+                              _icon(
+                                element.isLocked ? 'lock-fill' : 'unlock-fill',
+                                'white',
+                                12
+                              )
+                            "
+                          ></span>
+                        </div>
+                      </div>
+
+                      <span
+                        v-html="_icon('trash-fill', _color.pick('red'), 16)"
+                        class="cursor-pointer hover:brightness-110 ml-2"
+                        @click="deleteDate(element)"
+                      ></span>
+                    </div>
+                  </template>
+                </draggable>
+
+                <div class="mb-3 flex items-center" v-if="showAddDate">
+                  <span
+                    v-html="_icon('x-lg', 'black', 16)"
+                    class="cursor-pointer hover:opacity-70 mr-2"
+                    @click="showAddDate = false"
+                  ></span>
+
+                  <div class="flex flex-grow flex-wrap">
+                    <VueDatePicker
+                      v-model="newDateDate"
+                      class="flex-grow mx-1"
+                      locale="fr"
+                      teleport-center
+                      auto-apply
+                      :placeholder="_local(['common', 'date'])"
+                      :enable-time-picker="false"
+                      month-name-format="long"
+                      style="width: 30%; min-width: 130px"
+                      menu-class-name="dp-custom-menu"
+                      :clearable="false"
+                      :format="
+                        _date.formatDatetime(newDateDate?.toDateString())
+                      "
+                    ></VueDatePicker>
+
                     <input
-                      v-model="event.name"
-                      name="eventName"
-                      class="flex-grow mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-                      @input="updateEventName()"
+                      v-model="newDateTitle"
+                      type="text"
+                      class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+                      :placeholder="_local(['common', 'title'])"
+                      maxlength="18"
+                      style="height: 38px; width: 155px"
+                      ref="newDateTitleInput"
+                      @keyup.enter="newDateDate ? createDate() : null"
                     />
                   </div>
+
+                  <span
+                    v-html="
+                      _icon('save-fill', !newDateDate ? 'grey' : 'green', 20)
+                    "
+                    class="cursor-pointer hover:brightness-110 ml-1"
+                    :class="[{ 'pointer-events-none': !newDateDate }]"
+                    @click="createDate()"
+                  ></span>
                 </div>
+              </div>
 
-                <div
-                  class="modal-body p-5 w-full h-full overflow-y-auto"
-                  v-show="modalTab == 'dates'"
-                  ref="modalDates"
+              <div
+                class="modal-body p-5 w-full h-full overflow-y-auto"
+                v-show="modalTab == 'people'"
+                ref="modalPeople"
+              >
+                <button
+                  class="bg-purple-900 hover:bg-purple-800 flex w-full justify-center rounded-md px-3 py-1.5 mb-4 text-sm font-semibold leading-6 text-white shadow-sm"
+                  @click="sortUsersByName()"
                 >
-                  <draggable
-                    v-model="event.dates"
-                    @start="dragging = true"
-                    @end="dragging = false"
-                    @change="updateDatePositions()"
-                    handle=".handle"
-                    item-key="id"
-                    v-bind="{
-                      animation: 200,
-                      group: 'description',
-                      disabled: false,
-                      ghostClass: 'ghost',
-                    }"
-                  >
-                    <template #item="{ element }">
-                      <div class="mb-3 flex items-center">
-                        <span
-                          v-html="
-                            _icon('grip-horizontal', _color.pick('pink'), 16)
+                  <span
+                    v-html="_icon('sort-alpha-down', 'white', 24)"
+                    class="mr-2"
+                  ></span>
+                  {{ _local(['common', 'sortUsersByName']) }}
+                </button>
+
+                <draggable
+                  v-model="event.userLinks"
+                  @start="dragging = true"
+                  @end="dragging = false"
+                  handle=".handle"
+                  item-key="id"
+                  v-bind="{
+                    animation: 200,
+                    group: 'description',
+                    disabled: false,
+                    ghostClass: 'ghost',
+                  }"
+                  @change="updateUserLinkPositions()"
+                >
+                  <template #item="{ element }">
+                    <div class="mb-3 flex items-center">
+                      <span
+                        v-html="
+                          _icon('grip-horizontal', _color.pick('pink'), 16)
+                        "
+                        class="cursor-grab hover:brightness-110 mr-2 handle"
+                      ></span>
+
+                      <div class="flex flex-grow flex-wrap">
+                        <input
+                          class="overflow-hidden flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 ring-gray-300 shadow-sm ring-1 ring-inset text-sm leading-6 focus:ring-slate-600"
+                          :placeholder="_local(['common', 'email'])"
+                          style="height: 38px; width: 150px"
+                          v-model="element.user.email"
+                        />
+
+                        <div
+                          class="cursor-pointer rounded-full w-5 h-5 relative flex items-center justify-center hover:brightness-110"
+                          style="top: -6px; left: -20px; margin-right: -20px"
+                          :class="[
+                            { 'bg-red-500': !element.isPasswordSent },
+                            { 'bg-green-600': element.isPasswordSent },
+                          ]"
+                          :title="
+                            element.isPasswordSent
+                              ? _local(['common', 'passwordSent'])
+                              : _local(['common', 'passwordNotSent'])
                           "
-                          class="cursor-grab hover:brightness-110 mr-2 handle"
-                        ></span>
-
-                        <div class="flex flex-grow flex-wrap">
-                          <VueDatePicker
-                            v-model="element.date"
-                            class="flex-grow mx-1"
-                            :format="_date.formatDatetime(element.date)"
-                            locale="fr"
-                            teleport-center
-                            auto-apply
-                            :placeholder="_local(['common', 'date'])"
-                            :enable-time-picker="false"
-                            month-name-format="long"
-                            style="width: 30%; min-width: 130px"
-                            menu-class-name="dp-custom-menu"
-                            :clearable="false"
-                            @update:model-value="updateDate(element)"
-                          ></VueDatePicker>
-
-                          <input
-                            type="text"
-                            v-model="element.title"
-                            class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-                            :placeholder="_local(['common', 'title'])"
-                            maxlength="18"
-                            style="height: 38px; width: 155px"
-                            @input="updateDate(element)"
-                          />
-
-                          <div
-                            class="cursor-pointer rounded-full w-5 h-5 relative flex items-center justify-center hover:brightness-110"
-                            style="top: -6px; left: -20px; margin-right: -20px"
-                            :class="[
-                              { 'bg-orange-500': element.isLocked },
-                              { 'bg-green-600': !element.isLocked },
-                            ]"
-                            :title="
-                              !element.isHidden
-                                ? _local(['common', 'isLockedTooltip'])
-                                : _local(['common', 'isNotLockedTooltip'])
+                          @click="sendPassword(element)"
+                        >
+                          <span
+                            v-html="
+                              _icon(
+                                element.isPasswordSent ? 'check' : 'x',
+                                'white',
+                                18
+                              )
                             "
-                            @click="lockDate(element)"
-                          >
-                            <span
-                              v-html="
-                                _icon(
-                                  element.isLocked
-                                    ? 'lock-fill'
-                                    : 'unlock-fill',
-                                  'white',
-                                  12
-                                )
-                              "
-                            ></span>
-                          </div>
+                          ></span>
                         </div>
 
-                        <span
-                          v-html="_icon('trash-fill', _color.pick('red'), 16)"
-                          class="cursor-pointer hover:brightness-110 ml-2"
-                          @click="deleteDate(element)"
-                        ></span>
-                      </div>
-                    </template>
-                  </draggable>
-
-                  <div class="mb-3 flex items-center" v-if="showAddDate">
-                    <span
-                      v-html="_icon('x-lg', 'black', 16)"
-                      class="cursor-pointer hover:opacity-70 mr-2"
-                      @click="showAddDate = false"
-                    ></span>
-
-                    <div class="flex flex-grow flex-wrap">
-                      <VueDatePicker
-                        v-model="newDateDate"
-                        class="flex-grow mx-1"
-                        locale="fr"
-                        teleport-center
-                        auto-apply
-                        :placeholder="_local(['common', 'date'])"
-                        :enable-time-picker="false"
-                        month-name-format="long"
-                        style="width: 30%; min-width: 130px"
-                        menu-class-name="dp-custom-menu"
-                        :clearable="false"
-                        :format="
-                          _date.formatDatetime(newDateDate?.toDateString())
-                        "
-                      ></VueDatePicker>
-
-                      <input
-                        v-model="newDateTitle"
-                        type="text"
-                        class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-                        :placeholder="_local(['common', 'title'])"
-                        maxlength="18"
-                        style="height: 38px; width: 155px"
-                        ref="newDateTitleInput"
-                        @keyup.enter="newDateDate ? createDate() : null"
-                      />
-                    </div>
-
-                    <span
-                      v-html="
-                        _icon('save-fill', !newDateDate ? 'grey' : 'green', 20)
-                      "
-                      class="cursor-pointer hover:brightness-110 ml-1"
-                      :class="[{ 'pointer-events-none': !newDateDate }]"
-                      @click="createDate()"
-                    ></span>
-                  </div>
-                </div>
-
-                <div
-                  class="modal-body p-5 w-full h-full overflow-y-auto"
-                  v-show="modalTab == 'people'"
-                  ref="modalPeople"
-                >
-                  <button
-                    class="bg-purple-900 hover:bg-purple-800 flex w-full justify-center rounded-md px-3 py-1.5 mb-4 text-sm font-semibold leading-6 text-white shadow-sm"
-                    @click="sortUsersByName()"
-                  >
-                    <span
-                      v-html="_icon('sort-alpha-down', 'white', 24)"
-                      class="mr-2"
-                    ></span>
-                    {{ _local(['common', 'sortUsersByName']) }}
-                  </button>
-
-                  <draggable
-                    v-model="event.userLinks"
-                    @start="dragging = true"
-                    @end="dragging = false"
-                    handle=".handle"
-                    item-key="id"
-                    v-bind="{
-                      animation: 200,
-                      group: 'description',
-                      disabled: false,
-                      ghostClass: 'ghost',
-                    }"
-                    @change="updateUserLinkPositions()"
-                  >
-                    <template #item="{ element }">
-                      <div class="mb-3 flex items-center">
-                        <span
-                          v-html="
-                            _icon('grip-horizontal', _color.pick('pink'), 16)
-                          "
-                          class="cursor-grab hover:brightness-110 mr-2 handle"
-                        ></span>
-
-                        <div class="flex flex-grow flex-wrap">
-                          <input
-                            class="overflow-hidden flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 ring-gray-300 shadow-sm ring-1 ring-inset text-sm leading-6 focus:ring-slate-600"
-                            :placeholder="_local(['common', 'email'])"
-                            style="height: 38px; width: 150px"
-                            v-model="element.user.email"
-                          />
-
-                          <div
-                            class="cursor-pointer rounded-full w-5 h-5 relative flex items-center justify-center hover:brightness-110"
-                            style="top: -6px; left: -20px; margin-right: -20px"
-                            :class="[
-                              { 'bg-red-500': !element.isPasswordSent },
-                              { 'bg-green-600': element.isPasswordSent },
-                            ]"
-                            :title="
-                              element.isPasswordSent
-                                ? _local(['common', 'passwordSent'])
-                                : _local(['common', 'passwordNotSent'])
-                            "
-                            @click="sendPassword(element)"
-                          >
-                            <span
-                              v-html="
-                                _icon(
-                                  element.isPasswordSent ? 'check' : 'x',
-                                  'white',
-                                  18
-                                )
-                              "
-                            ></span>
-                          </div>
-
-                          <div
-                            v-if="element.user.email != getEmail(element)"
-                            class="cursor-pointer rounded-md w-5 h-5 relative flex items-center justify-center hover:brightness-110"
-                            style="top: 24px; left: -20px; margin-right: -20px"
-                            :class="
+                        <div
+                          v-if="element.user.email != getEmail(element)"
+                          class="cursor-pointer rounded-md w-5 h-5 relative flex items-center justify-center hover:brightness-110"
+                          style="top: 24px; left: -20px; margin-right: -20px"
+                          :class="
                               isValidEmail(element.user.email) &&
                               !cloneEvent.userLinks.find(
                                 (u: EventUser) => u.user.email == element.user.email
@@ -466,201 +452,199 @@
                                 ? 'bg-green-600'
                                 : 'bg-gray-500 pointer-events-none'
                             "
-                            :title="_local(['common', 'updateEmail'])"
-                            @click="updateUserEmail(element)"
-                          >
-                            <span v-html="_icon('save', 'white', 14)"></span>
-                          </div>
-
-                          <input
-                            type="text"
-                            v-model="element.alias"
-                            class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
-                            :placeholder="_local(['common', 'alias'])"
-                            style="height: 38px; width: 150px"
-                            @input="updateUserAlias(element)"
-                          />
-
-                          <div
-                            class="cursor-pointer rounded-full w-5 h-5 relative flex items-center justify-center hover:brightness-110"
-                            style="top: -6px; left: -20px; margin-right: -20px"
-                            :class="[
-                              { 'bg-orange-500': element.isHidden },
-                              { 'bg-blue-500': !element.isHidden },
-                            ]"
-                            :title="
-                              element.isHidden
-                                ? _local(['common', 'isHiddenTooltip'])
-                                : _local(['common', 'isVisibleTooltip'])
-                            "
-                            @click="updateUserLinkIsHidden(element)"
-                          >
-                            <span
-                              v-html="
-                                _icon(
-                                  !element.isHidden
-                                    ? 'eye-fill'
-                                    : 'eye-slash-fill',
-                                  'white',
-                                  14
-                                )
-                              "
-                            ></span>
-                          </div>
+                          :title="_local(['common', 'updateEmail'])"
+                          @click="updateUserEmail(element)"
+                        >
+                          <span v-html="_icon('save', 'white', 14)"></span>
                         </div>
 
-                        <span
-                          v-html="
-                            _icon(
-                              'trash-fill',
-                              _color.pick(
-                                element.userId == loggedUserId ? 'grey' : 'red'
-                              ),
-                              16
-                            )
+                        <input
+                          type="text"
+                          v-model="element.alias"
+                          class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
+                          :placeholder="_local(['common', 'alias'])"
+                          style="height: 38px; width: 150px"
+                          @input="updateUserAlias(element)"
+                        />
+
+                        <div
+                          class="cursor-pointer rounded-full w-5 h-5 relative flex items-center justify-center hover:brightness-110"
+                          style="top: -6px; left: -20px; margin-right: -20px"
+                          :class="[
+                            { 'bg-orange-500': element.isHidden },
+                            { 'bg-blue-500': !element.isHidden },
+                          ]"
+                          :title="
+                            element.isHidden
+                              ? _local(['common', 'isHiddenTooltip'])
+                              : _local(['common', 'isVisibleTooltip'])
                           "
-                          class="cursor-pointer hover:brightness-110 ml-2"
-                          :class="{
-                            'pointer-events-none':
-                              element.userId == loggedUserId,
-                          }"
-                          @click="deleteUserLink(element)"
-                        ></span>
+                          @click="updateUserLinkIsHidden(element)"
+                        >
+                          <span
+                            v-html="
+                              _icon(
+                                !element.isHidden
+                                  ? 'eye-fill'
+                                  : 'eye-slash-fill',
+                                'white',
+                                14
+                              )
+                            "
+                          ></span>
+                        </div>
                       </div>
-                    </template>
-                  </draggable>
 
-                  <div class="mb-3 flex items-center" v-if="showAddUser">
-                    <span
-                      v-html="_icon('x-lg', 'black', 16)"
-                      class="cursor-pointer hover:opacity-70 mr-2"
-                      @click="showAddUser = false"
-                    ></span>
-
-                    <div class="flex flex-grow flex-wrap">
-                      <input
-                        v-model="newUserEmail"
-                        type="email"
-                        class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset text-sm leading-6"
-                        :class="[
-                          {
-                            'focus:ring-red-600':
-                              (newUserEmail && !isValidEmail(newUserEmail)) ||
-                              event.userLinks.find(
-                                (u) => u.user.email == newUserEmail
-                              ),
-                            'focus:ring-green-700':
-                              isValidEmail(newUserEmail) &&
-                              !event.userLinks.find(
-                                (u) => u.user.email == newUserEmail
-                              ),
-                          },
-                        ]"
-                        :placeholder="_local(['common', 'email'])"
-                        style="height: 38px; width: 150px"
-                        ref="newUserEmailInput"
-                        @keyup.enter="
-                          newUserAlias &&
-                          ((newUserEmail &&
-                            isValidEmail(newUserEmail) &&
-                            !event.userLinks.find(
-                              (u) => u.user.email == newUserEmail
-                            )) ||
-                            !newUserEmail)
-                            ? createUser()
-                            : null
+                      <span
+                        v-html="
+                          _icon(
+                            'trash-fill',
+                            _color.pick(
+                              element.userId == loggedUserId ? 'grey' : 'red'
+                            ),
+                            16
+                          )
                         "
-                      />
-
-                      <input
-                        v-model="newUserAlias"
-                        type="text"
-                        class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
-                        :placeholder="_local(['common', 'alias'])"
-                        style="height: 38px; width: 150px"
-                        @keyup.enter="
-                          newUserAlias &&
-                          ((newUserEmail &&
-                            isValidEmail(newUserEmail) &&
-                            !event.userLinks.find(
-                              (u) => u.user.email == newUserEmail
-                            )) ||
-                            !newUserEmail)
-                            ? createUser()
-                            : null
-                        "
-                      />
+                        class="cursor-pointer hover:brightness-110 ml-2"
+                        :class="{
+                          'pointer-events-none': element.userId == loggedUserId,
+                        }"
+                        @click="deleteUserLink(element)"
+                      ></span>
                     </div>
+                  </template>
+                </draggable>
 
-                    <span
-                      v-html="
-                        _icon(
-                          'save-fill',
-                          newUserAlias &&
-                            ((newUserEmail &&
-                              isValidEmail(newUserEmail) &&
-                              !event.userLinks.find(
-                                (u) => u.user.email == newUserEmail
-                              )) ||
-                              !newUserEmail)
-                            ? 'green'
-                            : 'grey',
-                          20
-                        )
-                      "
-                      class="cursor-pointer hover:brightness-110 ml-1"
+                <div class="mb-3 flex items-center" v-if="showAddUser">
+                  <span
+                    v-html="_icon('x-lg', 'black', 16)"
+                    class="cursor-pointer hover:opacity-70 mr-2"
+                    @click="showAddUser = false"
+                  ></span>
+
+                  <div class="flex flex-grow flex-wrap">
+                    <input
+                      v-model="newUserEmail"
+                      type="email"
+                      class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset text-sm leading-6"
                       :class="[
                         {
-                          'pointer-events-none': !(
-                            newUserAlias &&
-                            ((newUserEmail &&
-                              isValidEmail(newUserEmail) &&
-                              !event.userLinks.find(
-                                (u) => u.user.email == newUserEmail
-                              )) ||
-                              !newUserEmail)
-                          ),
+                          'focus:ring-red-600':
+                            (newUserEmail && !isValidEmail(newUserEmail)) ||
+                            event.userLinks.find(
+                              (u) => u.user.email == newUserEmail
+                            ),
+                          'focus:ring-green-700':
+                            isValidEmail(newUserEmail) &&
+                            !event.userLinks.find(
+                              (u) => u.user.email == newUserEmail
+                            ),
                         },
                       ]"
-                      @click="createUser()"
-                    ></span>
-                  </div>
-                </div>
+                      :placeholder="_local(['common', 'email'])"
+                      style="height: 38px; width: 150px"
+                      ref="newUserEmailInput"
+                      @keyup.enter="
+                        newUserAlias &&
+                        ((newUserEmail &&
+                          isValidEmail(newUserEmail) &&
+                          !event.userLinks.find(
+                            (u) => u.user.email == newUserEmail
+                          )) ||
+                          !newUserEmail)
+                          ? createUser()
+                          : null
+                      "
+                    />
 
-                <div
-                  class="flex p-2 bg-slate-200 rounded"
-                  :class="
-                    modalTab == 'general' ? 'justify-end' : 'justify-between'
-                  "
-                >
-                  <span
-                    v-if="modalTab != 'general'"
-                    v-html="_icon('plus-square-fill', 'green', 30)"
-                    class="cursor-pointer hover:brightness-110"
-                    @click="toggleNewElement()"
-                  ></span>
+                    <input
+                      v-model="newUserAlias"
+                      type="text"
+                      class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
+                      :placeholder="_local(['common', 'alias'])"
+                      style="height: 38px; width: 150px"
+                      @keyup.enter="
+                        newUserAlias &&
+                        ((newUserEmail &&
+                          isValidEmail(newUserEmail) &&
+                          !event.userLinks.find(
+                            (u) => u.user.email == newUserEmail
+                          )) ||
+                          !newUserEmail)
+                          ? createUser()
+                          : null
+                      "
+                    />
+                  </div>
 
                   <span
                     v-html="
                       _icon(
-                        fetchIsLoading ? 'arrow-clockwise' : 'check',
-                        _color.pick(fetchIsLoading ? 'blue' : 'green'),
-                        30
+                        'save-fill',
+                        newUserAlias &&
+                          ((newUserEmail &&
+                            isValidEmail(newUserEmail) &&
+                            !event.userLinks.find(
+                              (u) => u.user.email == newUserEmail
+                            )) ||
+                            !newUserEmail)
+                          ? 'green'
+                          : 'grey',
+                        20
                       )
                     "
-                    class="hover:brightness-110 ml-3"
-                    :class="{
-                      'animate-spin': fetchIsLoading,
-                    }"
+                    class="cursor-pointer hover:brightness-110 ml-1"
+                    :class="[
+                      {
+                        'pointer-events-none': !(
+                          newUserAlias &&
+                          ((newUserEmail &&
+                            isValidEmail(newUserEmail) &&
+                            !event.userLinks.find(
+                              (u) => u.user.email == newUserEmail
+                            )) ||
+                            !newUserEmail)
+                        ),
+                      },
+                    ]"
+                    @click="createUser()"
                   ></span>
                 </div>
               </div>
+
+              <div
+                class="flex p-2 bg-slate-200 rounded"
+                :class="
+                  modalTab == 'general' ? 'justify-end' : 'justify-between'
+                "
+              >
+                <span
+                  v-if="modalTab != 'general'"
+                  v-html="_icon('plus-square-fill', 'green', 30)"
+                  class="cursor-pointer hover:brightness-110"
+                  @click="toggleNewElement()"
+                ></span>
+
+                <span
+                  v-html="
+                    _icon(
+                      fetchIsLoading ? 'arrow-clockwise' : 'check',
+                      _color.pick(fetchIsLoading ? 'blue' : 'green'),
+                      30
+                    )
+                  "
+                  class="hover:brightness-110 ml-3"
+                  :class="{
+                    'animate-spin': fetchIsLoading,
+                  }"
+                ></span>
+              </div>
             </div>
-          </transition>
-        </main>
-      </div>
-    </transition>
-  </div>
+          </div>
+        </transition>
+      </main>
+    </div>
+  </transition>
 </template>
 
 <script setup lang="ts">
@@ -685,6 +669,8 @@ requestedEvent.dates.sort((a: Date, b: Date) => a.position - b.position)
 requestedEvent.userLinks.sort(
   (a: EventUser, b: EventUser) => a.position - b.position
 )
+
+useState<String>('eventName', () => requestedEvent.name)
 
 const isOwner = ref<Boolean>(
   requestedEvent.ownerId == useCookie('userId').value

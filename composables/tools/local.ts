@@ -84,6 +84,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    summary: {
+      fr: 'Récapitulatif',
+      nl: '',
+      de: '',
+      en: '',
+    },
     sortUsersByName: {
       fr: 'Trier par ordre alphabétique',
       nl: '',
