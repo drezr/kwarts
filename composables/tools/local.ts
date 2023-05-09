@@ -90,6 +90,30 @@ const localisation = {
       de: '',
       en: '',
     },
+    availables: {
+      fr: 'Disponibles',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    notAvailables: {
+      fr: 'Indisponibles',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    unknowns: {
+      fr: 'Décisions inconnues',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    backToTheEvent: {
+      fr: 'Retour à l\'évènement',
+      nl: '',
+      de: '',
+      en: '',
+    },
     sortUsersByName: {
       fr: 'Trier par ordre alphabétique',
       nl: '',

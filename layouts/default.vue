@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gradient-to-b from-slate-200">
+  <div class="bg-gradient-to-b from-slate-200 h-screen">
     <slot />
   </div>
 </template>

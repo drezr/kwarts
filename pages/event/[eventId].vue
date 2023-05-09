@@ -1,5 +1,5 @@
 <template>
-  <Header :event="event" />
+  <BaseHeader :event="event" />
 
   <div class="flex justify-center">
     <div class="mx-auto overflow-x-auto">
@@ -14,7 +14,7 @@
 
           <div
             v-for="userLink in userLinksLoggedUserFirst"
-            class="opacity-90 w-44 px-1 rounded-md text-slate-950 bg-slate-100 shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2 flex items-center justify-center font-semibold text-center overflow-hidden break-normal"
+            class="opacity-90 w-44 px-1 rounded-md text-slate-950 bg-slate-50 shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2 flex items-center justify-center font-semibold text-center overflow-hidden break-normal"
             :class="[{ 'mb-4': userLink.userId == loggedUserId }]"
             style="height: 81px"
           >
@@ -24,33 +24,12 @@
 
         <div class="flex mx-auto">
           <div v-for="date in event.dates" class="flex flex-col items-center">
-            <div class="flex">
-              <span
-                v-if="isOwner && userLinksLoggedUserFirst.length > 0"
-                v-html="
-                  _icon(
-                    date.isLocked ? 'lock-fill' : 'unlock-fill',
-                    date.isLocked
-                      ? _color.pick('orange')
-                      : _color.pick('green'),
-                    24
-                  )
-                "
-                :title="
-                  date.isLocked
-                    ? _local(['common', 'isLockedTooltip'])
-                    : _local(['common', 'isNotLockedTooltip'])
-                "
-                class="mb-1 mr-2 cursor-pointer hover:brightness-110"
-                @click="lockDate(date)"
-              ></span>
-
-              <span
-                v-html="_icon('list', _color.pick('blue'), 24)"
-                class="mt-1 cursor-pointer hover:brightness-110"
-                :title="_local(['common', 'summary'])"
-              ></span>
-            </div>
+            <span
+              v-html="_icon('list', _color.pick('blue'), 28)"
+              class="cursor-pointer hover:brightness-125"
+              :title="_local(['common', 'summary'])"
+              @click="navigateTo('/summary/' + date.id)"
+            ></span>
 
             <div
               v-for="userLink in userLinksLoggedUserFirst"
@@ -720,14 +699,6 @@ function getEmail(userLink: EventUser) {
   return targetLink?.user.email
 }
 
-async function logout() {
-  useCookie('userId').value = null
-  useCookie('token').value = null
-  useCookie('eventId').value = null
-
-  navigateTo('/')
-}
-
 function selectAvailabilityIcon(
   status: string,
   date: Date,
@@ -802,7 +773,6 @@ async function updateEventName() {
 
   fetchThrottleTimer = setTimeout(async () => {
     await _fetch('/api/updateEventName', {
-      loggedUserId: loggedUserId,
       eventId: event.value.id,
       newEventName: event.value.name,
     })
@@ -816,7 +786,6 @@ async function updateEventName() {
 async function sendPassword(eventUser: EventUser) {
   if (confirm(_local(['common', 'sendPasswordConfirm']))) {
     await _fetch('/api/sendPassword', {
-      loggedUserId: loggedUserId,
       eventId: event.value.id,
       userId: eventUser.user.id,
     })
@@ -832,7 +801,6 @@ async function createUser() {
   newUserEmail.value = newUserEmail.value?.replace(/\s/g, '')
 
   const newUserLink = await _fetch('/api/createUser', {
-    loggedUserId: loggedUserId,
     eventId: event.value.id,
     email: newUserEmail.value,
     alias: newUserAlias.value,
@@ -866,7 +834,6 @@ async function updateUserLinkPositions() {
   }
 
   await _fetch('/api/updateUserLinkPositions', {
-    loggedUserId: loggedUserId,
     eventId: event.value.id,
     userLinkPositionsData: userLinkPositionsData,
   })
@@ -892,7 +859,6 @@ async function updateUserLinkIsHidden(userLink: EventUser) {
   userLink.isHidden = !userLink.isHidden
 
   await _fetch('/api/updateUserLinkIsHidden', {
-    loggedUserId: loggedUserId,
     eventId: event.value.id,
     userLinkId: userLink.id,
     isHidden: userLink.isHidden,
@@ -909,7 +875,6 @@ async function updateUserAlias(userLink: EventUser) {
 
   fetchThrottleTimer = setTimeout(async () => {
     await _fetch('/api/updateUserAlias', {
-      loggedUserId: loggedUserId,
       eventId: event.value.id,
       userLinkId: userLink.id,
       alias: userLink.alias,
@@ -927,7 +892,6 @@ async function updateUserEmail(userLink: EventUser) {
 
   fetchThrottleTimer = setTimeout(async () => {
     await _fetch('/api/updateUserEmail', {
-      loggedUserId: loggedUserId,
       userLinkId: userLink.id,
       userId: userLink.user.id,
       eventId: event.value.id,
@@ -945,7 +909,6 @@ async function deleteUserLink(userLink: EventUser) {
   if (confirm(_local(['common', 'areyousure']))) {
     fetchIsLoading.value = true
     await _fetch('/api/deleteUserLink', {
-      loggedUserId: loggedUserId,
       userLinkId: userLink.id,
       userId: userLink.user.id,
       eventId: event.value.id,
@@ -975,7 +938,6 @@ async function createDate() {
 
   if (newDateDate.value) {
     const newDate = await _fetch('/api/createDate', {
-      loggedUserId: loggedUserId,
       eventId: event.value.id,
       title: newDateTitle.value,
       date: newDateDate.value.toISOString(),
@@ -1002,7 +964,6 @@ function updateDate(date: Date) {
     }
 
     await _fetch('/api/updateDate', {
-      loggedUserId: loggedUserId,
       eventId: event.value.id,
       dateId: date.id,
       date: date.date.toISOString(),
@@ -1025,7 +986,6 @@ async function updateDatePositions() {
   }
 
   await _fetch('/api/updateDatePositions', {
-    loggedUserId: loggedUserId,
     eventId: event.value.id,
     datePositionsData: datePositionsData,
   })
@@ -1039,7 +999,6 @@ async function lockDate(date: Date) {
   date.isLocked = !date.isLocked
 
   await _fetch('/api/lockDate', {
-    loggedUserId: loggedUserId,
     eventId: event.value.id,
     isLocked: date.isLocked,
     dateId: date.id,
@@ -1051,7 +1010,6 @@ async function deleteDate(date: Date) {
     fetchIsLoading.value = true
 
     await _fetch('/api/deleteDate', {
-      loggedUserId: loggedUserId,
       eventId: event.value.id,
       dateId: date.id,
     })
@@ -1081,7 +1039,6 @@ async function setAvailability(
     const newAvailability: Availability = await _fetch(
       '/api/updateAvailability',
       {
-        loggedUserId: loggedUserId,
         eventId: event.value.id,
         isAvailable: isAvailable,
         availabilityId: availability.id,
@@ -1094,7 +1051,6 @@ async function setAvailability(
     const newAvailability: Availability = await _fetch(
       '/api/createAvailability',
       {
-        loggedUserId: loggedUserId,
         eventId: event.value.id,
         isAvailable: isAvailable,
         dateId: date.id,
