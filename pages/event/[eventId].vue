@@ -857,6 +857,8 @@ async function createUser() {
   newUserEmail.value = ''
   newUserAlias.value = ''
 
+  cloneEvent = JSON.parse(JSON.stringify(event.value))
+
   setTimeout(() => {
     modalPeople.value.scrollTo(0, 9999999)
   }, 10)
