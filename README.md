@@ -1,20 +1,21 @@
-# Nuxt 3 Minimal Starter
-
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
-
 ## Setup
 
-Make sure to install the dependencies:
+Create a `.env` file on the root of the project with:
+
+```
+DATABASE_URL="file:PATH_TO_DB"
+EMAIL_HOST="YOUR_EMAIL_HOST"
+EMAIL_PORT="YOUR_EMAIL_PORT"
+EMAIL_USER="YOUR_EMAIL_USER"
+EMAIL_PASSWORD="YOUR_EMAIL_PASSWORD"
+WEBSITE_HOST="YOUR_WEBSITE_HOST"
+```
+
+Then, run:
 
 ```bash
-# yarn
-yarn install
-
-# npm
 npm install
-
-# pnpm
-pnpm install
+sh migrate.sh init
 ```
 
 ## Development Server
@@ -33,10 +34,10 @@ Build the application for production:
 npm run build
 ```
 
-Locally preview production build:
+## Database migrations
+
+On `schema.prisma` updates, run:
 
 ```bash
-npm run preview
+sh migrate.sh MIGRATIONNUMBER
 ```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
