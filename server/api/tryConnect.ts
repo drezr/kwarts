@@ -13,7 +13,11 @@ export default defineEventHandler(async (event) => {
       email: email,
     },
     include: {
-      eventLinks: true,
+      eventLinks: {
+        include: {
+          event: true,
+        },
+      },
     },
   })
 
@@ -34,6 +38,7 @@ export default defineEventHandler(async (event) => {
         token: newToken,
         user: user,
         eventId: matchingEvent.eventId,
+        eventSlug: matchingEvent.event.slug,
       }
     }
   }

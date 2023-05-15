@@ -634,10 +634,10 @@ import '@vuepic/vue-datepicker/dist/main.css'
 const route = useRoute()
 
 const loggedUserId = useCookie<Number>('userId')
-const eventId: Number = Number(route.params.eventId)
+const slug = route.params.slug
 
-let requestedEvent = await _fetch('/api/getEvent', {
-  eventId: eventId,
+let requestedEvent = await _fetch('/api/getEventBySlug', {
+  slug: slug,
 })
 
 useHead({
@@ -650,7 +650,11 @@ useHead({
   ],
 })
 
-if (!requestedEvent) {
+const loggedUserLink = requestedEvent.userLinks.find(
+  (ul: any) => ul.user.id == loggedUserId.value
+)
+
+if (!requestedEvent || !loggedUserLink) {
   logout()
 }
 
@@ -661,11 +665,7 @@ requestedEvent.userLinks.sort(
 
 useState<String>('eventName', () => requestedEvent.name)
 
-const isOwner = ref<Boolean>(
-  requestedEvent.userLinks.find(
-    (ul: any) => ul.user.id == useCookie('userId').value
-  ).isOwner
-)
+const isOwner = loggedUserLink ? ref<Boolean>(loggedUserLink.isOwner) : false
 let event = ref<Event>(requestedEvent)
 let cloneEvent = JSON.parse(JSON.stringify(event.value))
 let dragging = ref<Boolean>(false)
@@ -688,10 +688,6 @@ const newUserEmailInput = ref()
 
 const userLinksLoggedUserFirst = computed<[EventUser]>(() => {
   let sortedUserLinks = JSON.parse(JSON.stringify(event.value.userLinks))
-
-  const loggedUserLink = sortedUserLinks.find(
-    (ul: any) => ul.userId == loggedUserId.value
-  )
 
   sortedUserLinks = sortedUserLinks.filter(
     (ul: any) => ul.userId != loggedUserId.value

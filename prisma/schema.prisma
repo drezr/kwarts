@@ -21,18 +21,19 @@ model User {
 }
 
 model Event {
-  id             Int         @id @default(autoincrement())
-  name           String
-  title          String?
-  slug           String?
-  logo           String?
-  icon           String?
-  theme          String?
-  backLink       String?
-  hasGodfather   Boolean     @default(false)
-  isOpen         Boolean     @default(false)
-  userLinks      EventUser[]
-  dates          Date[]
+  id                  Int         @id @default(autoincrement())
+  name                String
+  title               String?
+  slug                String?
+  logo                String?
+  icon                String?
+  theme               String?
+  backLink            String?
+  godfatherInfoLink   String?
+  hasGodfather        Boolean     @default(false)
+  isOpen              Boolean     @default(false)
+  userLinks           EventUser[]
+  dates               Date[]
 }
 
 model Date {

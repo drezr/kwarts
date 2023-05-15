@@ -20,9 +20,10 @@
           v-html="_icon('arrow-left', _color.pick('teal', -4), 20)"
           class="mr-2"
         ></span>
-        <a :href="event.backLink" class="text-teal-900"
-          >Retour vers la page du tournoi</a
-        >
+
+        <a :href="event.backLink" class="text-teal-900">
+          Retour vers la page du tournoi
+        </a>
       </div>
     </div>
 
@@ -35,6 +36,7 @@
         v-html="_icon('exclamation-triangle-fill', _color.pick('red', -4), 24)"
         class="mr-4"
       ></span>
+
       <div>
         L'adresse email que vous avez introduite a déjà été utilisée pour cet
         évènement.
@@ -50,6 +52,7 @@
         v-html="_icon('exclamation-triangle-fill', _color.pick('red', -4), 24)"
         class="mr-4"
       ></span>
+
       <div>Une erreur est survenue.</div>
     </div>
 
@@ -62,6 +65,7 @@
         v-html="_icon('check-circle-fill', _color.pick('green', -4), 24)"
         class="mr-4"
       ></span>
+
       <div>
         Merci, vous avez bien été inscrit(e) au<br />
         <b>Tournoi des Trois Vallées 2023</b> !
@@ -145,8 +149,16 @@
             :class="`text-teal-950`"
           >
             Parrain, marraine
+
             <span class="text-gray-400 italic mr-3">(facultatif)</span>
-            <a href="" class="text-blue-500">En savoir plus</a>
+
+            <a
+              :href="event.godfatherInfoLink"
+              class="text-blue-500"
+              v-if="event.godfatherInfoLink"
+            >
+              En savoir plus
+            </a>
           </label>
 
           <div class="mt-2">
@@ -172,7 +184,7 @@
             :disabled="!canCreateParticipation"
             @click="createParticipation()"
           >
-            S'inscrire au Tournoi des Trois Vallées
+            S'inscrire au {{ event.name }}
           </button>
         </div>
       </div>
@@ -195,6 +207,10 @@ let creationSuccess = ref<Boolean>(false)
 const event = await _fetch('/api/getEventBySlugLight', {
   slug: slug,
 })
+
+if (!event.isOpen) {
+  logout()
+}
 
 useHead({
   titleTemplate: 'Inscription au ' + event.title,

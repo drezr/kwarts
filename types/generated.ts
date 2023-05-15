@@ -23,6 +23,7 @@ export interface Event {
     icon?: string,
     theme?: string,
     backLink?: string,
+    godfatherInfoLink?: string,
     hasGodfather: boolean,
     isOpen: boolean,
     userLinks: EventUser[],
