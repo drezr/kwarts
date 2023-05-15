@@ -18,16 +18,21 @@ model User {
   token          String?
   eventLinks     EventUser[]
   availabilities Availability[]
-  ownedEvents    Event[]
 }
 
 model Event {
-  id        Int         @id @default(autoincrement())
-  name      String
-  owner     User        @relation(fields: [ownerId], references: [id])
-  ownerId   Int
-  userLinks EventUser[]
-  dates     Date[]
+  id             Int         @id @default(autoincrement())
+  name           String
+  title          String?
+  slug           String?
+  logo           String?
+  icon           String?
+  theme          String?
+  backLink       String?
+  hasGodfather   Boolean     @default(false)
+  isOpen         Boolean     @default(false)
+  userLinks      EventUser[]
+  dates          Date[]
 }
 
 model Date {
@@ -58,8 +63,13 @@ model EventUser {
   position       Int
   alias          String
   password       String
+  fideid         String?
+  godfather      String?
+  isValidated    Boolean @default(false)
   isPasswordSent Boolean @default(false)
   isHidden       Boolean @default(false)
+  isAdmin        Boolean @default(false)
+  isOwner        Boolean @default(false)
   token          String?
   event          Event   @relation(fields: [eventId], references: [id])
   eventId        Int

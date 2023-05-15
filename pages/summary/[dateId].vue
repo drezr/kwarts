@@ -3,7 +3,7 @@
 
   <div class="mt-4 text-xl text-center">
     <NuxtLink
-      :to="`/event/${date.event.id}`"
+      :to="`/availability/${date.event.id}`"
       class="mr-4 bg-slate-700 hover:bg-slate-600 text-white text-sm py-1 px-2 rounded inline-flex items-center relative"
       style="top: 2px"
     >
@@ -81,6 +81,16 @@ const dateId: Number = Number(route.params.dateId)
 
 const date: Date = await _fetch('/api/getDateSummary', {
   dateId: dateId,
+})
+
+useHead({
+  link: [
+    {
+      rel: 'icon',
+      type: 'image/png',
+      href: date.event.icon ? date.event.icon : '/kwarts_logo_mini.png',
+    },
+  ],
 })
 
 if (!date) {

@@ -89,6 +89,10 @@
 </template>
 
 <script setup lang="ts">
+useHead({
+  link: [{ rel: 'icon', type: 'image/png', href: '/kwarts_logo_mini.png' }],
+})
+
 let email = ref()
 let password = ref()
 let loginError = ref(false)
@@ -106,7 +110,7 @@ async function tryConnect() {
 
     useState<User>('loggedUser', () => request.user)
 
-    navigateTo('/event/' + request.eventId)
+    navigateTo('/availability/' + request.eventId)
   } else {
     loginError.value = true
   }

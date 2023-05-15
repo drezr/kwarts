@@ -5,7 +5,6 @@ export default defineNuxtConfig({
       title: 'Kwarts',
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
-      link: [{ rel: 'icon', type: 'image/png', href: '/kwarts_logo_mini.png' }],
     },
   },
 

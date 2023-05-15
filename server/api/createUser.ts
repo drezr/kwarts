@@ -4,14 +4,27 @@ import { v4 as uuidv4 } from 'uuid'
 
 export default defineEventHandler(async (e) => {
   const params: any = getQuery(e)
-  const authData = JSON.parse(params.auth)
-  const authorization = await authorize(authData)
-
-  if (!authorization || !authorization.isOwner) return null
 
   const email: string = params.email
   const alias: string = params.alias
+  const godfather: string = params.godfather
+  const fideid: string = params.fideid
   const eventId: number = parseInt(params.eventId)
+
+  const event = await prisma.event.findUnique({
+    where: {
+      id: eventId,
+    },
+  })
+
+  if (event && !event.isOpen) {
+    const authData = JSON.parse(params.auth)
+    const authorization = await authorize(authData)
+
+    if (!authorization || !authorization.isOwner) return null
+  }
+
+  if (!event) return null
 
   let user = null
 
@@ -40,7 +53,7 @@ export default defineEventHandler(async (e) => {
     })
 
     if (userLinkExist.length != 0) {
-      return null
+      return 'linkExist'
     }
   }
 
@@ -53,6 +66,8 @@ export default defineEventHandler(async (e) => {
   const userLink = await prisma.eventUser.create({
     data: {
       alias: alias,
+      godfather: godfather,
+      fideid: fideid,
       userId: user.id,
       eventId: eventId,
       password: uuidv4().replaceAll('-', ''),

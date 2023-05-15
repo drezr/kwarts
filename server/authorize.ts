@@ -11,17 +11,20 @@ async function authorize(authData: any) {
     },
   })
 
-  const event = await prisma.event.findUnique({
-    where: {
-      id: authData.eventId,
-    },
-  })
+  if (eventUser) {
+    const event = await prisma.event.findUnique({
+      where: {
+        id: authData.eventId,
+      },
+    })
 
-  if (eventUser && event) {
-    return {
-      eventUser: eventUser,
-      event: event,
-      isOwner: eventUser.userId == event.ownerId,
+    if (eventUser && event) {
+      return {
+        eventUser: eventUser,
+        event: event,
+        isAdmin: eventUser.isAdmin,
+        isOwner: eventUser.isOwner,
+      }
     }
   }
 

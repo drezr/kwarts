@@ -18,11 +18,19 @@ export function isValidEmail(email: String | null | undefined) {
   return re.test(String(email.replaceAll(/\s/g, '')).toLowerCase())
 }
 
-
 export function logout() {
   useCookie('userId').value = null
   useCookie('token').value = null
   useCookie('eventId').value = null
 
   navigateTo('/')
+}
+
+export function slugify(str: String) {
+  return str
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
 }

@@ -21,8 +21,14 @@ export default defineEventHandler(async (e) => {
           alias: true,
           position: true,
           isHidden: true,
-          isPasswordSent: true,
-          user: true,
+          isPasswordSent: authorization.isOwner,
+          isOwner: true,
+          user: {
+            select: {
+              id: true,
+              email: true,
+            },
+          },
           userId: true,
         },
       },
