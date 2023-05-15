@@ -2,7 +2,10 @@
   <div class="flex pl-3 py-3 justify-between">
     <div class="flex items-center">
       <div class="p-1 rounded-full mr-3">
-        <img src="/kwarts_logo_mini.png" class="w-12" />
+        <img
+          :src="event.logo ? event.logo : '/kwarts_logo_mini.png'"
+          class="w-12 rounded"
+        />
       </div>
       <span class="text-xl font-semibold text-slate-700">
         {{ event.name }}

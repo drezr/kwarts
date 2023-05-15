@@ -39,6 +39,8 @@ interface Date {
 interface Availability {
   id: number,
   isAvailable: boolean,
+  isMotorized?: boolean,
+  isReserve?: boolean,
   date: Date,
   dateId: number,
   user: User,
@@ -52,6 +54,8 @@ interface EventUser {
   password: string,
   fideid?: string,
   godfather?: string,
+  hasPaid: boolean,
+  paymentNote?: string,
   isValidated: boolean,
   isPasswordSent: boolean,
   isHidden: boolean,

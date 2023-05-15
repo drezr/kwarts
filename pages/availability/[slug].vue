@@ -694,7 +694,9 @@ const userLinksLoggedUserFirst = computed<[EventUser]>(() => {
   )
   sortedUserLinks.unshift(loggedUserLink)
 
-  sortedUserLinks = sortedUserLinks.filter((u: EventUser) => !u.isHidden)
+  sortedUserLinks = sortedUserLinks.filter(
+    (u: EventUser) => !u.isHidden && u.isValidated
+  )
 
   return sortedUserLinks
 })
