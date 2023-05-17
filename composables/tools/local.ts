@@ -12,6 +12,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    names: {
+      fr: 'Nom, prénom',
+      nl: '',
+      de: '',
+      en: '',
+    },
     password: {
       fr: 'Mot de passe',
       nl: '',
@@ -84,6 +90,30 @@ const localisation = {
       de: '',
       en: '',
     },
+    godfather: {
+      fr: 'Parrain',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    knowmore: {
+      fr: 'En savoir plus',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    notes: {
+      fr: 'Remarques',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    registerTo: {
+      fr: 'S\'inscrire au',
+      nl: '',
+      de: '',
+      en: '',
+    },
     summary: {
       fr: 'Récapitulatif',
       nl: '',
@@ -104,6 +134,12 @@ const localisation = {
     },
     unknowns: {
       fr: 'Décisions inconnues',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    fideid: {
+      fr: 'Matricule FIDE',
       nl: '',
       de: '',
       en: '',
@@ -180,33 +216,51 @@ const localisation = {
       de: '',
       en: '',
     },
+    errorEmailExist: {
+      fr: 'L\'adresse email que vous avez introduite a déjà été utilisée pour cet évènement.',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    errorMessage: {
+      fr: 'Une erreur est survenue.',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    successRegister: {
+      fr: 'Merci, vous avez bien été inscrit(e) au',
+      nl: '',
+      de: '',
+      en: '',
+    },
   },
-  email_text: {
-    send_password_title: {
+  emailText: {
+    sendPasswordTitle: {
       fr: "Votre mot de passe pour l'évènement",
       nl: '',
       de: '',
       en: '',
     },
-    send_password_content: {
+    sendPasswordContent: {
       fr: "Voici vos informations de connexion afin de donner vos disponibilités pour l'évènement",
       nl: '',
       de: '',
       en: '',
     },
-    send_password_hello: {
+    sendPasswordHello: {
       fr: 'Bonjour',
       nl: '',
       de: '',
       en: '',
     },
-    send_password_seeyousoon: {
+    sendPasswordSeeyousoon: {
       fr: 'À bientôt',
       nl: '',
       de: '',
       en: '',
     },
-    send_password_clickhere: {
+    sendPasswordClickhere: {
       fr: "Cliquez ici pour accèder à l'èvenement",
       nl: '',
       de: '',

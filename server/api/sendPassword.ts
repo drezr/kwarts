@@ -35,17 +35,17 @@ export default defineEventHandler(async (e) => {
   })
 
   const emailContent = `
-    ${_local(['email_text', 'send_password_hello'])} ${
+    ${_local(['emailText', 'sendPasswordHello'])} ${
     eventUser?.alias
   },<br><br>
-    ${_local(['email_text', 'send_password_content'])} <b>
+    ${_local(['emailText', 'sendPasswordContent'])} <b>
     ${event?.name}</b>:<br><br>
     ${_local(['common', 'email'])}: ${user?.email}<br>
     ${_local(['common', 'password'])}: ${eventUser?.password}<br><br>
     <a href="${process.env.WEBSITE_HOST}" title="${event?.name}">
-    ${_local(['email_text', 'send_password_clickhere'])}
+    ${_local(['emailText', 'sendPasswordClickhere'])}
     </a><br><br>
-    ${_local(['email_text', 'send_password_seeyousoon'])} !
+    ${_local(['emailText', 'sendPasswordSeeyousoon'])} !
   `
 
   let transporter = nodemailer.createTransport({
@@ -61,7 +61,7 @@ export default defineEventHandler(async (e) => {
   await transporter.sendMail({
     from: `${process.env.EMAIL_AUTHOR} <${process.env.EMAIL_USER}>`,
     to: user?.email,
-    subject: _local(['email_text', 'send_password_title']),
+    subject: _local(['emailText', 'sendPasswordTitle']),
     html: emailContent,
   })
 

@@ -38,8 +38,7 @@
       ></span>
 
       <div>
-        L'adresse email que vous avez introduite a déjà été utilisée pour cet
-        évènement.
+        {{ _local(['common', 'errorEmailExist']) }}
       </div>
     </div>
 
@@ -53,7 +52,9 @@
         class="mr-4"
       ></span>
 
-      <div>Une erreur est survenue.</div>
+      <div>
+        {{ _local(['common', 'errorMessage']) }}
+      </div>
     </div>
 
     <div
@@ -67,8 +68,8 @@
       ></span>
 
       <div>
-        Merci, vous avez bien été inscrit(e) au<br />
-        <b>Tournoi des Trois Vallées 2023</b> !
+        {{ _local(['common', 'successRegister']) }}<br />
+        <b>{{ event.title }}</b> !
       </div>
     </div>
 
@@ -80,7 +81,8 @@
             class="block text-sm font-medium leading-6"
             :class="`text-teal-950`"
           >
-            Adresse email <span class="text-red-500">*</span>
+            {{ _local(['common', 'email']) }}
+            <span class="text-red-500">*</span>
           </label>
 
           <div class="mt-2">
@@ -103,7 +105,9 @@
             class="block text-sm font-medium leading-6"
             :class="`text-teal-950`"
           >
-            Nom, prénom <span class="text-red-500">*</span>
+            {{ _local(['common', 'names']) }}
+
+            <span class="text-red-500">*</span>
           </label>
 
           <div class="mt-2">
@@ -126,7 +130,9 @@
             class="block text-sm font-medium leading-6"
             :class="`text-teal-950`"
           >
-            Matricule FIDE <span class="text-red-500">*</span>
+            {{ _local(['common', 'fideid']) }}
+
+            <span class="text-red-500">*</span>
           </label>
 
           <div class="mt-2">
@@ -148,7 +154,7 @@
             class="block text-sm font-medium leading-6"
             :class="`text-teal-950`"
           >
-            Parrain
+            {{ _local(['common', 'godfather']) }}
 
             <span class="text-gray-400 italic mr-3">(facultatif)</span>
 
@@ -157,7 +163,7 @@
               class="text-blue-500"
               v-if="event.godfatherInfoLink"
             >
-              En savoir plus
+              {{ _local(['common', 'knowmore']) }}
             </a>
           </label>
 
@@ -179,7 +185,7 @@
             class="block text-sm font-medium leading-6"
             :class="`text-teal-950`"
           >
-            Remarques
+            {{ _local(['common', 'notes']) }}
 
             <span class="text-gray-400 italic mr-3">(facultatif)</span>
           </label>
@@ -207,7 +213,7 @@
             :disabled="!canCreateParticipation"
             @click="createParticipation()"
           >
-            S'inscrire au {{ event.name }}
+            {{ _local(['common', 'registerTo']) }} {{ event.name }}
           </button>
         </div>
       </div>
