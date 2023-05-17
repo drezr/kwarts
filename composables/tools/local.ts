@@ -174,6 +174,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    createUser: {
+      fr: 'Ajouter une personne',
+      nl: '',
+      de: '',
+      en: '',
+    },
     updateEmail: {
       fr: 'Mettre à jour l\'adresse email',
       nl: '',
@@ -193,13 +199,13 @@ const localisation = {
       en: '',
     },
     passwordSent: {
-      fr: 'Le mot de passe a été envoyé par email.\nCliquez ici pour le réenvoyer.',
+      fr: 'Le mot de passe a été envoyé par email.\nCliquez ici pour le renvoyer par email à la personne.',
       nl: '',
       de: '',
       en: '',
     },
     passwordNotSent: {
-      fr: "Le mot de passe n'a pas encore été envoyé.\nCliquez ici pour l'envoyer par email.",
+      fr: "Le mot de passe n'a pas encore été envoyé.\nCliquez ici pour l'envoyer par email à la personne.",
       nl: '',
       de: '',
       en: '',
@@ -217,25 +223,25 @@ const localisation = {
       en: '',
     },
     isValidatedTooltip: {
-      fr: 'Cet utilisateur est validé.',
+      fr: 'Cet utilisateur est validé.\nCliquez ici pour changer le statut en "non validé".',
       nl: '',
       de: '',
       en: '',
     },
     isNotValidatedTooltip: {
-      fr: 'Cet utilisateur n\'est pas validé.',
+      fr: 'Cet utilisateur n\'est pas validé.\nCliquez ici pour changer le statut en "validé".',
       nl: '',
       de: '',
       en: '',
     },
     hasPaidTooltip: {
-      fr: 'Cet utilisateur a payé.',
+      fr: 'Cet utilisateur a payé.\nCliquez ici pour changer le statut en "non payé".',
       nl: '',
       de: '',
       en: '',
     },
     hasNotPaidTooltip: {
-      fr: 'Cet utilisateur n\'a pas encore payé.',
+      fr: 'Cet utilisateur n\'a pas encore payé.\nCliquez ici pour changer le statut en "payé".',
       nl: '',
       de: '',
       en: '',

@@ -210,14 +210,35 @@
     </div>
   </div>
 
-  <div class="p-5 pb-10" v-show="modalTab == 'people'" ref="modalPeople">
-    <button
-      class="bg-purple-900 hover:bg-purple-800 flex w-full justify-center rounded-md px-3 py-1.5 mb-4 text-sm font-semibold leading-6 text-white shadow-sm"
-      @click="sortUsersByName()"
-    >
-      <span v-html="_icon('sort-alpha-down', 'white', 24)" class="mr-2"></span>
-      {{ _local(['common', 'sortUsersByName']) }}
-    </button>
+  <div
+    class="p-5 pb-10 mx-auto"
+    v-show="modalTab == 'people'"
+    ref="modalPeople"
+    style="max-width: 1000px"
+  >
+    <div class="flex">
+      <button
+        class="bg-purple-900 hover:bg-purple-800 flex w-full justify-center rounded-md px-3 py-1.5 mb-4 text-sm font-semibold leading-6 text-white shadow-sm"
+        @click="sortUsersByName()"
+      >
+        <span
+          v-html="_icon('sort-alpha-down', 'white', 24)"
+          class="mr-2"
+        ></span>
+        {{ _local(['common', 'sortUsersByName']) }}
+      </button>
+
+      <button
+        class="bg-green-700 hover:bg-green-600 flex w-full justify-center rounded-md px-3 py-1.5 mb-4 text-sm font-semibold leading-6 text-white shadow-sm ml-1"
+        @click="toggleNewElement()"
+      >
+        <span
+          v-html="_icon('person-fill-add', 'white', 24)"
+          class="mr-2"
+        ></span>
+        {{ _local(['common', 'createUser']) }}
+      </button>
+    </div>
 
     <draggable
       v-model="event.userLinks"
@@ -274,14 +295,14 @@
               <span v-html="_icon('save', 'white', 20)"></span>
             </div>
 
-            <input
+            <!-- <input
               type="text"
               v-model="element.paymentNote"
               class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
               :placeholder="_local(['common', 'paymentNote'])"
               style="height: 38px; min-width: 200px; max-width: 300px"
               @input="updateUserPaymentNote(element)"
-            />
+            /> -->
 
             <div class="flex items-center">
               <div
@@ -376,21 +397,26 @@
               <div
                 class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 mr-1 command-button"
                 :class="[
-                  { 'bg-purple-500': element.isOwner },
+                  {
+                    'bg-purple-500':
+                      element.isOwner && element.userId != loggedUserId,
+                  },
                   { 'bg-yellow-500': !element.isOwner },
+                  { 'bg-gray-200': element.userId == loggedUserId },
+                  { 'pointer-events-none': element.userId == loggedUserId },
                 ]"
                 :title="
                   element.isOwner
                     ? _local(['common', 'isOwnerTooltip'])
                     : _local(['common', 'isNotOwnerTooltip'])
                 "
-                @click="updateUserLinkIsHidden(element)"
+                @click="updateUserLinkIsOwner(element)"
               >
                 <span
                   v-html="
                     _icon(
                       element.isOwner ? 'person-fill-gear' : 'person-fill',
-                      'white',
+                      element.userId == loggedUserId ? 'grey' : 'white',
                       26
                     )
                   "
@@ -766,19 +792,21 @@ async function updateUserLinkHasPaid(userLink: EventUser) {
 }
 
 async function updateUserLinkIsOwner(userLink: EventUser) {
-  fetchIsLoading.value = true
+  if (confirm(_local(['common', 'areyousure']))) {
+    fetchIsLoading.value = true
 
-  userLink.isOwner = !userLink.isOwner
+    userLink.isOwner = !userLink.isOwner
 
-  await _fetch('/api/updateUserLinkIsOwner', {
-    eventId: event.value.id,
-    userLinkId: userLink.id,
-    isOwner: userLink.isOwner,
-  })
+    await _fetch('/api/updateUserLinkIsOwner', {
+      eventId: event.value.id,
+      userLinkId: userLink.id,
+      isOwner: userLink.isOwner,
+    })
 
-  setTimeout(() => {
-    fetchIsLoading.value = false
-  }, 500)
+    setTimeout(() => {
+      fetchIsLoading.value = false
+    }, 500)
+  }
 }
 
 async function updateUserAlias(userLink: EventUser) {
