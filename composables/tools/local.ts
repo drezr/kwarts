@@ -36,6 +36,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    delete: {
+      fr: 'Supprimer',
+      nl: '',
+      de: '',
+      en: '',
+    },
     loginError: {
       fr: "L'adresse email et le mot de passe que vous avez introduit ne correspondent à aucun évènement.",
       nl: '',
@@ -200,6 +206,30 @@ const localisation = {
     },
     isVisibleTooltip: {
       fr: 'Cet utilisateur est visible dans la liste.\nCliquez ici pour le rendre invisible.',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    isValidatedTooltip: {
+      fr: 'Cet utilisateur est validé.',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    isNotValidatedTooltip: {
+      fr: 'Cet utilisateur n\'est pas validé.',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    hasPaidTooltip: {
+      fr: 'Cet utilisateur a payé.',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    hasNotPaidTooltip: {
+      fr: 'Cet utilisateur n\'a pas encore payé.',
       nl: '',
       de: '',
       en: '',

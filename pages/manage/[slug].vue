@@ -1,0 +1,911 @@
+<template>
+  <BaseHeader :event="event" />
+
+  <!-- <button @click="dialog1Node.showModal()">Open Dialog</button>
+
+  <dialog ref="dialog1Node" @click="closeDialog($event, dialog1Node)">
+    <p>Greetings, one and all!</p>
+    <button @click="dialog1Node.close()">OK</button>
+  </dialog> -->
+
+  <div class="p-5 rounded-t flex justify-between items-center">
+    <div class="text-slate-800 text-lg flex items-center">
+      <span
+        v-html="_icon('gear-fill', _color.pick('blue'), 24)"
+        class="mr-3 relative"
+        style="top: 2px"
+      ></span>
+
+      {{ _local(['common', 'eventConfig']) }}
+    </div>
+  </div>
+
+  <nav class="bg-slate-800 flex justify-center py-1 flex-wrap">
+    <span
+      class="text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer flex"
+      :class="{ 'bg-slate-900': modalTab == 'general' }"
+      @click="modalTab = 'general'"
+    >
+      <span
+        v-html="_icon('sliders', 'white', 16)"
+        class="mr-2 relative"
+        style="top: 2px"
+      ></span>
+
+      {{ _local(['common', 'general']) }}
+    </span>
+
+    <span
+      class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer flex mx-1"
+      :class="{ 'bg-slate-900': modalTab == 'dates' }"
+      @click="modalTab = 'dates'"
+    >
+      <span
+        v-html="_icon('calendar3', 'white', 16)"
+        class="mr-2 relative"
+        style="top: 2px"
+      ></span>
+
+      {{ _local(['common', 'dates']) }}
+    </span>
+
+    <span
+      class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer flex"
+      :class="{ 'bg-slate-900': modalTab == 'people' }"
+      @click="modalTab = 'people'"
+    >
+      <span
+        v-html="_icon('people', 'white', 16)"
+        class="mr-2 relative"
+        style="top: 2px"
+      ></span>
+
+      {{ _local(['common', 'people']) }}
+    </span>
+  </nav>
+
+  <div class="p-5 pb-10" v-show="modalTab == 'general'">
+    <label
+      for="eventName"
+      class="block text-sm font-medium leading-6 text-gray-900"
+    >
+      {{ _local(['common', 'eventName']) }}
+    </label>
+
+    <div class="mt-2 flex items-center">
+      <input
+        v-model="event.name"
+        name="eventName"
+        class="flex-grow mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+        @input="updateEventName()"
+      />
+    </div>
+  </div>
+
+  <div class="p-5 pb-10" v-show="modalTab == 'dates'" ref="modalDates">
+    <draggable
+      v-model="event.dates"
+      @start="dragging = true"
+      @end="dragging = false"
+      @change="updateDatePositions()"
+      handle=".handle"
+      item-key="id"
+      v-bind="{
+        animation: 200,
+        group: 'description',
+        disabled: false,
+        ghostClass: 'ghost',
+      }"
+    >
+      <template #item="{ element }">
+        <div class="mb-3 flex items-center">
+          <span
+            v-html="_icon('grip-horizontal', _color.pick('pink'), 16)"
+            class="cursor-grab hover:brightness-110 mr-2 handle"
+          ></span>
+
+          <div class="flex flex-grow flex-wrap">
+            <VueDatePicker
+              v-model="element.date"
+              class="flex-grow mx-1"
+              :format="_date.formatDatetime(element.date)"
+              locale="fr"
+              teleport-center
+              auto-apply
+              :placeholder="_local(['common', 'date'])"
+              :enable-time-picker="false"
+              month-name-format="long"
+              style="width: 30%; min-width: 130px"
+              menu-class-name="dp-custom-menu"
+              :clearable="false"
+              @update:model-value="updateDate(element)"
+            ></VueDatePicker>
+
+            <input
+              type="text"
+              v-model="element.title"
+              class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+              :placeholder="_local(['common', 'title'])"
+              maxlength="18"
+              style="height: 38px; width: 155px"
+              @input="updateDate(element)"
+            />
+
+            <div
+              class="cursor-pointer rounded-full w-5 h-5 relative flex items-center justify-center hover:brightness-110"
+              style="top: -6px; left: -20px; margin-right: -20px"
+              :class="[
+                { 'bg-orange-500': element.isLocked },
+                { 'bg-green-600': !element.isLocked },
+              ]"
+              :title="
+                element.isLocked
+                  ? _local(['common', 'isLockedTooltip'])
+                  : _local(['common', 'isNotLockedTooltip'])
+              "
+              @click="lockDate(element)"
+            >
+              <span
+                v-html="
+                  _icon(
+                    element.isLocked ? 'lock-fill' : 'unlock-fill',
+                    'white',
+                    12
+                  )
+                "
+              ></span>
+            </div>
+          </div>
+
+          <span
+            v-html="_icon('trash-fill', _color.pick('red'), 16)"
+            class="cursor-pointer hover:brightness-110 ml-2"
+            @click="deleteDate(element)"
+          ></span>
+        </div>
+      </template>
+    </draggable>
+
+    <div class="mb-3 flex items-center" v-if="showAddDate">
+      <span
+        v-html="_icon('x-lg', 'black', 16)"
+        class="cursor-pointer hover:opacity-70 mr-2"
+        @click="showAddDate = false"
+      ></span>
+
+      <div class="flex flex-grow flex-wrap">
+        <VueDatePicker
+          v-model="newDateDate"
+          class="flex-grow mx-1"
+          locale="fr"
+          teleport-center
+          auto-apply
+          :placeholder="_local(['common', 'date'])"
+          :enable-time-picker="false"
+          month-name-format="long"
+          style="width: 30%; min-width: 130px"
+          menu-class-name="dp-custom-menu"
+          :clearable="false"
+          :format="_date.formatDatetime(newDateDate?.toDateString())"
+        ></VueDatePicker>
+
+        <input
+          v-model="newDateTitle"
+          type="text"
+          class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+          :placeholder="_local(['common', 'title'])"
+          maxlength="18"
+          style="height: 38px; width: 155px"
+          ref="newDateTitleInput"
+          @keyup.enter="newDateDate ? createDate() : null"
+        />
+      </div>
+
+      <span
+        v-html="_icon('save-fill', !newDateDate ? 'grey' : 'green', 20)"
+        class="cursor-pointer hover:brightness-110 ml-1"
+        :class="[{ 'pointer-events-none': !newDateDate }]"
+        @click="createDate()"
+      ></span>
+    </div>
+  </div>
+
+  <div class="p-5 pb-10" v-show="modalTab == 'people'" ref="modalPeople">
+    <button
+      class="bg-purple-900 hover:bg-purple-800 flex w-full justify-center rounded-md px-3 py-1.5 mb-4 text-sm font-semibold leading-6 text-white shadow-sm"
+      @click="sortUsersByName()"
+    >
+      <span v-html="_icon('sort-alpha-down', 'white', 24)" class="mr-2"></span>
+      {{ _local(['common', 'sortUsersByName']) }}
+    </button>
+
+    <draggable
+      v-model="event.userLinks"
+      @start="dragging = true"
+      @end="dragging = false"
+      handle=".handle"
+      item-key="id"
+      v-bind="{
+        animation: 200,
+        group: 'description',
+        disabled: false,
+        ghostClass: 'ghost',
+      }"
+      @change="updateUserLinkPositions()"
+    >
+      <template #item="{ element }">
+        <div class="mb-3 flex items-center">
+          <span
+            v-html="_icon('grip-horizontal', _color.pick('pink'), 16)"
+            class="cursor-grab hover:brightness-110 mr-2 handle"
+          ></span>
+
+          <div class="flex flex-grow flex-wrap justify-center items-center">
+            <input
+              type="text"
+              v-model="element.alias"
+              class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
+              :placeholder="_local(['common', 'alias'])"
+              style="height: 38px; min-width: 200px"
+              @input="updateUserAlias(element)"
+            />
+
+            <input
+              class="overflow-hidden flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 ring-gray-300 shadow-sm ring-1 ring-inset text-sm leading-6 focus:ring-slate-600"
+              :placeholder="_local(['common', 'email'])"
+              style="height: 38px; min-width: 200px"
+              v-model="element.user.email"
+            />
+
+            <div
+              v-if="element.user.email != getEmail(element)"
+              class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 mr-1 command-button"
+              :class="
+                              isValidEmail(element.user.email) &&
+                              !cloneEvent.userLinks.find(
+                                (u: EventUser) => u.user.email == element.user.email
+                              )
+                                ? 'bg-green-600'
+                                : 'bg-gray-500 pointer-events-none'
+                            "
+              :title="_local(['common', 'updateEmail'])"
+              @click="updateUserEmail(element)"
+            >
+              <span v-html="_icon('save', 'white', 20)"></span>
+            </div>
+
+            <div class="flex items-center">
+              <div
+                class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 mr-1 command-button"
+                :class="[
+                  { 'bg-red-500': !element.isPasswordSent },
+                  { 'bg-green-600': element.isPasswordSent },
+                ]"
+                :title="
+                  element.isPasswordSent
+                    ? _local(['common', 'passwordSent'])
+                    : _local(['common', 'passwordNotSent'])
+                "
+                @click="sendPassword(element)"
+              >
+                <span
+                  v-html="
+                    _icon(
+                      element.isPasswordSent
+                        ? 'envelope-check-fill'
+                        : 'envelope-x-fill',
+                      'white',
+                      24
+                    )
+                  "
+                ></span>
+              </div>
+
+              <div
+                class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 mr-1 command-button"
+                :class="[
+                  { 'bg-green-600': element.hasPaid },
+                  { 'bg-red-500': !element.hasPaid },
+                ]"
+                :title="
+                  element.hasPaid
+                    ? _local(['common', 'hasPaidTooltip'])
+                    : _local(['common', 'hasNotPaidTooltip'])
+                "
+                @click="updateUserLinkHasPaid(element)"
+              >
+                <span
+                  v-html="_icon('currency-euro', 'white', 30)"
+                  style="position: relative; left: -2px"
+                ></span>
+              </div>
+
+              <div
+                class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 mr-1 command-button"
+                :class="[
+                  { 'bg-green-600': element.isValidated },
+                  { 'bg-red-500': !element.isValidated },
+                ]"
+                :title="
+                  element.isValidated
+                    ? _local(['common', 'isValidatedTooltip'])
+                    : _local(['common', 'isNotValidatedTooltip'])
+                "
+                @click="updateUserLinkIsValidated(element)"
+              >
+                <span
+                  v-html="
+                    _icon(element.isValidated ? 'check' : 'x', 'white', 30)
+                  "
+                ></span>
+              </div>
+
+              <div
+                class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 mr-1 command-button"
+                :class="[
+                  { 'bg-orange-500': element.isHidden },
+                  { 'bg-blue-500': !element.isHidden },
+                ]"
+                :title="
+                  element.isHidden
+                    ? _local(['common', 'isHiddenTooltip'])
+                    : _local(['common', 'isVisibleTooltip'])
+                "
+                @click="updateUserLinkIsHidden(element)"
+              >
+                <span
+                  v-html="
+                    _icon(
+                      !element.isHidden ? 'eye-fill' : 'eye-slash-fill',
+                      'white',
+                      20
+                    )
+                  "
+                ></span>
+              </div>
+
+              <div
+                class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 command-button bg-gray-200"
+                :class="{
+                  'pointer-events-none': element.userId == loggedUserId,
+                }"
+                :title="_local(['common', 'delete'])"
+                @click="deleteUserLink(element)"
+              >
+                <span
+                  v-html="
+                    _icon(
+                      'trash-fill',
+                      _color.pick(
+                        element.userId == loggedUserId ? 'grey' : 'red'
+                      ),
+                      20
+                    )
+                  "
+                ></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </draggable>
+
+    <div class="mb-3 flex items-center" v-if="showAddUser">
+      <span
+        v-html="_icon('x-lg', 'black', 16)"
+        class="cursor-pointer hover:opacity-70 mr-2"
+        @click="showAddUser = false"
+      ></span>
+
+      <div class="flex flex-grow flex-wrap">
+        <input
+          v-model="newUserAlias"
+          ref="newUserAliasInput"
+          type="text"
+          class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
+          :placeholder="_local(['common', 'alias'])"
+          style="height: 38px; width: 150px"
+          @keyup.enter="
+            newUserAlias &&
+            ((newUserEmail &&
+              isValidEmail(newUserEmail) &&
+              !event.userLinks.find((u) => u.user.email == newUserEmail)) ||
+              !newUserEmail)
+              ? createUser()
+              : null
+          "
+        />
+
+        <input
+          v-model="newUserEmail"
+          type="email"
+          class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset text-sm leading-6"
+          :class="[
+            {
+              'focus:ring-red-600':
+                (newUserEmail && !isValidEmail(newUserEmail)) ||
+                event.userLinks.find((u) => u.user.email == newUserEmail),
+              'focus:ring-green-700':
+                isValidEmail(newUserEmail) &&
+                !event.userLinks.find((u) => u.user.email == newUserEmail),
+            },
+          ]"
+          :placeholder="_local(['common', 'email'])"
+          style="height: 38px; width: 150px"
+          @keyup.enter="
+            newUserAlias &&
+            ((newUserEmail &&
+              isValidEmail(newUserEmail) &&
+              !event.userLinks.find((u) => u.user.email == newUserEmail)) ||
+              !newUserEmail)
+              ? createUser()
+              : null
+          "
+        />
+      </div>
+
+      <span
+        v-html="
+          _icon(
+            'save-fill',
+            newUserAlias &&
+              ((newUserEmail &&
+                isValidEmail(newUserEmail) &&
+                !event.userLinks.find((u) => u.user.email == newUserEmail)) ||
+                !newUserEmail)
+              ? 'green'
+              : 'grey',
+            26
+          )
+        "
+        class="cursor-pointer hover:brightness-110 ml-1"
+        :class="[
+          {
+            'pointer-events-none': !(
+              newUserAlias &&
+              ((newUserEmail &&
+                isValidEmail(newUserEmail) &&
+                !event.userLinks.find((u) => u.user.email == newUserEmail)) ||
+                !newUserEmail)
+            ),
+          },
+        ]"
+        @click="createUser()"
+      ></span>
+    </div>
+  </div>
+
+  <div
+    class="flex p-2 bg-slate-200 fixed bottom-0 w-full"
+    :class="modalTab == 'general' ? 'justify-end' : 'justify-between'"
+  >
+    <span
+      v-if="modalTab != 'general'"
+      v-html="_icon('plus-square-fill', 'green', 30)"
+      class="cursor-pointer hover:brightness-110"
+      @click="toggleNewElement()"
+    ></span>
+
+    <span
+      v-html="
+        _icon(
+          fetchIsLoading ? 'arrow-clockwise' : 'check',
+          _color.pick(fetchIsLoading ? 'blue' : 'green'),
+          30
+        )
+      "
+      class="hover:brightness-110 ml-3"
+      :class="{
+        'animate-spin': fetchIsLoading,
+      }"
+    ></span>
+  </div>
+</template>
+
+<script setup lang="ts">
+import draggable from 'vuedraggable'
+import VueDatePicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
+
+const route = useRoute()
+
+const loggedUserId = useCookie<Number>('userId')
+const slug = route.params.slug
+
+let requestedEvent = await _fetch('/api/getEventBySlug', {
+  slug: slug,
+})
+
+useHead({
+  link: [
+    {
+      rel: 'icon',
+      type: 'image/png',
+      href: requestedEvent.icon ? requestedEvent.icon : '/kwarts_logo_mini.png',
+    },
+  ],
+})
+
+const loggedUserLink = requestedEvent.userLinks.find(
+  (ul: any) => ul.user.id == loggedUserId.value
+)
+
+if (!requestedEvent || !loggedUserLink) {
+  logout()
+}
+
+requestedEvent.dates.sort((a: Date, b: Date) => a.position - b.position)
+requestedEvent.userLinks.sort(
+  (a: EventUser, b: EventUser) => a.position - b.position
+)
+
+useState<String>('eventName', () => requestedEvent.name)
+
+const isOwner = loggedUserLink ? ref<boolean>(loggedUserLink.isOwner) : false
+
+if (!isOwner) {
+  navigateTo(`/availability/` + requestedEvent.slug)
+}
+
+let event = ref<Event>(requestedEvent)
+let cloneEvent = JSON.parse(JSON.stringify(event.value))
+let dragging = ref<Boolean>(false)
+let modalTab = ref<String>('general')
+let fetchThrottleTimer: any = null
+let fetchIsLoading = ref<Boolean>(false)
+
+let showAddUser = ref<Boolean>(false)
+let showAddDate = ref<Boolean>(false)
+let newDateTitle = ref<String>()
+let newDateDate = ref<Date | null>()
+let newUserEmail = ref<String>()
+let newUserAlias = ref<String>()
+
+const modalDates = ref()
+const modalPeople = ref()
+const newDateTitleInput = ref()
+const newUserAliasInput = ref()
+
+function getEmail(userLink: EventUser) {
+  const targetLink = cloneEvent.userLinks.find(
+    (ul: EventUser) => userLink.id == ul.id
+  )
+
+  return targetLink?.user.email
+}
+
+function toggleNewElement() {
+  if (modalTab.value == 'dates') {
+    showAddDate.value = true
+
+    setTimeout(() => {
+      newDateTitleInput.value.focus()
+      newDateTitleInput.value.scrollIntoView()
+    }, 10)
+  } else if (modalTab.value == 'people') {
+    showAddUser.value = true
+
+    setTimeout(() => {
+      newUserAliasInput.value.focus()
+      newUserAliasInput.value.scrollIntoView()
+    }, 10)
+  }
+}
+
+/*
+ CRUD METHODS
+*/
+
+// Event
+
+async function updateEventName() {
+  fetchIsLoading.value = true
+  clearTimeout(fetchThrottleTimer)
+
+  fetchThrottleTimer = setTimeout(async () => {
+    await _fetch('/api/updateEventName', {
+      eventId: event.value.id,
+      newEventName: event.value.name,
+    })
+
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+// User / EventUser
+
+async function sendPassword(eventUser: EventUser) {
+  if (confirm(_local(['common', 'sendPasswordConfirm']))) {
+    await _fetch('/api/sendPassword', {
+      eventId: event.value.id,
+      userId: eventUser.user.id,
+    })
+
+    eventUser.isPasswordSent = true
+  }
+}
+
+async function createUser() {
+  fetchIsLoading.value = true
+  showAddUser.value = false
+
+  newUserEmail.value = newUserEmail.value?.replace(/\s/g, '')
+
+  const newUserLink = await _fetch('/api/createUser', {
+    eventId: event.value.id,
+    email: newUserEmail.value,
+    alias: newUserAlias.value,
+  })
+
+  event.value.userLinks.push(newUserLink)
+
+  newUserEmail.value = ''
+  newUserAlias.value = ''
+
+  cloneEvent = JSON.parse(JSON.stringify(event.value))
+
+  setTimeout(() => {
+    modalPeople.value.scrollTo(0, 9999999)
+  }, 10)
+
+  setTimeout(() => {
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+async function updateUserLinkPositions() {
+  const userLinkPositionsData = []
+  fetchIsLoading.value = true
+
+  for (let index in event.value.userLinks) {
+    userLinkPositionsData.push({
+      userLinkId: event.value.userLinks[index].id,
+      position: Number(index),
+    })
+  }
+
+  await _fetch('/api/updateUserLinkPositions', {
+    eventId: event.value.id,
+    userLinkPositionsData: userLinkPositionsData,
+  })
+
+  setTimeout(() => {
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+async function sortUsersByName() {
+  event.value.userLinks.sort((a: EventUser, b: EventUser) =>
+    a.alias.localeCompare(b.alias)
+  )
+
+  setTimeout(() => {
+    updateUserLinkPositions()
+  }, 10)
+}
+
+async function updateUserLinkIsHidden(userLink: EventUser) {
+  fetchIsLoading.value = true
+
+  userLink.isHidden = !userLink.isHidden
+
+  await _fetch('/api/updateUserLinkIsHidden', {
+    eventId: event.value.id,
+    userLinkId: userLink.id,
+    isHidden: userLink.isHidden,
+  })
+
+  setTimeout(() => {
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+async function updateUserLinkIsValidated(userLink: EventUser) {
+  fetchIsLoading.value = true
+
+  userLink.isValidated = !userLink.isValidated
+
+  await _fetch('/api/updateUserLinkIsValidated', {
+    eventId: event.value.id,
+    userLinkId: userLink.id,
+    isValidated: userLink.isValidated,
+  })
+
+  setTimeout(() => {
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+async function updateUserLinkHasPaid(userLink: EventUser) {
+  fetchIsLoading.value = true
+
+  userLink.isValidated = !userLink.hasPaid
+
+  await _fetch('/api/updateUserLinkHasPaid', {
+    eventId: event.value.id,
+    userLinkId: userLink.id,
+    hasPaid: userLink.hasPaid,
+  })
+
+  setTimeout(() => {
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+async function updateUserAlias(userLink: EventUser) {
+  fetchIsLoading.value = true
+  clearTimeout(fetchThrottleTimer)
+
+  fetchThrottleTimer = setTimeout(async () => {
+    await _fetch('/api/updateUserAlias', {
+      eventId: event.value.id,
+      userLinkId: userLink.id,
+      alias: userLink.alias,
+    })
+
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+async function updateUserEmail(userLink: EventUser) {
+  fetchIsLoading.value = true
+  clearTimeout(fetchThrottleTimer)
+
+  userLink.user.email = userLink.user.email?.replace(/\s/g, '')
+
+  fetchThrottleTimer = setTimeout(async () => {
+    await _fetch('/api/updateUserEmail', {
+      userLinkId: userLink.id,
+      userId: userLink.user.id,
+      eventId: event.value.id,
+      email: userLink.user.email,
+    })
+
+    userLink.isPasswordSent = false
+    cloneEvent = JSON.parse(JSON.stringify(event.value))
+
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+async function deleteUserLink(userLink: EventUser) {
+  if (confirm(_local(['common', 'areyousure']))) {
+    fetchIsLoading.value = true
+    await _fetch('/api/deleteUserLink', {
+      userLinkId: userLink.id,
+      userId: userLink.user.id,
+      eventId: event.value.id,
+    })
+
+    event.value.userLinks = event.value.userLinks.filter(
+      (ul: EventUser) => userLink.id != ul.id
+    )
+
+    for (let date of event.value.dates) {
+      date.availabilities = date.availabilities.filter(
+        (a) => a.userId != userLink.user.id
+      )
+    }
+
+    setTimeout(() => {
+      fetchIsLoading.value = false
+    }, 500)
+  }
+}
+
+// Date
+
+async function createDate() {
+  fetchIsLoading.value = true
+  showAddDate.value = false
+
+  if (newDateDate.value) {
+    const newDate = await _fetch('/api/createDate', {
+      eventId: event.value.id,
+      title: newDateTitle.value,
+      date: newDateDate.value.toISOString(),
+    })
+
+    event.value.dates.push(newDate)
+
+    newDateTitle.value = ''
+    newDateDate.value = null
+  }
+
+  setTimeout(() => {
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+function updateDate(date: Date) {
+  fetchIsLoading.value = true
+  clearTimeout(fetchThrottleTimer)
+
+  fetchThrottleTimer = setTimeout(async () => {
+    if (typeof date.date == 'string') {
+      date.date = new Date(date.date)
+    }
+
+    await _fetch('/api/updateDate', {
+      eventId: event.value.id,
+      dateId: date.id,
+      date: date.date.toISOString(),
+      title: date.title,
+    })
+
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+async function updateDatePositions() {
+  const datePositionsData = []
+  fetchIsLoading.value = true
+
+  for (let index in event.value.dates) {
+    datePositionsData.push({
+      dateId: event.value.dates[index].id,
+      position: Number(index),
+    })
+  }
+
+  await _fetch('/api/updateDatePositions', {
+    eventId: event.value.id,
+    datePositionsData: datePositionsData,
+  })
+
+  setTimeout(() => {
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+async function lockDate(date: Date) {
+  date.isLocked = !date.isLocked
+
+  await _fetch('/api/lockDate', {
+    eventId: event.value.id,
+    isLocked: date.isLocked,
+    dateId: date.id,
+  })
+}
+
+async function deleteDate(date: Date) {
+  if (confirm(_local(['common', 'areyousure']))) {
+    fetchIsLoading.value = true
+
+    await _fetch('/api/deleteDate', {
+      eventId: event.value.id,
+      dateId: date.id,
+    })
+
+    event.value.dates = event.value.dates.filter((d: Date) => date.id != d.id)
+
+    setTimeout(() => {
+      fetchIsLoading.value = false
+    }, 500)
+  }
+}
+
+//let dialog1Node = ref()
+</script>
+
+<style>
+dialog {
+  border: none;
+  box-shadow: #00000029 2px 2px 5px 0px;
+  border-radius: 3px;
+  padding: 20px;
+}
+
+dialog::backdrop {
+  background-color: #0000005d;
+}
+
+.command-button {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  position: relative;
+  top: -2px;
+}
+</style>

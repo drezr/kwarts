@@ -34,3 +34,15 @@ export function slugify(str: String) {
     .replace(/[\s_-]+/g, '-')
     .replace(/^-+|-+$/g, '')
 }
+
+export function closeDialog(event: any, dialogNode: any) {
+  const rect = dialogNode.getBoundingClientRect()
+  if (
+    event.clientY < rect.top ||
+    event.clientY > rect.bottom ||
+    event.clientX < rect.left ||
+    event.clientX > rect.right
+  ) {
+    dialogNode.close()
+  }
+}
