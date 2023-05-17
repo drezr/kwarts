@@ -119,7 +119,22 @@ let requestedEvent = await _fetch('/api/getEventBySlug', {
   slug: slug,
 })
 
+if (!requestedEvent) logout()
+
+const loggedUserLink = requestedEvent.userLinks.find(
+  (ul: any) => ul.user.id == loggedUserId.value
+)
+
+if (!loggedUserLink) logout()
+
+const title = requestedEvent.title
+  ? requestedEvent.title
+  : requestedEvent.name
+  ? requestedEvent.name
+  : 'Kwarts'
+
 useHead({
+  titleTemplate: title,
   link: [
     {
       rel: 'icon',
@@ -128,14 +143,6 @@ useHead({
     },
   ],
 })
-
-const loggedUserLink = requestedEvent.userLinks.find(
-  (ul: any) => ul.user.id == loggedUserId.value
-)
-
-if (!requestedEvent || !loggedUserLink) {
-  logout()
-}
 
 requestedEvent.dates.sort((a: Date, b: Date) => a.position - b.position)
 requestedEvent.userLinks.sort(

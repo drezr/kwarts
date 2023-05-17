@@ -83,6 +83,8 @@ const date: Date = await _fetch('/api/getDateSummary', {
   dateId: dateId,
 })
 
+if (!date) logout()
+
 useHead({
   link: [
     {
@@ -92,10 +94,6 @@ useHead({
     },
   ],
 })
-
-if (!date) {
-  logout()
-}
 
 let mergedData = []
 

@@ -9,20 +9,25 @@
       </div>
 
       <h2
-        class="mt-2 text-center text-2xl font-bold leading-9 tracking-tight"
+        class="w-screen mt-2 text-center text-2xl font-bold leading-9 tracking-tight"
         :class="`text-teal-950`"
       >
-        {{ event.title }}
+        {{ event.title ? event.title : event.name }}
       </h2>
 
-      <div class="mt-1 flex items-center hover:opacity-80">
+      <div
+        class="mt-1 flex items-center hover:opacity-80"
+        v-if="event.homepage"
+      >
         <span
           v-html="_icon('caret-left-fill', _color.pick('teal', -4), 20)"
           class="mr-2"
         ></span>
 
-        <a v-if="event.backLink" :href="event.backLink" class="text-teal-900">
-          {{ event.backLinkText ? event.backLinkText : 'Retour' }}
+        <a :href="event.homepage" class="text-teal-900">
+          {{
+            event.backlinkText ? event.backlinkText : _local(['common', 'back'])
+          }}
         </a>
       </div>
     </div>
@@ -156,12 +161,15 @@
           >
             {{ _local(['common', 'godfather']) }}
 
-            <span class="text-gray-400 italic mr-3">(facultatif)</span>
+            <span class="text-gray-400 italic mr-3">
+              ({{ _local(['common', 'optional']) }})
+            </span>
 
             <a
               :href="event.godfatherInfoLink"
               class="text-blue-500"
               v-if="event.godfatherInfoLink"
+              target="_blank"
             >
               {{ _local(['common', 'knowmore']) }}
             </a>
@@ -242,8 +250,10 @@ if (!event.isOpen) {
   logout()
 }
 
+const title = event.title ? event.title : event.name
+
 useHead({
-  titleTemplate: 'Inscription au ' + event.title,
+  titleTemplate: 'Inscription au ' + title,
   link: [
     {
       rel: 'icon',
@@ -282,6 +292,7 @@ async function createParticipation() {
     email.value = ''
     fideid.value = ''
     godfather.value = ''
+    note.value = ''
   } else if (result == 'linkExist') {
     linkExistError.value = true
   } else {

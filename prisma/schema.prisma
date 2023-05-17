@@ -28,9 +28,10 @@ model Event {
   logo              String?
   icon              String?
   theme             String?
-  backLink          String?
-  backLinkText      String?
+  homepage          String?
+  backlinkText      String?
   godfatherInfoLink String?
+  isFree            Boolean     @default(true)
   hasGodfather      Boolean     @default(false)
   isOpen            Boolean     @default(false)
   userLinks         EventUser[]

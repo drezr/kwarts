@@ -82,15 +82,214 @@
       class="block text-sm font-medium leading-6 text-gray-900"
     >
       {{ _local(['common', 'eventName']) }}
+
+      <span class="text-red-500">*</span>
     </label>
 
-    <div class="mt-2 flex items-center">
+    <input
+      v-model="event.name"
+      id="eventName"
+      class="mb-3 w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+      @input="updateEvent('name', event.name)"
+    />
+
+    <label
+      for="eventSlug"
+      class="block text-sm font-medium leading-6 text-gray-900"
+    >
+      {{ _local(['common', 'eventSlug']) }}
+
+      <span class="text-red-500">*</span>
+    </label>
+
+    <input
+      v-model="event.slug"
+      id="eventSlug"
+      class="mb-3 w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+      @input="updateEventSlug()"
+    />
+
+    <label
+      for="eventTitle"
+      class="block text-sm font-medium leading-6 text-gray-900"
+    >
+      {{ _local(['common', 'eventTitle']) }}
+
+      <span class="text-gray-400 italic">
+        ({{ _local(['common', 'optional']) }})
+      </span>
+    </label>
+
+    <input
+      v-model="event.title"
+      id="eventTitle"
+      class="mb-3 w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+      @input="updateEvent('title', event.title)"
+    />
+
+    <label
+      for="eventHomepage"
+      class="block text-sm font-medium leading-6 text-gray-900"
+    >
+      {{ _local(['common', 'eventHomepage']) }}
+
+      <span class="text-gray-400 italic">
+        ({{ _local(['common', 'optional']) }})
+      </span>
+    </label>
+
+    <input
+      v-model="event.homepage"
+      id="eventHomepage"
+      class="mb-3 w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+      @input="updateEvent('homepage', event.homepage)"
+    />
+
+    <label
+      for="eventLogo"
+      class="block text-sm font-medium leading-6 text-gray-900"
+    >
+      {{ _local(['common', 'eventLogo']) }}
+
+      <span class="text-gray-400 italic">
+        ({{ _local(['common', 'optional']) }})
+      </span>
+    </label>
+
+    <input
+      v-model="event.logo"
+      id="eventLogo"
+      class="mb-3 w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+      @input="updateEvent('logo', event.logo)"
+    />
+
+    <label
+      for="eventIcon"
+      class="block text-sm font-medium leading-6 text-gray-900"
+    >
+      {{ _local(['common', 'eventIcon']) }}
+
+      <span class="text-gray-400 italic">
+        ({{ _local(['common', 'optional']) }})
+      </span>
+    </label>
+
+    <input
+      v-model="event.icon"
+      id="eventIcon"
+      class="mb-3 w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+      @input="updateEvent('icon', event.icon)"
+    />
+
+    <label
+      for="isFree"
+      class="flex text-sm font-medium leading-6 text-gray-900"
+    >
       <input
-        v-model="event.name"
-        name="eventName"
-        class="flex-grow mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-        @input="updateEventName()"
+        v-model="event.isFree"
+        type="checkbox"
+        id="isFree"
+        class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+        @change="updateEvent('isFree', event.isFree)"
       />
+
+      {{ _local(['common', 'eventIsFree']) }}
+
+      <span class="text-gray-400 italic ml-1">
+        ({{ _local(['common', 'optional']) }})
+      </span>
+    </label>
+
+    <label
+      for="registerPage"
+      class="flex text-sm font-medium leading-6 text-gray-900 pt-3"
+    >
+      <input
+        v-model="event.isOpen"
+        type="checkbox"
+        id="registerPage"
+        class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+        @change="updateEvent('isOpen', event.isOpen)"
+      />
+
+      {{ _local(['common', 'registerPage']) }}
+
+      <span class="text-gray-400 italic ml-1">
+        ({{ _local(['common', 'optional']) }})
+      </span>
+    </label>
+
+    <div
+      class="ring-1 ring-gray-300 p-3 rounded"
+      :class="[
+        { 'opacity-50': !event.isOpen },
+        { 'pointer-events-none': !event.isOpen },
+      ]"
+    >
+      <label
+        for="eventBacklinkText"
+        class="block text-sm font-medium leading-6 text-gray-900"
+      >
+        {{ _local(['common', 'eventBacklinkText']) }}
+
+        <span class="text-gray-400 italic">
+          ({{ _local(['common', 'optional']) }})
+        </span>
+      </label>
+
+      <input
+        v-model="event.backlinkText"
+        id="eventBacklinkText"
+        class="mb-3 w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+        @input="updateEvent('backlinkText', event.backlinkText)"
+      />
+
+      <label
+        for="hasGodfather"
+        class="flex text-sm font-medium leading-6 text-gray-900"
+      >
+        <input
+          v-model="event.hasGodfather"
+          type="checkbox"
+          id="registerPage"
+          class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+          @change="updateEvent('hasGodfather', event.hasGodfather)"
+        />
+
+        {{ _local(['common', 'eventHasGodfather']) }}
+
+        <span class="text-gray-400 italic ml-1">
+          ({{ _local(['common', 'optional']) }})
+        </span>
+      </label>
+
+      <label
+        for="eventGodfatherInfoLink"
+        class="block text-sm font-medium leading-6 text-gray-900"
+      >
+        {{ _local(['common', 'eventGodfatherInfoLink']) }}
+
+        <span class="text-gray-400 italic">
+          ({{ _local(['common', 'optional']) }})
+        </span>
+      </label>
+
+      <input
+        v-model="event.godfatherInfoLink"
+        id="eventGodfatherInfoLink"
+        class="mb-3 w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+        @input="updateEvent('godfatherInfoLink', event.godfatherInfoLink)"
+      />
+
+      <div class="text-center font-bold text-blue-500 hover:opacity-80">
+        <a
+          :href="`/register/${event.slug}`"
+          target="_blank"
+          class="inline-flex"
+        >
+          {{ _local(['common', 'checkRegisterPage']) }}
+        </a>
+      </div>
     </div>
   </div>
 
@@ -358,6 +557,7 @@
               </div>
 
               <div
+                v-if="!event.isFree"
                 class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 mr-1 command-button"
                 :class="[
                   { 'bg-green-600': element.hasPaid },
@@ -575,7 +775,22 @@ let requestedEvent = await _fetch('/api/getEventBySlug', {
   slug: slug,
 })
 
+if (!requestedEvent) logout()
+
+const loggedUserLink = requestedEvent.userLinks.find(
+  (ul: any) => ul.user.id == loggedUserId.value
+)
+
+if (!loggedUserLink) logout()
+
+const title = requestedEvent.title
+  ? requestedEvent.title
+  : requestedEvent.name
+  ? requestedEvent.name
+  : _local(['common', 'eventManagement'])
+
 useHead({
+  titleTemplate: _local(['common', 'eventManagement']) + ' - ' + title,
   link: [
     {
       rel: 'icon',
@@ -584,14 +799,6 @@ useHead({
     },
   ],
 })
-
-const loggedUserLink = requestedEvent.userLinks.find(
-  (ul: any) => ul.user.id == loggedUserId.value
-)
-
-if (!requestedEvent || !loggedUserLink) {
-  logout()
-}
 
 requestedEvent.dates.sort((a: Date, b: Date) => a.position - b.position)
 requestedEvent.userLinks.sort(
@@ -607,7 +814,7 @@ if (!isOwner) {
 }
 
 let event = ref<Event>(requestedEvent)
-let cloneEvent = JSON.parse(JSON.stringify(event.value))
+let cloneEvent = ref(JSON.parse(JSON.stringify(event.value)))
 let dragging = ref<Boolean>(false)
 let modalTab = ref<String>('general')
 let fetchThrottleTimer: any = null
@@ -626,7 +833,7 @@ const newDateTitleInput = ref()
 const newUserAliasInput = ref()
 
 function getEmail(userLink: EventUser) {
-  const targetLink = cloneEvent.userLinks.find(
+  const targetLink = cloneEvent.value.userLinks.find(
     (ul: EventUser) => userLink.id == ul.id
   )
 
@@ -657,19 +864,24 @@ function toggleNewElement() {
 
 // Event
 
-async function updateEventName() {
+async function updateEvent(key: any, value: any) {
   fetchIsLoading.value = true
   clearTimeout(fetchThrottleTimer)
 
+  let data: any = {}
+  data[key] = value
+
   fetchThrottleTimer = setTimeout(async () => {
-    await _fetch('/api/updateEventName', {
+    await _fetch('/api/updateEvent', {
       eventId: event.value.id,
-      newEventName: event.value.name,
+      data: data,
     })
 
     fetchIsLoading.value = false
-  }, 500)
+  }, 300)
 }
+
+async function updateEventSlug() {}
 
 // User / EventUser
 
@@ -701,7 +913,7 @@ async function createUser() {
   newUserEmail.value = ''
   newUserAlias.value = ''
 
-  cloneEvent = JSON.parse(JSON.stringify(event.value))
+  cloneEvent.value = JSON.parse(JSON.stringify(event.value))
 
   setTimeout(() => {
     modalPeople.value.scrollTo(0, 9999999)
@@ -854,7 +1066,7 @@ async function updateUserEmail(userLink: EventUser) {
     })
 
     userLink.isPasswordSent = false
-    cloneEvent = JSON.parse(JSON.stringify(event.value))
+    cloneEvent.value = JSON.parse(JSON.stringify(event.value))
 
     fetchIsLoading.value = false
   }, 500)
