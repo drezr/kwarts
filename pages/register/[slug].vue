@@ -17,7 +17,7 @@
 
       <div class="mt-1 flex items-center hover:opacity-80">
         <span
-          v-html="_icon('arrow-left', _color.pick('teal', -4), 20)"
+          v-html="_icon('caret-left-fill', _color.pick('teal', -4), 20)"
           class="mr-2"
         ></span>
 

@@ -1,28 +1,22 @@
 <template>
   <BaseHeader :event="event" />
 
-  <!-- <button @click="dialog1Node.showModal()">Open Dialog</button>
-
-  <dialog ref="dialog1Node" @click="closeDialog($event, dialog1Node)">
-    <p>Greetings, one and all!</p>
-    <button @click="dialog1Node.close()">OK</button>
-  </dialog> -->
-
-  <div class="p-5 rounded-t flex justify-between items-center">
-    <div class="text-slate-800 text-lg flex items-center">
+  <nav class="bg-slate-800 flex justify-center items-center py-1 flex-wrap">
+    <NuxtLink
+      :to="`/availability/${event.slug}`"
+      class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer flex"
+    >
       <span
-        v-html="_icon('gear-fill', _color.pick('blue'), 24)"
-        class="mr-3 relative"
+        v-html="_icon('caret-left-fill', 'white', 16)"
+        class="mr-2 relative"
         style="top: 2px"
       ></span>
 
-      {{ _local(['common', 'eventConfig']) }}
-    </div>
-  </div>
+      {{ _local(['common', 'backToTheEvent']) }}
+    </NuxtLink>
 
-  <nav class="bg-slate-800 flex justify-center py-1 flex-wrap">
     <span
-      class="text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer flex"
+      class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer flex ml-1"
       :class="{ 'bg-slate-900': modalTab == 'general' }"
       @click="modalTab = 'general'"
     >
@@ -62,9 +56,27 @@
 
       {{ _local(['common', 'people']) }}
     </span>
+
+    <span
+      v-html="
+        _icon(
+          fetchIsLoading ? 'arrow-clockwise' : 'check',
+          _color.pick(fetchIsLoading ? 'blue' : 'green'),
+          30
+        )
+      "
+      class="hover:brightness-110 ml-3"
+      :class="{
+        'animate-spin': fetchIsLoading,
+      }"
+    ></span>
   </nav>
 
-  <div class="p-5 pb-10" v-show="modalTab == 'general'">
+  <div
+    class="p-5 mx-auto"
+    v-show="modalTab == 'general'"
+    style="max-width: 600px"
+  >
     <label
       for="eventName"
       class="block text-sm font-medium leading-6 text-gray-900"
@@ -82,7 +94,20 @@
     </div>
   </div>
 
-  <div class="p-5 pb-10" v-show="modalTab == 'dates'" ref="modalDates">
+  <div
+    class="p-5 mx-auto"
+    v-show="modalTab == 'dates'"
+    ref="modalDates"
+    style="max-width: 600px"
+  >
+    <button
+      class="bg-green-700 hover:bg-green-600 flex w-full justify-center rounded-md px-3 py-1.5 mb-4 text-sm font-semibold leading-6 text-white shadow-sm ml-1"
+      @click="toggleNewElement()"
+    >
+      <span v-html="_icon('calendar-plus', 'white', 24)" class="mr-2"></span>
+      {{ _local(['common', 'createDate']) }}
+    </button>
+
     <draggable
       v-model="event.dates"
       @start="dragging = true"
@@ -115,7 +140,7 @@
               :placeholder="_local(['common', 'date'])"
               :enable-time-picker="false"
               month-name-format="long"
-              style="width: 30%; min-width: 130px"
+              style="width: 30%; min-width: 130px; max-width: 200px"
               menu-class-name="dp-custom-menu"
               :clearable="false"
               @update:model-value="updateDate(element)"
@@ -130,38 +155,39 @@
               style="height: 38px; width: 155px"
               @input="updateDate(element)"
             />
-
-            <div
-              class="cursor-pointer rounded-full w-5 h-5 relative flex items-center justify-center hover:brightness-110"
-              style="top: -6px; left: -20px; margin-right: -20px"
-              :class="[
-                { 'bg-orange-500': element.isLocked },
-                { 'bg-green-600': !element.isLocked },
-              ]"
-              :title="
-                element.isLocked
-                  ? _local(['common', 'isLockedTooltip'])
-                  : _local(['common', 'isNotLockedTooltip'])
-              "
-              @click="lockDate(element)"
-            >
-              <span
-                v-html="
-                  _icon(
-                    element.isLocked ? 'lock-fill' : 'unlock-fill',
-                    'white',
-                    12
-                  )
-                "
-              ></span>
-            </div>
           </div>
 
-          <span
-            v-html="_icon('trash-fill', _color.pick('red'), 16)"
-            class="cursor-pointer hover:brightness-110 ml-2"
+          <div
+            class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 mr-1 command-button"
+            :class="[
+              { 'bg-orange-500': element.isLocked },
+              { 'bg-green-600': !element.isLocked },
+            ]"
+            :title="
+              element.isLocked
+                ? _local(['common', 'isLockedTooltip'])
+                : _local(['common', 'isNotLockedTooltip'])
+            "
+            @click="lockDate(element)"
+          >
+            <span
+              v-html="
+                _icon(
+                  element.isHidden ? 'lock-fill' : 'unlock-fill',
+                  'white',
+                  20
+                )
+              "
+            ></span>
+          </div>
+
+          <div
+            class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 command-button bg-gray-200"
+            :title="_local(['common', 'delete'])"
             @click="deleteDate(element)"
-          ></span>
+          >
+            <span v-html="_icon('trash-fill', _color.pick('red'), 20)"></span>
+          </div>
         </div>
       </template>
     </draggable>
@@ -183,7 +209,7 @@
           :placeholder="_local(['common', 'date'])"
           :enable-time-picker="false"
           month-name-format="long"
-          style="width: 30%; min-width: 130px"
+          style="width: 30%; min-width: 130px; max-width: 200px"
           menu-class-name="dp-custom-menu"
           :clearable="false"
           :format="_date.formatDatetime(newDateDate?.toDateString())"
@@ -202,7 +228,7 @@
       </div>
 
       <span
-        v-html="_icon('save-fill', !newDateDate ? 'grey' : 'green', 20)"
+        v-html="_icon('save-fill', !newDateDate ? 'grey' : 'green', 26)"
         class="cursor-pointer hover:brightness-110 ml-1"
         :class="[{ 'pointer-events-none': !newDateDate }]"
         @click="createDate()"
@@ -211,7 +237,7 @@
   </div>
 
   <div
-    class="p-5 pb-10 mx-auto"
+    class="p-5 mx-auto"
     v-show="modalTab == 'people'"
     ref="modalPeople"
     style="max-width: 1000px"
@@ -532,32 +558,6 @@
         @click="createUser()"
       ></span>
     </div>
-  </div>
-
-  <div
-    class="flex p-2 bg-slate-200 fixed bottom-0 w-full"
-    :class="modalTab == 'general' ? 'justify-end' : 'justify-between'"
-  >
-    <span
-      v-if="modalTab != 'general'"
-      v-html="_icon('plus-square-fill', 'green', 30)"
-      class="cursor-pointer hover:brightness-110"
-      @click="toggleNewElement()"
-    ></span>
-
-    <span
-      v-html="
-        _icon(
-          fetchIsLoading ? 'arrow-clockwise' : 'check',
-          _color.pick(fetchIsLoading ? 'blue' : 'green'),
-          30
-        )
-      "
-      class="hover:brightness-110 ml-3"
-      :class="{
-        'animate-spin': fetchIsLoading,
-      }"
-    ></span>
   </div>
 </template>
 
@@ -889,6 +889,7 @@ async function deleteUserLink(userLink: EventUser) {
 
 async function createDate() {
   fetchIsLoading.value = true
+
   showAddDate.value = false
 
   if (newDateDate.value) {
@@ -951,6 +952,8 @@ async function updateDatePositions() {
 }
 
 async function lockDate(date: Date) {
+  fetchIsLoading.value = true
+
   date.isLocked = !date.isLocked
 
   await _fetch('/api/lockDate', {
@@ -958,6 +961,10 @@ async function lockDate(date: Date) {
     isLocked: date.isLocked,
     dateId: date.id,
   })
+
+  setTimeout(() => {
+    fetchIsLoading.value = false
+  }, 500)
 }
 
 async function deleteDate(date: Date) {

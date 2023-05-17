@@ -180,6 +180,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    createDate: {
+      fr: 'Ajouter une date',
+      nl: '',
+      de: '',
+      en: '',
+    },
     updateEmail: {
       fr: 'Mettre à jour l\'adresse email',
       nl: '',
