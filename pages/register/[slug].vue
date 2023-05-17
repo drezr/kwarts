@@ -21,8 +21,8 @@
           class="mr-2"
         ></span>
 
-        <a :href="event.backLink" class="text-teal-900">
-          Retour vers la page du tournoi
+        <a v-if="event.backLink" :href="event.backLink" class="text-teal-900">
+          {{ event.backLinkText ? event.backLinkText : 'Retour' }}
         </a>
       </div>
     </div>
@@ -148,7 +148,7 @@
             class="block text-sm font-medium leading-6"
             :class="`text-teal-950`"
           >
-            Parrain, marraine
+            Parrain
 
             <span class="text-gray-400 italic mr-3">(facultatif)</span>
 
@@ -170,6 +170,29 @@
               class="block w-full rounded-md border-0 py-1.5 px-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
               :class="`text-teal-950 ring-teal-800 placeholder:text-teal-400 focus:ring-teal-800`"
             />
+          </div>
+        </div>
+
+        <div>
+          <label
+            for="note"
+            class="block text-sm font-medium leading-6"
+            :class="`text-teal-950`"
+          >
+            Remarques
+
+            <span class="text-gray-400 italic mr-3">(facultatif)</span>
+          </label>
+
+          <div class="mt-2">
+            <textarea
+              v-model="note"
+              id="note"
+              name="note"
+              type="text"
+              class="block w-full rounded-md border-0 py-1.5 px-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+              :class="`text-teal-950 ring-teal-800 placeholder:text-teal-400 focus:ring-teal-800`"
+            ></textarea>
           </div>
         </div>
 
@@ -196,13 +219,14 @@
 const route = useRoute()
 const slug = route.params.slug
 
-let email = ref<String>()
-let alias = ref<String>()
-let fideid = ref<String>()
-let godfather = ref<String>()
-let creationError = ref<Boolean>(false)
-let linkExistError = ref<Boolean>(false)
-let creationSuccess = ref<Boolean>(false)
+let email = ref<string>()
+let alias = ref<string>()
+let fideid = ref<string>()
+let godfather = ref<string>()
+let note = ref<string>()
+let creationError = ref<boolean>(false)
+let linkExistError = ref<boolean>(false)
+let creationSuccess = ref<boolean>(false)
 
 const event = await _fetch('/api/getEventBySlugLight', {
   slug: slug,
@@ -223,7 +247,7 @@ useHead({
   ],
 })
 
-const canCreateParticipation = computed<Boolean>(() => {
+const canCreateParticipation = computed<boolean>(() => {
   if (
     !isValidEmail(email.value) ||
     !email.value ||
