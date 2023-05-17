@@ -150,6 +150,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    paymentNote: {
+      fr: 'Note sur le paiement',
+      nl: '',
+      de: '',
+      en: '',
+    },
     backToTheEvent: {
       fr: 'Retour à l\'évènement',
       nl: '',
@@ -242,6 +248,18 @@ const localisation = {
     },
     isNotLockedTooltip: {
       fr: 'Cette date est déverrouillée.\nCliquez ici pour la verrouiller.',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    isOwnerTooltip: {
+      fr: 'Cette personne est administrateur de l\'évènement.\nCliquez ici pour lui retirer les droits.',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    isNotOwnerTooltip: {
+      fr: 'Cette personne n\'est pas administrateur de l\'évènement.\nCliquez ici pour lui donner les droits.',
       nl: '',
       de: '',
       en: '',

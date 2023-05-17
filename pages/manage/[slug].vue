@@ -251,7 +251,7 @@
             />
 
             <input
-              class="overflow-hidden flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 ring-gray-300 shadow-sm ring-1 ring-inset text-sm leading-6 focus:ring-slate-600"
+              class="overflow-hidden flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 ring-gray-300 placeholder:text-gray-400 shadow-sm ring-1 ring-inset text-sm leading-6 focus:ring-slate-600"
               :placeholder="_local(['common', 'email'])"
               style="height: 38px; min-width: 200px"
               v-model="element.user.email"
@@ -273,6 +273,15 @@
             >
               <span v-html="_icon('save', 'white', 20)"></span>
             </div>
+
+            <input
+              type="text"
+              v-model="element.paymentNote"
+              class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
+              :placeholder="_local(['common', 'paymentNote'])"
+              style="height: 38px; min-width: 200px; max-width: 300px"
+              @input="updateUserPaymentNote(element)"
+            />
 
             <div class="flex items-center">
               <div
@@ -359,6 +368,30 @@
                       !element.isHidden ? 'eye-fill' : 'eye-slash-fill',
                       'white',
                       20
+                    )
+                  "
+                ></span>
+              </div>
+
+              <div
+                class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 mr-1 command-button"
+                :class="[
+                  { 'bg-purple-500': element.isOwner },
+                  { 'bg-yellow-500': !element.isOwner },
+                ]"
+                :title="
+                  element.isOwner
+                    ? _local(['common', 'isOwnerTooltip'])
+                    : _local(['common', 'isNotOwnerTooltip'])
+                "
+                @click="updateUserLinkIsHidden(element)"
+              >
+                <span
+                  v-html="
+                    _icon(
+                      element.isOwner ? 'person-fill-gear' : 'person-fill',
+                      'white',
+                      26
                     )
                   "
                 ></span>
@@ -719,12 +752,28 @@ async function updateUserLinkIsValidated(userLink: EventUser) {
 async function updateUserLinkHasPaid(userLink: EventUser) {
   fetchIsLoading.value = true
 
-  userLink.isValidated = !userLink.hasPaid
+  userLink.hasPaid = !userLink.hasPaid
 
   await _fetch('/api/updateUserLinkHasPaid', {
     eventId: event.value.id,
     userLinkId: userLink.id,
     hasPaid: userLink.hasPaid,
+  })
+
+  setTimeout(() => {
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+async function updateUserLinkIsOwner(userLink: EventUser) {
+  fetchIsLoading.value = true
+
+  userLink.isOwner = !userLink.isOwner
+
+  await _fetch('/api/updateUserLinkIsOwner', {
+    eventId: event.value.id,
+    userLinkId: userLink.id,
+    isOwner: userLink.isOwner,
   })
 
   setTimeout(() => {
@@ -741,6 +790,21 @@ async function updateUserAlias(userLink: EventUser) {
       eventId: event.value.id,
       userLinkId: userLink.id,
       alias: userLink.alias,
+    })
+
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+async function updateUserPaymentNote(userLink: EventUser) {
+  fetchIsLoading.value = true
+  clearTimeout(fetchThrottleTimer)
+
+  fetchThrottleTimer = setTimeout(async () => {
+    await _fetch('/api/updateUserPaymentNote', {
+      eventId: event.value.id,
+      userLinkId: userLink.id,
+      paymentNote: userLink.paymentNote,
     })
 
     fetchIsLoading.value = false
