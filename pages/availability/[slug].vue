@@ -5,12 +5,12 @@
     <div class="mx-auto overflow-x-auto">
       <div class="flex py-6">
         <div class="flex flex-col items-center" :class="[{ 'mt-7': !isOwner }]">
-          <NuxtLink
+          <span
             v-if="isOwner"
-            :to="`/manage/${event.slug}`"
             v-html="_icon('gear-fill', _color.pick('blue'), 24)"
             class="mb-1 cursor-pointer hover:brightness-110"
-          ></NuxtLink>
+            @click="navigateTo(`/manage/${event.slug}`)"
+          ></span>
 
           <div
             v-for="userLink in userLinksLoggedUserFirst"
@@ -110,10 +110,6 @@
 </template>
 
 <script setup lang="ts">
-import draggable from 'vuedraggable'
-import VueDatePicker from '@vuepic/vue-datepicker'
-import '@vuepic/vue-datepicker/dist/main.css'
-
 const route = useRoute()
 
 const loggedUserId = useCookie<Number>('userId')
@@ -150,18 +146,6 @@ useState<String>('eventName', () => requestedEvent.name)
 
 const isOwner = loggedUserLink ? ref<Boolean>(loggedUserLink.isOwner) : false
 let event = ref<Event>(requestedEvent)
-let cloneEvent = JSON.parse(JSON.stringify(event.value))
-let showConfigModal = ref<Boolean>(false)
-let modalTab = ref<String>('general')
-let fetchThrottleTimer: any = null
-let fetchIsLoading = ref<Boolean>(false)
-
-let showAddUser = ref<Boolean>(false)
-let showAddDate = ref<Boolean>(false)
-let newDateTitle = ref<String>()
-let newDateDate = ref<Date | null>()
-let newUserEmail = ref<String>()
-let newUserAlias = ref<String>()
 
 const userLinksLoggedUserFirst = computed<[EventUser]>(() => {
   let sortedUserLinks = JSON.parse(JSON.stringify(event.value.userLinks))
@@ -177,14 +161,6 @@ const userLinksLoggedUserFirst = computed<[EventUser]>(() => {
 
   return sortedUserLinks
 })
-
-function getEmail(userLink: EventUser) {
-  const targetLink = cloneEvent.userLinks.find(
-    (ul: EventUser) => userLink.id == ul.id
-  )
-
-  return targetLink?.user.email
-}
 
 function selectAvailabilityIcon(
   status: string,
