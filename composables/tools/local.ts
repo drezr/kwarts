@@ -13,7 +13,7 @@ const localisation = {
       en: '',
     },
     names: {
-      fr: 'Nom, prénom',
+      fr: 'Prénom, Nom',
       nl: '',
       de: '',
       en: '',
