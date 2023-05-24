@@ -102,12 +102,43 @@
       <span class="text-red-500">*</span>
     </label>
 
-    <input
-      v-model="event.slug"
-      id="eventSlug"
-      class="mb-3 w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-      @input="updateEventSlug()"
-    />
+    <div class="flex items-center mb-3">
+      <input
+        v-model="newSlug"
+        id="eventSlug"
+        class="w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+        @input="checkSlugExist()"
+      />
+
+      <div
+        v-if="newSlug != event.slug"
+        class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 ml-1 command-button"
+        :class="
+          slugExist == false
+            ? 'bg-green-600'
+            : 'bg-gray-500 pointer-events-none'
+        "
+        :title="_local(['common', 'save'])"
+        @click="updateEventSlug()"
+      >
+        <span v-html="_icon('save', 'white', 20)"></span>
+      </div>
+    </div>
+
+    <div
+      v-if="slugExist && newSlug != event.slug"
+      class="flex items-center bg-red-100 rounded-lg p-4 mb-3 text-sm text-red-700"
+      role="alert"
+    >
+      <span
+        v-html="_icon('exclamation-triangle-fill', _color.pick('red', -4), 24)"
+        class="mr-4"
+      ></span>
+
+      <div>
+        {{ _local(['common', 'slugExistError']) }}
+      </div>
+    </div>
 
     <label
       for="eventTitle"
@@ -819,6 +850,8 @@ let dragging = ref<Boolean>(false)
 let modalTab = ref<String>('general')
 let fetchThrottleTimer: any = null
 let fetchIsLoading = ref<Boolean>(false)
+let newSlug = ref<any>(event.value.slug)
+let slugExist = ref<any>(null)
 
 let showAddUser = ref<Boolean>(false)
 let showAddDate = ref<Boolean>(false)
@@ -881,7 +914,33 @@ async function updateEvent(key: any, value: any) {
   }, 300)
 }
 
-async function updateEventSlug() {}
+async function updateEventSlug() {
+  fetchIsLoading.value = true
+  clearTimeout(fetchThrottleTimer)
+
+  fetchThrottleTimer = setTimeout(async () => {
+    await _fetch('/api/updateEventSlug', {
+      eventId: event.value.id,
+      slug: newSlug,
+    })
+
+    navigateTo(`/manage/${newSlug.value}`)
+
+    fetchIsLoading.value = false
+  }, 300)
+}
+
+async function checkSlugExist() {
+  slugExist.value = null
+
+  if (newSlug.value.length == 0) {
+    slugExist.value = null
+  } else {
+    slugExist.value = await _fetch('/api/checkSlugExist', {
+      slug: newSlug.value,
+    })
+  }
+}
 
 // User / EventUser
 

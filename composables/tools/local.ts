@@ -90,6 +90,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    slugExistError: {
+      fr: "L'identifiant de l'évènement exisite déjà. Choisissez-en un autre.",
+      nl: '',
+      de: '',
+      en: '',
+    },
     loginError: {
       fr: "L'adresse email et le mot de passe que vous avez introduit ne correspondent à aucun évènement.",
       nl: '',
@@ -182,6 +188,12 @@ const localisation = {
     },
     optional: {
       fr: 'facultatif',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    save: {
+      fr: 'Enregistrer',
       nl: '',
       de: '',
       en: '',
