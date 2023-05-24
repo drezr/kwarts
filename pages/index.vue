@@ -110,7 +110,7 @@ async function tryConnect() {
 
     useState<User>('loggedUser', () => request.user)
 
-    navigateTo('/availability/' + request.eventSlug)
+    navigateTo('/event/' + request.eventSlug)
   } else {
     loginError.value = true
   }

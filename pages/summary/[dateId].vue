@@ -3,7 +3,7 @@
 
   <div class="mt-4 text-xl text-center">
     <NuxtLink
-      :to="`/availability/${date.event.slug}`"
+      :to="`/event/${date.event.slug}`"
       class="mr-4 bg-slate-700 hover:bg-slate-600 text-white text-sm py-1 px-2 rounded inline-flex items-center relative"
       style="top: 2px"
     >

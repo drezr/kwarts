@@ -3,7 +3,7 @@
 
   <nav class="bg-slate-800 flex justify-center items-center py-1 flex-wrap">
     <NuxtLink
-      :to="`/availability/${event.slug}`"
+      :to="`/event/${event.slug}`"
       class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer flex"
     >
       <span
@@ -841,7 +841,7 @@ useState<String>('eventName', () => requestedEvent.name)
 const isOwner = loggedUserLink ? ref<boolean>(loggedUserLink.isOwner) : false
 
 if (!isOwner) {
-  navigateTo(`/availability/` + requestedEvent.slug)
+  navigateTo(`/event/` + requestedEvent.slug)
 }
 
 let event = ref<Event>(requestedEvent)
