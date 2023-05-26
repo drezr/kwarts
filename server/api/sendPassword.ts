@@ -35,14 +35,14 @@ export default defineEventHandler(async (e) => {
   })
 
   const emailContent = `
-    ${_local(['emailText', 'sendPasswordHello'])} ${
-    eventUser?.alias
-  },<br><br>
+    ${_local(['emailText', 'sendPasswordHello'])} ${eventUser?.alias},<br><br>
     ${_local(['emailText', 'sendPasswordContent'])} <b>
     ${event?.name}</b>:<br><br>
     ${_local(['common', 'email'])}: ${user?.email}<br>
     ${_local(['common', 'password'])}: ${eventUser?.password}<br><br>
-    <a href="${process.env.WEBSITE_HOST}" title="${event?.name}">
+    <a href="${process.env.WEBSITE_HOST}/connect/${user?.email}/${
+    eventUser?.password
+  }" title="${event?.name}">
     ${_local(['emailText', 'sendPasswordClickhere'])}
     </a><br><br>
     ${_local(['emailText', 'sendPasswordSeeyousoon'])} !

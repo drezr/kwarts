@@ -103,7 +103,7 @@ async function tryConnect() {
     password: password.value,
   })
 
-  if (request.eventId) {
+  if (request?.eventId) {
     useCookie('userId').value = request.user.id
     useCookie('token').value = request.token
     useCookie('eventId').value = request.eventId
@@ -114,13 +114,5 @@ async function tryConnect() {
   } else {
     loginError.value = true
   }
-}
-
-async function initDatabase() {
-  await _fetch('/api/initDatabase', {})
-}
-
-async function clearDatabase() {
-  await _fetch('/api/clearDatabase', {})
 }
 </script>
