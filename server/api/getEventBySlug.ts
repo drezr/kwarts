@@ -22,6 +22,8 @@ export default defineEventHandler(async (e) => {
           position: true,
           isHidden: true,
           isValidated: true,
+          isMotorized: true,
+          isReserve: true,
           hasPaid: authorization.isOwner,
           paymentNote: authorization.isOwner,
           isPasswordSent: authorization.isOwner,

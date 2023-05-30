@@ -53,8 +53,6 @@ model Date {
 model Availability {
   id          Int      @id @default(autoincrement())
   isAvailable Boolean  @default(false)
-  isMotorized Boolean?
-  isReserve   Boolean?
   date        Date     @relation(fields: [dateId], references: [id])
   dateId      Int
   user        User     @relation(fields: [userId], references: [id])
@@ -73,6 +71,8 @@ model EventUser {
   note           String?
   hasPaid        Boolean @default(false)
   paymentNote    String?
+  isMotorized    Boolean?
+  isReserve      Boolean?
   isValidated    Boolean @default(false)
   isPasswordSent Boolean @default(false)
   isHidden       Boolean @default(false)

@@ -47,8 +47,6 @@ export interface Date {
 export interface Availability {
     id: number,
     isAvailable: boolean,
-    isMotorized?: boolean,
-    isReserve?: boolean,
     date: Date,
     dateId: number,
     user: User,
@@ -65,6 +63,8 @@ export interface EventUser {
     note?: string,
     hasPaid: boolean,
     paymentNote?: string,
+    isMotorized?: boolean,
+    isReserve?: boolean,
     isValidated: boolean,
     isPasswordSent: boolean,
     isHidden: boolean,
