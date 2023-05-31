@@ -31,6 +31,8 @@ model Event {
   homepage          String?
   backlinkText      String?
   godfatherInfoLink String?
+  showIsMotorized   Boolean     @default(false)
+  showIsReserve     Boolean     @default(false)
   isFree            Boolean     @default(true)
   hasGodfather      Boolean     @default(false)
   isOpen            Boolean     @default(false)

@@ -30,8 +30,9 @@
         >
           {{ userLink.alias }}
 
-          <div class="flex mt-1">
+          <div class="flex">
             <span
+              v-if="event.showIsMotorized"
               v-html="
                 _icon(
                   selectOptionIcon(userLink, 'isMotorized'),
@@ -39,7 +40,7 @@
                   28
                 )
               "
-              class="mx-2"
+              class="mx-2 mt-1"
               :class="[
                 {
                   'cursor-pointer': isOwner || userLink.userId == loggedUserId,
@@ -50,7 +51,13 @@
                 },
               ]"
               :title="
-                _local(['common', selectOptionTooltip(userLink, 'isMotorized')])
+                _local([
+                  'common',
+                  selectOptionTooltip(userLink, 'isMotorized'),
+                ]) +
+                (isOwner || userLink.userId == loggedUserId
+                  ? _local(['common', 'clickToUpdateTooltip'])
+                  : '')
               "
               @click="
                 isOwner || userLink.userId == loggedUserId
@@ -60,6 +67,7 @@
             ></span>
 
             <span
+              v-if="event.showIsReserve"
               v-html="
                 _icon(
                   selectOptionIcon(userLink, 'isReserve'),
@@ -67,7 +75,7 @@
                   28
                 )
               "
-              class="mx-2"
+              class="mx-2 mt-1"
               :class="[
                 {
                   'cursor-pointer': isOwner || userLink.userId == loggedUserId,
@@ -78,7 +86,10 @@
                 },
               ]"
               :title="
-                _local(['common', selectOptionTooltip(userLink, 'isReserve')])
+                _local(['common', selectOptionTooltip(userLink, 'isReserve')]) +
+                (isOwner || userLink.userId == loggedUserId
+                  ? _local(['common', 'clickToUpdateTooltip'])
+                  : '')
               "
               @click="
                 isOwner || userLink.userId == loggedUserId

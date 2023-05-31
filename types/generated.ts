@@ -25,6 +25,8 @@ export interface Event {
     homepage?: string,
     backlinkText?: string,
     godfatherInfoLink?: string,
+    showIsMotorized: boolean,
+    showIsReserve: boolean,
     isFree: boolean,
     hasGodfather: boolean,
     isOpen: boolean,

@@ -78,6 +78,18 @@ const localisation = {
       de: '',
       en: '',
     },
+    showIsMotorized: {
+      fr: "Donner la possibilité d'indiquer si l'on possède un véhicule pour se déplacer",
+      nl: '',
+      de: '',
+      en: '',
+    },
+    showIsReserve: {
+      fr: "Donner la possibilité d'indiquer si l'on souhaite être réserviste",
+      nl: '',
+      de: '',
+      en: '',
+    },
     eventHasGodfather: {
       fr: 'Donner la possibilité de renseigner un parrain',
       nl: '',
@@ -206,6 +218,12 @@ const localisation = {
     },
     notes: {
       fr: 'Remarques',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    clickToUpdateTooltip: {
+      fr: "\nCliquez ici pour mettre à jour l'information.",
       nl: '',
       de: '',
       en: '',
