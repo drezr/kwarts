@@ -304,7 +304,7 @@
         <input
           v-model="event.hasGodfather"
           type="checkbox"
-          id="registerPage"
+          id="hasGodfather"
           class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
           @change="updateEvent('hasGodfather', event.hasGodfather)"
         />
@@ -490,8 +490,9 @@
     ref="modalPeople"
     style="max-width: 1000px"
   >
-    <div class="flex">
+    <div class="flex justify-center">
       <button
+        v-if="peopleView == 'classic'"
         class="bg-purple-900 hover:bg-purple-800 flex w-full justify-center rounded-md px-3 py-1.5 mb-4 text-sm font-semibold leading-6 text-white shadow-sm"
         @click="sortUsersByName()"
       >
@@ -503,6 +504,7 @@
       </button>
 
       <button
+        v-if="peopleView == 'classic'"
         class="bg-green-700 hover:bg-green-600 flex w-full justify-center rounded-md px-3 py-1.5 mb-4 text-sm font-semibold leading-6 text-white shadow-sm ml-1"
         @click="toggleNewElement()"
       >
@@ -512,9 +514,256 @@
         ></span>
         {{ _local(['common', 'createUser']) }}
       </button>
+
+      <button
+        class="bg-blue-700 hover:bg-blue-600 flex w-96 justify-center rounded-md px-3 py-1.5 mb-4 text-sm font-semibold leading-6 text-white shadow-sm ml-1"
+        @click="peopleView = peopleView == 'classic' ? 'table' : 'classic'"
+      >
+        <span
+          v-html="
+            _icon(peopleView == 'classic' ? 'table' : 'list-ul', 'white', 24)
+          "
+          class="mr-2"
+        ></span>
+        {{
+          _local([
+            'common',
+            peopleView == 'classic' ? 'tableView' : 'classicView',
+          ])
+        }}
+      </button>
+    </div>
+
+    <div
+      v-if="peopleView == 'table'"
+      class="max-w-full w-full absolute left-0 pb-3 overflow-auto"
+      style="height: calc(100vh - 186px)"
+    >
+      <table class="border-collapse w-full">
+        <thead>
+          <tr>
+            <th
+              v-for="keyword in [
+                { field: '', locale: '' },
+                { field: 'alias', locale: 'names' },
+                { field: 'email', locale: 'email' },
+                { field: 'phone', locale: 'phoneShort' },
+                { field: 'fideid', locale: 'fideid' },
+                { field: 'hasPaid', locale: 'paid' },
+                { field: 'paymentNote', locale: 'paymentNote' },
+                { field: 'isValidated', locale: 'validated' },
+                { field: 'isHidden', locale: 'hidden' },
+                { field: 'isMotorized', locale: 'motorized' },
+                { field: 'isReserve', locale: 'reserve' },
+                { field: 'note', locale: 'notes' },
+                { field: 'godfather', locale: 'godfather' },
+                { field: 'isOwner', locale: 'owner' },
+                { field: 'isPasswordSent', locale: 'passwordSentShort' },
+              ]"
+              class="p-1 font-bold bg-gray-200 text-gray-600 border border-gray-300 text-sm px-3"
+              @click="sortUserLinksBy(keyword.field)"
+            >
+              {{ _local(['common', keyword.locale]) }}
+            </th>
+          </tr>
+        </thead>
+
+        <draggable
+          v-model="event.userLinks"
+          @start="dragging = true"
+          @end="dragging = false"
+          handle=".handle"
+          item-key="id"
+          v-bind="{
+            animation: 200,
+            group: 'description',
+            disabled: false,
+            ghostClass: 'ghost',
+          }"
+          @change="updateUserLinkPositions()"
+          :tag="'tbody'"
+          class="bg-white"
+        >
+          <template #item="{ element }">
+            <tr>
+              <td class="text-center border p-2 handle cursor-grab">
+                <span
+                  v-html="_icon('grip-horizontal', _color.pick('pink'), 16)"
+                ></span>
+              </td>
+
+              <td class="border h-6 p-0">
+                <input
+                  type="text"
+                  v-model="element.alias"
+                  class="border-none text-sm h-full w-full"
+                  style="min-width: 200px"
+                  @input="updateUserLink(element, 'alias', 300)"
+                />
+              </td>
+
+              <td class="border h-6 p-0">
+                <input
+                  type="text"
+                  v-model="element.user.email"
+                  class="border-none text-sm h-full w-full bg-gray-200"
+                  style="min-width: 200px"
+                  disabled
+                />
+              </td>
+
+              <td class="border h-6 p-0">
+                <input
+                  type="text"
+                  v-model="element.phone"
+                  class="border-none text-sm h-full w-full"
+                  style="min-width: 120px"
+                  @input="updateUserLink(element, 'phone', 300)"
+                />
+              </td>
+
+              <td class="border h-6">
+                <input
+                  type="text"
+                  v-model="element.fideid"
+                  class="border-none text-sm h-full w-full"
+                  style="min-width: 120px"
+                  @input="updateUserLink(element, 'fideid', 300)"
+                />
+              </td>
+
+              <td class="text-center border p-0">
+                <input
+                  type="checkbox"
+                  v-model="element.hasPaid"
+                  @click="
+                    ;(element.hasPaid = !element.hasPaid),
+                      updateUserLink(element, 'hasPaid', 0)
+                  "
+                />
+              </td>
+
+              <td class="border h-6 p-0">
+                <textarea
+                  v-model="element.paymentNote"
+                  class="border-none text-sm p-1 relative h-full w-full"
+                  style="top: 3px; min-width: 200px"
+                  rows="1"
+                  @input="updateUserLink(element, 'paymentNote', 300)"
+                >
+                </textarea>
+              </td>
+
+              <td class="text-center border h-6 p-0">
+                <input
+                  type="checkbox"
+                  v-model="element.isValidated"
+                  @click="
+                    ;(element.isValidated = !element.isValidated),
+                      updateUserLink(element, 'isValidated', 0)
+                  "
+                />
+              </td>
+
+              <td class="text-center border h-6 p-0">
+                <input
+                  type="checkbox"
+                  v-model="element.isHidden"
+                  @click="
+                    ;(element.isHidden = !element.isHidden),
+                      updateUserLink(element, 'isHidden', 0)
+                  "
+                />
+              </td>
+
+              <td class="text-center border h-6 p-0">
+                <input
+                  type="checkbox"
+                  v-model="element.isMotorized"
+                  @click="
+                    ;(element.isMotorized = !element.isMotorized),
+                      updateUserLink(element, 'isMotorized', 0)
+                  "
+                />
+              </td>
+
+              <td class="text-center border h-6 p-0">
+                <input
+                  type="checkbox"
+                  v-model="element.isReserve"
+                  @click="
+                    ;(element.isReserve = !element.isReserve),
+                      updateUserLink(element, 'isReserve', 0)
+                  "
+                />
+              </td>
+
+              <td class="border h-6 p-0">
+                <textarea
+                  v-model="element.note"
+                  class="border-none text-sm p-1 relative h-full w-full bg-gray-100"
+                  style="top: 3px; min-width: 200px"
+                  disabled
+                  rows="1"
+                >
+                </textarea>
+              </td>
+
+              <td class="border h-6 p-0">
+                <input
+                  type="text"
+                  v-model="element.godfather"
+                  class="border-none w-32 text-sm h-full bg-gray-100"
+                  disabled
+                />
+              </td>
+
+              <td class="text-center border h-6 p-0">
+                <input
+                  type="checkbox"
+                  v-model="element.isOwner"
+                  :disabled="element.userId == loggedUserId"
+                />
+              </td>
+
+              <td class="text-center border h-6 p-0 w-28">
+                <div class="w-full h-full flex justify-center items-center">
+                  <div
+                    class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110"
+                    style="height: 26px; width: 26px"
+                    :class="[
+                      { 'bg-red-500': !element.isPasswordSent },
+                      { 'bg-green-600': element.isPasswordSent },
+                    ]"
+                    :title="
+                      element.isPasswordSent
+                        ? _local(['common', 'passwordSent'])
+                        : _local(['common', 'passwordNotSent'])
+                    "
+                    @click="sendPassword(element)"
+                  >
+                    <span
+                      v-html="
+                        _icon(
+                          element.isPasswordSent
+                            ? 'envelope-check-fill'
+                            : 'envelope-x-fill',
+                          'white',
+                          16
+                        )
+                      "
+                    ></span>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </template>
+        </draggable>
+      </table>
     </div>
 
     <draggable
+      v-if="peopleView == 'classic'"
       v-model="event.userLinks"
       @start="dragging = true"
       @end="dragging = false"
@@ -568,15 +817,6 @@
             >
               <span v-html="_icon('save', 'white', 20)"></span>
             </div>
-
-            <!-- <input
-              type="text"
-              v-model="element.paymentNote"
-              class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
-              :placeholder="_local(['common', 'paymentNote'])"
-              style="height: 38px; min-width: 200px; max-width: 300px"
-              @input="updateUserPaymentNote(element)"
-            /> -->
 
             <div class="flex items-center">
               <div
@@ -1013,6 +1253,7 @@ let event = ref<Event>(requestedEvent)
 let cloneEvent = ref(JSON.parse(JSON.stringify(event.value)))
 let dragging = ref<Boolean>(false)
 let modalTab = ref<String>('general')
+let peopleView = ref<String>('classic')
 let fetchThrottleTimer: any = null
 let fetchIsLoading = ref<Boolean>(false)
 let newSlug = ref<any>(event.value.slug)
@@ -1069,6 +1310,56 @@ function hasMoreInfo(userLink: EventUser) {
     return true
 
   return false
+}
+
+function sortUserLinksBy(field: string) {
+  const stringFields = [
+    'alias',
+    'phone',
+    'fideid',
+    'paymentNote',
+    'note',
+    'godfather',
+  ]
+
+  const boolFields = [
+    'hasPaid',
+    'isValidated',
+    'isHidden',
+    'isMotorized',
+    'isReserve',
+    'isOwner',
+    'isPasswordSent',
+  ]
+
+  if (stringFields.includes(field)) {
+    event.value.userLinks.sort((a: EventUser, b: EventUser) => {
+      let x = a[field as keyof EventUser]
+      let y = b[field as keyof EventUser]
+
+      if (x) return y ? String(x).localeCompare(String(y)) : -1
+      else if (y) return x ? String(y).localeCompare(String(x)) : 1
+
+      return 0
+    })
+  } else if (boolFields.includes(field)) {
+    event.value.userLinks.sort((a: EventUser, b: EventUser) => {
+      let x = a[field as keyof EventUser]
+      let y = b[field as keyof EventUser]
+
+      return Number(y) - Number(x)
+    })
+  } else if (field == 'email') {
+    event.value.userLinks.sort((a: EventUser, b: EventUser) => {
+      let x = a.user.email
+      let y = b.user.email
+
+      if (x) return y ? x.localeCompare(y) : -1
+      else if (y) return x ? y.localeCompare(x) : 1
+
+      return 0
+    })
+  }
 }
 
 /*

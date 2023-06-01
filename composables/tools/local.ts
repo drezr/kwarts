@@ -198,6 +198,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    phoneShort: {
+      fr: 'Téléphone',
+      nl: '',
+      de: '',
+      en: '',
+    },
     godfather: {
       fr: 'Parrain',
       nl: '',
@@ -390,6 +396,18 @@ const localisation = {
       de: '',
       en: '',
     },
+    tableView: {
+      fr: 'Vue en tableau',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    classicView: {
+      fr: 'Vue en liste',
+      nl: '',
+      de: '',
+      en: '',
+    },
     createDate: {
       fr: 'Ajouter une date',
       nl: '',
@@ -518,6 +536,48 @@ const localisation = {
     },
     successRegister: {
       fr: 'Merci, vous avez bien été inscrit(e) au',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    validated: {
+      fr: 'Validé',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    paid: {
+      fr: 'Payé',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    hidden: {
+      fr: 'Masqué',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    owner: {
+      fr: 'Administrateur',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    motorized: {
+      fr: 'Véhiculé',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    reserve: {
+      fr: 'Réserviste',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    passwordSentShort: {
+      fr: 'MDP envoyé',
       nl: '',
       de: '',
       en: '',
