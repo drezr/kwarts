@@ -560,7 +560,7 @@
                 { field: 'isOwner', locale: 'owner' },
                 { field: 'isPasswordSent', locale: 'passwordSentShort' },
               ]"
-              class="p-1 font-bold bg-gray-200 text-gray-600 border border-gray-300 text-sm px-3"
+              class="p-1 font-bold bg-gray-200 text-gray-600 border border-gray-300 text-sm px-3 cursor-pointer hover:brightness-110"
               @click="sortUserLinksBy(keyword.field)"
             >
               {{ _local(['common', keyword.locale]) }}
