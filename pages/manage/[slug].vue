@@ -891,7 +891,7 @@
         ></textarea>
       </div>
 
-      <div class="mb-1">
+      <div class="mb-1" v-if="event.isOpen">
         <label for="note" class="text-xs">
           {{ _local(['common', 'notesFromUser']) }}
         </label>
@@ -907,7 +907,7 @@
         ></textarea>
       </div>
 
-      <div class="mb-1" v-if="event.hasGodfather">
+      <div class="mb-1" v-if="event.isOpen && event.hasGodfather">
         <label for="godfather" class="text-xs">
           {{ _local(['common', 'godfatherFromUser']) }}
         </label>
