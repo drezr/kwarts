@@ -560,7 +560,7 @@
                 { field: 'isOwner', locale: 'owner' },
                 { field: 'isPasswordSent', locale: 'passwordSentShort' },
               ]"
-              class="p-1 font-bold bg-gray-200 text-gray-600 border border-gray-300 text-sm px-3 cursor-pointer hover:brightness-110"
+              class="p-1 font-bold bg-gray-200 text-gray-600 border border-gray-300 text-sm px-3 cursor-pointer hover:brightness-105"
               @click="sortUserLinksBy(keyword.field)"
             >
               {{ _local(['common', keyword.locale]) }}
@@ -585,7 +585,7 @@
           class="bg-white"
         >
           <template #item="{ element }">
-            <tr>
+            <tr class="hover:bg-gray-100">
               <td class="text-center border p-2 handle cursor-grab">
                 <span
                   v-html="_icon('grip-horizontal', _color.pick('pink'), 16)"
@@ -596,7 +596,7 @@
                 <input
                   type="text"
                   v-model="element.alias"
-                  class="border-none text-sm h-full w-full"
+                  class="border-none text-sm h-full w-full bg-transparent"
                   style="min-width: 200px"
                   @input="updateUserLink(element, 'alias', 300)"
                 />
@@ -616,7 +616,7 @@
                 <input
                   type="text"
                   v-model="element.phone"
-                  class="border-none text-sm h-full w-full"
+                  class="border-none text-sm h-full w-full bg-transparent"
                   style="min-width: 120px"
                   @input="updateUserLink(element, 'phone', 300)"
                 />
@@ -626,7 +626,7 @@
                 <input
                   type="text"
                   v-model="element.fideid"
-                  class="border-none text-sm h-full w-full"
+                  class="border-none text-sm h-full w-full bg-transparent"
                   style="min-width: 120px"
                   @input="updateUserLink(element, 'fideid', 300)"
                 />
@@ -646,7 +646,7 @@
               <td class="border h-6 p-0">
                 <textarea
                   v-model="element.paymentNote"
-                  class="border-none text-sm p-1 relative h-full w-full"
+                  class="border-none text-sm p-1 relative h-full w-full bg-transparent"
                   style="top: 3px; min-width: 200px"
                   rows="1"
                   @input="updateUserLink(element, 'paymentNote', 300)"
