@@ -69,6 +69,7 @@ model EventUser {
   alias          String
   password       String
   fideid         String?
+  phone          String?
   godfather      String?
   note           String?
   hasPaid        Boolean @default(false)

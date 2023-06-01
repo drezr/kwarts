@@ -542,7 +542,7 @@
               class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
               :placeholder="_local(['common', 'alias'])"
               style="height: 38px; min-width: 200px"
-              @input="updateUserAlias(element)"
+              @input="updateUserLink(element, 'alias', 300)"
             />
 
             <input
@@ -617,7 +617,10 @@
                     ? _local(['common', 'hasPaidTooltip'])
                     : _local(['common', 'hasNotPaidTooltip'])
                 "
-                @click="updateUserLinkHasPaid(element)"
+                @click="
+                  ;(element.hasPaid = !element.hasPaid),
+                    updateUserLink(element, 'hasPaid', 0)
+                "
               >
                 <span
                   v-html="_icon('currency-euro', 'white', 30)"
@@ -636,7 +639,10 @@
                     ? _local(['common', 'isValidatedTooltip'])
                     : _local(['common', 'isNotValidatedTooltip'])
                 "
-                @click="updateUserLinkIsValidated(element)"
+                @click="
+                  ;(element.isValidated = !element.isValidated),
+                    updateUserLink(element, 'isValidated', 0)
+                "
               >
                 <span
                   v-html="
@@ -656,7 +662,10 @@
                     ? _local(['common', 'isHiddenTooltip'])
                     : _local(['common', 'isVisibleTooltip'])
                 "
-                @click="updateUserLinkIsHidden(element)"
+                @click="
+                  ;(element.isHidden = !element.isHidden),
+                    updateUserLink(element, 'isHidden', 0)
+                "
               >
                 <span
                   v-html="
@@ -696,6 +705,21 @@
                     )
                   "
                 ></span>
+              </div>
+
+              <div
+                class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 mr-1 command-button"
+                :class="[
+                  { 'bg-orange-500': hasMoreInfo(element) },
+                  { 'bg-gray-500': !hasMoreInfo(element) },
+                ]"
+                :title="_local(['common', 'moreInfo'])"
+                @click="
+                  moreInfoDialog.showModal(),
+                    (moreInfoSelectedUserLink = element)
+                "
+              >
+                <span v-html="_icon('three-dots', 'white', 26)"></span>
               </div>
 
               <div
@@ -808,6 +832,129 @@
       ></span>
     </div>
   </div>
+
+  <dialog
+    ref="moreInfoDialog"
+    @mousedown="closeDialog($event, moreInfoDialog)"
+    class="w-96"
+  >
+    <div v-if="moreInfoSelectedUserLink">
+      <div class="font-bold text-lg mb-3 flex">
+        <span v-html="_icon('person-fill', 'grey', 26)" class="mr-2"></span>
+
+        {{ moreInfoSelectedUserLink.alias }}
+      </div>
+
+      <div class="mb-1">
+        <label for="fideid" class="text-xs">
+          {{ _local(['common', 'fideid']) }}
+        </label>
+
+        <input
+          id="fideid"
+          v-model="moreInfoSelectedUserLink.fideid"
+          type="text"
+          class="w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
+          :placeholder="_local(['common', 'fideid'])"
+          @input="updateUserLink(moreInfoSelectedUserLink, 'fideid', 300)"
+        />
+      </div>
+
+      <div class="mb-1">
+        <label for="phone" class="text-xs">
+          {{ _local(['common', 'phone']) }}
+        </label>
+
+        <input
+          id="phone"
+          v-model="moreInfoSelectedUserLink.phone"
+          type="text"
+          class="w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
+          :placeholder="_local(['common', 'phone'])"
+          @input="updateUserLink(moreInfoSelectedUserLink, 'phone', 300)"
+        />
+      </div>
+
+      <div class="mb-1">
+        <label for="paymentNote" class="text-xs">
+          {{ _local(['common', 'paymentNote']) }}
+        </label>
+
+        <textarea
+          id="paymentNote"
+          v-model="moreInfoSelectedUserLink.paymentNote"
+          type="text"
+          class="w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
+          :placeholder="_local(['common', 'paymentNote'])"
+          @input="updateUserLink(moreInfoSelectedUserLink, 'paymentNote', 300)"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <div class="mb-1">
+        <label for="note" class="text-xs">
+          {{ _local(['common', 'notesFromUser']) }}
+        </label>
+
+        <textarea
+          id="note"
+          v-model="moreInfoSelectedUserLink.note"
+          type="text"
+          class="w-full block rounded border-0 py-1.5 px-1.5 bg-gray-200 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
+          :placeholder="_local(['common', 'notesFromUser'])"
+          disabled
+          rows="3"
+        ></textarea>
+      </div>
+
+      <div class="mb-1" v-if="event.hasGodfather">
+        <label for="godfather" class="text-xs">
+          {{ _local(['common', 'godfatherFromUser']) }}
+        </label>
+
+        <input
+          id="godfather"
+          v-model="moreInfoSelectedUserLink.godfather"
+          type="text"
+          class="w-full block rounded border-0 py-1.5 px-1.5 bg-gray-200 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
+          :placeholder="_local(['common', 'godfatherFromUser'])"
+          disabled
+        />
+      </div>
+
+      <label
+        v-if="event.showIsMotorized"
+        for="isMotorized"
+        class="flex items-center text-sm font-medium leading-6 text-gray-900 my-6 hover:opacity-70"
+      >
+        <input
+          v-model="moreInfoSelectedUserLink.isMotorized"
+          type="checkbox"
+          id="isMotorized"
+          class="mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+          @change="updateUserLink(moreInfoSelectedUserLink, 'isMotorized', 0)"
+        />
+
+        {{ _local(['common', 'isMotorizedTooltip']) }}
+      </label>
+
+      <label
+        v-if="event.showIsReserve"
+        for="isReserve"
+        class="flex items-center text-sm font-medium leading-6 text-gray-900 hover:opacity-70"
+      >
+        <input
+          v-model="moreInfoSelectedUserLink.isReserve"
+          type="checkbox"
+          id="isReserve"
+          class="mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+          @change="updateUserLink(moreInfoSelectedUserLink, 'isReserve', 0)"
+        />
+
+        {{ _local(['common', 'isReserveTooltip']) }}
+      </label>
+    </div>
+  </dialog>
 </template>
 
 <script setup lang="ts">
@@ -882,6 +1029,8 @@ const modalDates = ref()
 const modalPeople = ref()
 const newDateTitleInput = ref()
 const newUserAliasInput = ref()
+const moreInfoDialog = ref()
+let moreInfoSelectedUserLink = ref()
 
 function getEmail(userLink: EventUser) {
   const targetLink = cloneEvent.value.userLinks.find(
@@ -907,6 +1056,19 @@ function toggleNewElement() {
       newUserAliasInput.value.scrollIntoView()
     }, 10)
   }
+}
+
+function hasMoreInfo(userLink: EventUser) {
+  if (
+    userLink.paymentNote ||
+    userLink.note ||
+    userLink.godfather ||
+    userLink.phone ||
+    userLink.fideid
+  )
+    return true
+
+  return false
 }
 
 /*
@@ -1001,6 +1163,27 @@ async function createUser() {
   }, 500)
 }
 
+async function updateUserLink(
+  userLink: EventUser,
+  key: string,
+  throttle: number
+) {
+  fetchIsLoading.value = true
+  clearTimeout(fetchThrottleTimer)
+
+  let data: any = {}
+  data[key] = userLink[key as keyof EventUser]
+
+  fetchThrottleTimer = setTimeout(async () => {
+    await _fetch('/api/updateUserLink', {
+      userLinkId: userLink.id,
+      data: data,
+    })
+
+    fetchIsLoading.value = false
+  }, throttle)
+}
+
 async function updateUserLinkPositions() {
   const userLinkPositionsData = []
   fetchIsLoading.value = true
@@ -1032,54 +1215,6 @@ async function sortUsersByName() {
   }, 10)
 }
 
-async function updateUserLinkIsHidden(userLink: EventUser) {
-  fetchIsLoading.value = true
-
-  userLink.isHidden = !userLink.isHidden
-
-  await _fetch('/api/updateUserLinkIsHidden', {
-    eventId: event.value.id,
-    userLinkId: userLink.id,
-    isHidden: userLink.isHidden,
-  })
-
-  setTimeout(() => {
-    fetchIsLoading.value = false
-  }, 500)
-}
-
-async function updateUserLinkIsValidated(userLink: EventUser) {
-  fetchIsLoading.value = true
-
-  userLink.isValidated = !userLink.isValidated
-
-  await _fetch('/api/updateUserLinkIsValidated', {
-    eventId: event.value.id,
-    userLinkId: userLink.id,
-    isValidated: userLink.isValidated,
-  })
-
-  setTimeout(() => {
-    fetchIsLoading.value = false
-  }, 500)
-}
-
-async function updateUserLinkHasPaid(userLink: EventUser) {
-  fetchIsLoading.value = true
-
-  userLink.hasPaid = !userLink.hasPaid
-
-  await _fetch('/api/updateUserLinkHasPaid', {
-    eventId: event.value.id,
-    userLinkId: userLink.id,
-    hasPaid: userLink.hasPaid,
-  })
-
-  setTimeout(() => {
-    fetchIsLoading.value = false
-  }, 500)
-}
-
 async function updateUserLinkIsOwner(userLink: EventUser) {
   if (confirm(_local(['common', 'areyousure']))) {
     fetchIsLoading.value = true
@@ -1096,36 +1231,6 @@ async function updateUserLinkIsOwner(userLink: EventUser) {
       fetchIsLoading.value = false
     }, 500)
   }
-}
-
-async function updateUserAlias(userLink: EventUser) {
-  fetchIsLoading.value = true
-  clearTimeout(fetchThrottleTimer)
-
-  fetchThrottleTimer = setTimeout(async () => {
-    await _fetch('/api/updateUserAlias', {
-      eventId: event.value.id,
-      userLinkId: userLink.id,
-      alias: userLink.alias,
-    })
-
-    fetchIsLoading.value = false
-  }, 500)
-}
-
-async function updateUserPaymentNote(userLink: EventUser) {
-  fetchIsLoading.value = true
-  clearTimeout(fetchThrottleTimer)
-
-  fetchThrottleTimer = setTimeout(async () => {
-    await _fetch('/api/updateUserPaymentNote', {
-      eventId: event.value.id,
-      userLinkId: userLink.id,
-      paymentNote: userLink.paymentNote,
-    })
-
-    fetchIsLoading.value = false
-  }, 500)
 }
 
 async function updateUserEmail(userLink: EventUser) {

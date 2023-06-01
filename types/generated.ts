@@ -61,6 +61,7 @@ export interface EventUser {
     alias: string,
     password: string,
     fideid?: string,
+    phone?: string,
     godfather?: string,
     note?: string,
     hasPaid: boolean,

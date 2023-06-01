@@ -192,8 +192,20 @@ const localisation = {
       de: '',
       en: '',
     },
+    phone: {
+      fr: 'Numéro de téléphone',
+      nl: '',
+      de: '',
+      en: '',
+    },
     godfather: {
       fr: 'Parrain',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    godfatherFromUser: {
+      fr: "Parrain renseigné par la personne à l'enregistrement",
       nl: '',
       de: '',
       en: '',
@@ -218,6 +230,18 @@ const localisation = {
     },
     notes: {
       fr: 'Remarques',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    notesFromUser: {
+      fr: "Remarques de la personne à l'enregistrement",
+      nl: '',
+      de: '',
+      en: '',
+    },
+    moreInfo: {
+      fr: 'Consultez toutes les informations sur cette personne.',
       nl: '',
       de: '',
       en: '',
@@ -414,6 +438,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    isValidatedSimpleTooltip: {
+      fr: 'Cet utilisateur est validé.',
+      nl: '',
+      de: '',
+      en: '',
+    },
     isValidatedTooltip: {
       fr: 'Cet utilisateur est validé.\nCliquez ici pour changer le statut en "non validé".',
       nl: '',
@@ -422,6 +452,12 @@ const localisation = {
     },
     isNotValidatedTooltip: {
       fr: 'Cet utilisateur n\'est pas validé.\nCliquez ici pour changer le statut en "validé".',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    hasPaidSimpleTooltip: {
+      fr: 'Cet utilisateur a payé.',
       nl: '',
       de: '',
       en: '',
@@ -446,6 +482,12 @@ const localisation = {
     },
     isNotLockedTooltip: {
       fr: 'Cette date est déverrouillée.\nCliquez ici pour la verrouiller.',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    isOwnerSimpleTooltip: {
+      fr: "Cet utilisateur est administrateur de l'évènement.",
       nl: '',
       de: '',
       en: '',
