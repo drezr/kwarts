@@ -349,7 +349,7 @@ const localisation = {
       en: '',
     },
     registerTo: {
-      fr: "S'inscrire au",
+      fr: "S'inscrire à l'évènement",
       nl: '',
       de: '',
       en: '',
