@@ -73,7 +73,7 @@ const localisation = {
       en: '',
     },
     checkListingPage: {
-      fr: "Consulter la page contenant la liste des inscriptions",
+      fr: 'Consulter la page contenant la liste des inscriptions',
       nl: '',
       de: '',
       en: '',
