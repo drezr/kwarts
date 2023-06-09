@@ -66,6 +66,18 @@ const localisation = {
       de: '',
       en: '',
     },
+    listingPage: {
+      fr: "Liste d'inscriptions publique",
+      nl: '',
+      de: '',
+      en: '',
+    },
+    checkListingPage: {
+      fr: "Consulter la page contenant la liste des inscriptions",
+      nl: '',
+      de: '',
+      en: '',
+    },
     eventBacklinkText: {
       fr: "Texte de retour vers la page d'accueil",
       nl: '',
@@ -200,6 +212,12 @@ const localisation = {
     },
     phoneShort: {
       fr: 'Téléphone',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    nationality: {
+      fr: 'Nationalité',
       nl: '',
       de: '',
       en: '',
@@ -362,6 +380,12 @@ const localisation = {
     },
     fideid: {
       fr: 'Matricule FIDE',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    elo: {
+      fr: 'Classement Elo',
       nl: '',
       de: '',
       en: '',

@@ -31,6 +31,7 @@ model Event {
   homepage          String?
   backlinkText      String?
   godfatherInfoLink String?
+  isListingOpen     Boolean     @default(false)
   showIsMotorized   Boolean     @default(false)
   showIsReserve     Boolean     @default(false)
   isFree            Boolean     @default(true)
@@ -72,6 +73,8 @@ model EventUser {
   phone          String?
   godfather      String?
   note           String?
+  elo            String?
+  nationality    String?
   hasPaid        Boolean @default(false)
   paymentNote    String?
   isMotorized    Boolean?
