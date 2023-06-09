@@ -32,6 +32,10 @@ let requestedEvent = await _fetch('/api/getListingBySlug', {
 
 if (!requestedEvent) logout()
 
+requestedEvent.userLinks = requestedEvent.userLinks.filter(
+  (u: EventUser) => u.isValidated
+)
+
 const title = requestedEvent.title
   ? requestedEvent.title
   : requestedEvent.name

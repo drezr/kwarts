@@ -17,6 +17,7 @@ export default defineEventHandler(async (e) => {
           fideid: true,
           elo: true,
           nationality: true,
+          isValidated: true,
         },
       },
     },
