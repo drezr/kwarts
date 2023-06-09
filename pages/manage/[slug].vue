@@ -415,9 +415,9 @@
               <td class="text-center border p-0">
                 <input type="checkbox" v-model="element.hasPaid"
                   @click="
-                                                                                                                                                                                          ; (element.hasPaid = !element.hasPaid),
+                                                                                                                                                                                                                              ; (element.hasPaid = !element.hasPaid),
                     updateUserLink(element, 'hasPaid', 0)
-                                                                                                                                                                                        " />
+                                                                                                                                                                                                                            " />
               </td>
 
               <td class="border h-6 p-0">
@@ -508,7 +508,7 @@
             group: 'description',
               disabled: false,
                 ghostClass: 'ghost',
-                                                                  }
+                                                                              }
       " @change=" updateUserLinkPositions() ">
       <template #item=" { element } ">
         <div class="mb-3 flex items-center">
@@ -670,7 +670,7 @@
                 :class="
                   {
                     'pointer-events-none': element.userId == loggedUserId,
-                                                                                                                                                                                }
+                                                                                                                                                                                                                }
                 " :title=" _local(['common', 'delete']) " @click=" deleteUserLink(element) ">
                 <span v-html="
                   _icon(
@@ -705,7 +705,7 @@
               : null
           " /> -->
 
-        <input v-model=" newUserEmail " type="email"
+        <!-- <input v-model=" newUserEmail " type="email"
           class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset text-sm leading-6"
           :class="
             [
@@ -726,7 +726,7 @@
       !newUserEmail)
     ? createUser()
     : null
-" />
+" /> -->
       </div>
 
       <span v-html="
