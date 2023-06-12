@@ -298,6 +298,21 @@
       />
 
       <label
+        for="registerShowDates"
+        class="flex text-sm font-medium leading-6 text-gray-900"
+      >
+        <input
+          v-model="event.registerShowDates"
+          type="checkbox"
+          id="registerShowDates"
+          class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+          @change="updateEvent('registerShowDates', event.registerShowDates, 0)"
+        />
+
+        {{ _local(['common', 'registerShowDates']) }}
+      </label>
+
+      <label
         for="showFideid"
         class="flex text-sm font-medium leading-6 text-gray-900"
       >

@@ -114,6 +114,18 @@ const localisation = {
       de: '',
       en: '',
     },
+    registerShowDates: {
+      fr: "Donner la possibilité de renseigner les disponibilités aux dates de l'évènement",
+      nl: '',
+      de: '',
+      en: '',
+    },
+    registerShowDatesTooltip: {
+      fr: "Vos disponibilités pour l'évènement",
+      nl: '',
+      de: '',
+      en: '',
+    },
     eventHasGodfather: {
       fr: 'Donner la possibilité de renseigner un parrain',
       nl: '',
@@ -571,7 +583,13 @@ const localisation = {
       en: '',
     },
     successRegister: {
-      fr: 'Merci, vous avez bien été inscrit(e) au',
+      fr: 'Merci, vous avez bien été inscrit(e) à l\'évènement',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    registerAnotherPerson: {
+      fr: 'Inscrire une autre personne à l\'évènement',
       nl: '',
       de: '',
       en: '',

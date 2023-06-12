@@ -35,6 +35,7 @@ model Event {
   showIsMotorized   Boolean     @default(false)
   showIsReserve     Boolean     @default(false)
   showFideid        Boolean     @default(false)
+  registerShowDates Boolean     @default(false)
   isFree            Boolean     @default(true)
   hasGodfather      Boolean     @default(false)
   isOpen            Boolean     @default(false)

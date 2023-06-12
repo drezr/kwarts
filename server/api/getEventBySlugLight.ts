@@ -8,6 +8,9 @@ export default defineEventHandler(async (e) => {
     where: {
       slug: slug,
     },
+    include: {
+      dates: true,
+    }
   })
 
   if (event) {

@@ -78,32 +78,8 @@
       </div>
     </div>
 
-    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-sm" v-if="!creationSuccess">
       <div class="space-y-3">
-        <div>
-          <label
-            for="email"
-            class="block text-sm font-medium leading-6"
-            :class="`text-slate-950`"
-          >
-            {{ _local(['common', 'email']) }}
-            <span class="text-red-500">*</span>
-          </label>
-
-          <div class="mt-2">
-            <input
-              v-model="email"
-              id="email"
-              name="email"
-              type="email"
-              autocomplete="email"
-              required
-              class="block w-full rounded-md border-0 py-1.5 px-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
-              :class="`text-slate-950 ring-slate-800 placeholder:text-slate-400 focus:ring-slate-800`"
-            />
-          </div>
-        </div>
-
         <div>
           <label
             for="name"
@@ -122,6 +98,30 @@
               name="name"
               type="text"
               autocomplete="name"
+              required
+              class="block w-full rounded-md border-0 py-1.5 px-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+              :class="`text-slate-950 ring-slate-800 placeholder:text-slate-400 focus:ring-slate-800`"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label
+            for="email"
+            class="block text-sm font-medium leading-6"
+            :class="`text-slate-950`"
+          >
+            {{ _local(['common', 'email']) }}
+            <span class="text-red-500">*</span>
+          </label>
+
+          <div class="mt-2">
+            <input
+              v-model="email"
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
               required
               class="block w-full rounded-md border-0 py-1.5 px-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
               :class="`text-slate-950 ring-slate-800 placeholder:text-slate-400 focus:ring-slate-800`"
@@ -150,6 +150,39 @@
               class="block w-full rounded-md border-0 py-1.5 px-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
               :class="`text-slate-950 ring-slate-800 placeholder:text-slate-400 focus:ring-slate-800`"
             />
+          </div>
+        </div>
+
+        <div class="py-6" v-if="event.registerShowDates">
+          <span
+            class="block font-medium leading-6 cursor-pointer mb-2 text-center"
+          >
+            {{ _local(['common', 'registerShowDatesTooltip']) }}:
+          </span>
+
+          <div class="w-fit mx-auto">
+            <div
+              v-for="(date, i) in dates"
+              class="flex items-center hover:opacity-60"
+            >
+              <input
+                v-model="date.isAvailable"
+                :id="'date' + i"
+                :name="'date' + i"
+                type="checkbox"
+                class="block rounded-md border-0 py-1.5 px-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 cursor-pointer"
+                :class="`text-slate-950 ring-slate-800 placeholder:text-slate-400 focus:ring-slate-800`"
+              />
+
+              <label
+                :for="'date' + i"
+                class="block text-sm font-medium leading-6 ml-2 cursor-pointer"
+                :class="`text-slate-950`"
+              >
+                {{ date.title }} <span class="mx-2 text-gray-500">–</span>
+                {{ _date.formatDatetime(date.date) }}
+              </label>
+            </div>
           </div>
         </div>
 
@@ -266,6 +299,20 @@
         </div>
       </div>
     </div>
+
+    <div v-else class="text-center mt-4">
+      <span
+        class="cursor-pointer text-blue-500 inline-flex items-center hover:opacity-70"
+        @click="creationSuccess = false"
+      >
+        <span
+          v-html="_icon('person-fill-add', _color.pick('blue', -3), 20)"
+          class="mr-2"
+        ></span>
+
+        {{ _local(['common', 'registerAnotherPerson']) }}
+      </span>
+    </div>
   </div>
 </template>
 
@@ -283,6 +330,7 @@ let isReserve = ref<boolean>(false)
 let creationError = ref<boolean>(false)
 let linkExistError = ref<boolean>(false)
 let creationSuccess = ref<boolean>(false)
+let dates = ref()
 
 const event = await _fetch('/api/getEventBySlugLight', {
   slug: slug,
@@ -305,6 +353,8 @@ useHead({
   ],
 })
 
+setDates()
+
 const canCreateParticipation = computed<boolean>(() => {
   if (
     !isValidEmail(email.value) ||
@@ -324,6 +374,9 @@ async function createParticipation() {
     alias: alias.value,
     fideid: fideid.value,
     godfather: godfather.value,
+    isMotorized: isMotorized.value,
+    isReserve: isReserve.value,
+    dates: dates,
     eventId: event.id,
   })
 
@@ -335,10 +388,27 @@ async function createParticipation() {
     fideid.value = ''
     godfather.value = ''
     note.value = ''
+    isMotorized.value = false
+    isReserve.value = false
+
+    setDates()
   } else if (result == 'linkExist') {
     linkExistError.value = true
   } else {
     creationError.value = true
+  }
+}
+
+function setDates() {
+  dates.value = []
+
+  for (let date of event.dates) {
+    dates.value.push({
+      id: date.id,
+      date: date.date,
+      title: date.title,
+      isAvailable: false,
+    })
   }
 }
 </script>

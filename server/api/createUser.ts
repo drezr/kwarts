@@ -10,6 +10,18 @@ export default defineEventHandler(async (e) => {
   const godfather: string = params.godfather
   const fideid: string = params.fideid
   const eventId: number = parseInt(params.eventId)
+  
+  let dates: any = params.dates
+  let isMotorized: any
+  let isReserve: any
+
+  if (params.isMotorized === 'true') isMotorized = true
+  else if (params.isMotorized === 'false') isMotorized = false
+  else isMotorized = null
+
+  if (params.isReserve === 'true') isReserve = true
+  else if (params.isReserve === 'false') isReserve = false
+  else isMotorized = null
 
   const event = await prisma.event.findUnique({
     where: {
@@ -68,6 +80,8 @@ export default defineEventHandler(async (e) => {
       alias: alias,
       godfather: godfather,
       fideid: fideid,
+      isMotorized: isMotorized,
+      isReserve: isReserve,
       userId: user.id,
       eventId: eventId,
       password: uuidv4().replaceAll('-', ''),
@@ -84,6 +98,21 @@ export default defineEventHandler(async (e) => {
       userId: true,
     },
   })
+
+
+  if (dates) {
+    for (let date of dates) {
+      date = JSON.parse(date)
+
+      await prisma.availability.create({
+        data: {
+          isAvailable: date.isAvailable,
+          dateId: date.id,
+          userId: user.id,
+        },
+      })
+    }
+  }
 
   return userLink
 })
