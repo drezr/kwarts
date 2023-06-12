@@ -34,6 +34,7 @@ model Event {
   isListingOpen     Boolean     @default(false)
   showIsMotorized   Boolean     @default(false)
   showIsReserve     Boolean     @default(false)
+  showFideid        Boolean     @default(false)
   isFree            Boolean     @default(true)
   hasGodfather      Boolean     @default(false)
   isOpen            Boolean     @default(false)
@@ -54,18 +55,18 @@ model Date {
 }
 
 model Availability {
-  id          Int      @id @default(autoincrement())
-  isAvailable Boolean  @default(false)
-  date        Date     @relation(fields: [dateId], references: [id])
+  id          Int     @id @default(autoincrement())
+  isAvailable Boolean @default(false)
+  date        Date    @relation(fields: [dateId], references: [id])
   dateId      Int
-  user        User     @relation(fields: [userId], references: [id])
+  user        User    @relation(fields: [userId], references: [id])
   userId      Int
 
   @@unique([dateId, userId])
 }
 
 model EventUser {
-  id             Int     @id @default(autoincrement())
+  id             Int      @id @default(autoincrement())
   position       Int
   alias          String
   password       String
@@ -75,19 +76,19 @@ model EventUser {
   note           String?
   elo            String?
   nationality    String?
-  hasPaid        Boolean @default(false)
+  hasPaid        Boolean  @default(false)
   paymentNote    String?
   isMotorized    Boolean?
   isReserve      Boolean?
-  isValidated    Boolean @default(false)
-  isPasswordSent Boolean @default(false)
-  isHidden       Boolean @default(false)
-  isAdmin        Boolean @default(false)
-  isOwner        Boolean @default(false)
+  isValidated    Boolean  @default(false)
+  isPasswordSent Boolean  @default(false)
+  isHidden       Boolean  @default(false)
+  isAdmin        Boolean  @default(false)
+  isOwner        Boolean  @default(false)
   token          String?
-  event          Event   @relation(fields: [eventId], references: [id])
+  event          Event    @relation(fields: [eventId], references: [id])
   eventId        Int
-  user           User    @relation(fields: [userId], references: [id])
+  user           User     @relation(fields: [userId], references: [id])
   userId         Int
 
   @@unique([eventId, userId])

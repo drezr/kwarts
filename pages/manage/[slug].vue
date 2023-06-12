@@ -221,7 +221,7 @@
         type="checkbox"
         id="isFree"
         class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-        @change="updateEvent('isFree', event.isFree)"
+        @change="updateEvent('isFree', event.isFree, 0)"
       />
 
       {{ _local(['common', 'eventIsFree']) }}
@@ -236,7 +236,7 @@
         type="checkbox"
         id="showIsMotorized"
         class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-        @change="updateEvent('showIsMotorized', event.showIsMotorized)"
+        @change="updateEvent('showIsMotorized', event.showIsMotorized, 0)"
       />
 
       {{ _local(['common', 'showIsMotorized']) }}
@@ -251,7 +251,7 @@
         type="checkbox"
         id="showIsReserve"
         class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-        @change="updateEvent('showIsReserve', event.showIsReserve)"
+        @change="updateEvent('showIsReserve', event.showIsReserve, 0)"
       />
 
       {{ _local(['common', 'showIsReserve']) }}
@@ -266,7 +266,7 @@
         type="checkbox"
         id="registerPage"
         class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-        @change="updateEvent('isOpen', event.isOpen)"
+        @change="updateEvent('isOpen', event.isOpen, 0)"
       />
 
       {{ _local(['common', 'registerPage']) }}
@@ -298,6 +298,21 @@
       />
 
       <label
+        for="showFideid"
+        class="flex text-sm font-medium leading-6 text-gray-900"
+      >
+        <input
+          v-model="event.showFideid"
+          type="checkbox"
+          id="showFideid"
+          class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+          @change="updateEvent('showFideid', event.showFideid, 0)"
+        />
+
+        {{ _local(['common', 'showFideid']) }}
+      </label>
+
+      <label
         for="hasGodfather"
         class="flex text-sm font-medium leading-6 text-gray-900"
       >
@@ -306,29 +321,36 @@
           type="checkbox"
           id="hasGodfather"
           class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-          @change="updateEvent('hasGodfather', event.hasGodfather)"
+          @change="updateEvent('hasGodfather', event.hasGodfather, 0)"
         />
 
         {{ _local(['common', 'eventHasGodfather']) }}
       </label>
 
-      <label
-        for="eventGodfatherInfoLink"
-        class="block text-sm font-medium leading-6 text-gray-900"
+      <div
+        :class="[
+          { 'opacity-50': !event.hasGodfather },
+          { 'pointer-events-none': !event.hasGodfather },
+        ]"
       >
-        {{ _local(['common', 'eventGodfatherInfoLink']) }}
+        <label
+          for="eventGodfatherInfoLink"
+          class="block text-sm font-medium leading-6 text-gray-900"
+        >
+          {{ _local(['common', 'eventGodfatherInfoLink']) }}
 
-        <span class="text-gray-400 italic">
-          ({{ _local(['common', 'optional']) }})
-        </span>
-      </label>
+          <span class="text-gray-400 italic">
+            ({{ _local(['common', 'optional']) }})
+          </span>
+        </label>
 
-      <input
-        v-model="event.godfatherInfoLink"
-        id="eventGodfatherInfoLink"
-        class="mb-3 w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-        @input="updateEvent('godfatherInfoLink', event.godfatherInfoLink)"
-      />
+        <input
+          v-model="event.godfatherInfoLink"
+          id="eventGodfatherInfoLink"
+          class="mb-3 w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+          @input="updateEvent('godfatherInfoLink', event.godfatherInfoLink)"
+        />
+      </div>
 
       <div class="text-center font-bold text-blue-500 hover:opacity-80">
         <a
@@ -350,7 +372,7 @@
         type="checkbox"
         id="listingPage"
         class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-        @change="updateEvent('isListingOpen', event.isListingOpen)"
+        @change="updateEvent('isListingOpen', event.isListingOpen, 0)"
       />
 
       {{ _local(['common', 'listingPage']) }}
@@ -1454,7 +1476,7 @@ function sortUserLinksBy(field: string) {
 
 // Event
 
-async function updateEvent(key: any, value: any) {
+async function updateEvent(key: any, value: any, throttle: number = 300) {
   fetchIsLoading.value = true
   clearTimeout(fetchThrottleTimer)
 
@@ -1468,7 +1490,7 @@ async function updateEvent(key: any, value: any) {
     })
 
     fetchIsLoading.value = false
-  }, 300)
+  }, throttle)
 }
 
 async function updateEventSlug() {

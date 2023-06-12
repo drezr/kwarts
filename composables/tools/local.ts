@@ -60,6 +60,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    registerToEvent: {
+      fr: "Inscription à l'évènement",
+      nl: '',
+      de: '',
+      en: '',
+    },
     checkRegisterPage: {
       fr: "Consulter la page d'incription publique",
       nl: '',
@@ -98,6 +104,12 @@ const localisation = {
     },
     showIsReserve: {
       fr: "Donner la possibilité d'indiquer si l'on souhaite être réserviste",
+      nl: '',
+      de: '',
+      en: '',
+    },
+    showFideid: {
+      fr: "Donner la possibilité d'indiquer un matricule FIDE",
       nl: '',
       de: '',
       en: '',

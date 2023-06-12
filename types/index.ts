@@ -22,6 +22,7 @@ interface Event {
   isListingOpen: boolean,
   showIsMotorized: boolean,
   showIsReserve: boolean,
+  showFideid: boolean,
   isFree: boolean,
   hasGodfather: boolean,
   isOpen: boolean,

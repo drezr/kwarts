@@ -10,7 +10,7 @@
 
       <h2
         class="w-screen mt-2 text-center text-2xl font-bold leading-9 tracking-tight"
-        :class="`text-teal-950`"
+        :class="`text-slate-950`"
       >
         {{ event.title ? event.title : event.name }}
       </h2>
@@ -20,11 +20,11 @@
         v-if="event.homepage"
       >
         <span
-          v-html="_icon('caret-left-fill', _color.pick('teal', -4), 20)"
+          v-html="_icon('caret-left-fill', _color.pick('grey', -4), 20)"
           class="mr-2"
         ></span>
 
-        <a :href="event.homepage" class="text-teal-900">
+        <a :href="event.homepage" class="text-slate-900">
           {{
             event.backlinkText ? event.backlinkText : _local(['common', 'back'])
           }}
@@ -84,7 +84,7 @@
           <label
             for="email"
             class="block text-sm font-medium leading-6"
-            :class="`text-teal-950`"
+            :class="`text-slate-950`"
           >
             {{ _local(['common', 'email']) }}
             <span class="text-red-500">*</span>
@@ -99,7 +99,7 @@
               autocomplete="email"
               required
               class="block w-full rounded-md border-0 py-1.5 px-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
-              :class="`text-teal-950 ring-teal-800 placeholder:text-teal-400 focus:ring-teal-800`"
+              :class="`text-slate-950 ring-slate-800 placeholder:text-slate-400 focus:ring-slate-800`"
             />
           </div>
         </div>
@@ -108,7 +108,7 @@
           <label
             for="name"
             class="block text-sm font-medium leading-6"
-            :class="`text-teal-950`"
+            :class="`text-slate-950`"
           >
             {{ _local(['common', 'names']) }}
 
@@ -124,16 +124,16 @@
               autocomplete="name"
               required
               class="block w-full rounded-md border-0 py-1.5 px-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
-              :class="`text-teal-950 ring-teal-800 placeholder:text-teal-400 focus:ring-teal-800`"
+              :class="`text-slate-950 ring-slate-800 placeholder:text-slate-400 focus:ring-slate-800`"
             />
           </div>
         </div>
 
-        <div>
+        <div v-if="event.showFideid">
           <label
             for="fideid"
             class="block text-sm font-medium leading-6"
-            :class="`text-teal-950`"
+            :class="`text-slate-950`"
           >
             {{ _local(['common', 'fideid']) }}
 
@@ -148,16 +148,56 @@
               type="number"
               required
               class="block w-full rounded-md border-0 py-1.5 px-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
-              :class="`text-teal-950 ring-teal-800 placeholder:text-teal-400 focus:ring-teal-800`"
+              :class="`text-slate-950 ring-slate-800 placeholder:text-slate-400 focus:ring-slate-800`"
             />
           </div>
+        </div>
+
+        <div class="mt-2 flex items-center" v-if="event.showIsMotorized">
+          <input
+            v-model="isMotorized"
+            id="isMotorized"
+            name="isMotorized"
+            type="checkbox"
+            required
+            class="block rounded-md border-0 py-1.5 px-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 cursor-pointer"
+            :class="`text-slate-950 ring-slate-800 placeholder:text-slate-400 focus:ring-slate-800`"
+          />
+
+          <label
+            for="isMotorized"
+            class="block text-sm font-medium leading-6 ml-2 cursor-pointer"
+            :class="`text-slate-950`"
+          >
+            {{ _local(['common', 'isMotorizedSelfTooltip']) }}
+          </label>
+        </div>
+
+        <div class="mt-2 flex items-center" v-if="event.showIsReserve">
+          <input
+            v-model="isReserve"
+            id="isReserve"
+            name="isReserve"
+            type="checkbox"
+            required
+            class="block rounded-md border-0 py-1.5 px-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 cursor-pointer"
+            :class="`text-slate-950 ring-slate-800 placeholder:text-slate-400 focus:ring-slate-800`"
+          />
+
+          <label
+            for="isReserve"
+            class="block text-sm font-medium leading-6 ml-2 cursor-pointer"
+            :class="`text-slate-950`"
+          >
+            {{ _local(['common', 'isReserveSelfTooltip']) }}
+          </label>
         </div>
 
         <div v-if="event.hasGodfather">
           <label
             for="godfather"
             class="block text-sm font-medium leading-6"
-            :class="`text-teal-950`"
+            :class="`text-slate-950`"
           >
             {{ _local(['common', 'godfather']) }}
 
@@ -182,7 +222,7 @@
               name="godfather"
               type="text"
               class="block w-full rounded-md border-0 py-1.5 px-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
-              :class="`text-teal-950 ring-teal-800 placeholder:text-teal-400 focus:ring-teal-800`"
+              :class="`text-slate-950 ring-slate-800 placeholder:text-slate-400 focus:ring-slate-800`"
             />
           </div>
         </div>
@@ -191,7 +231,7 @@
           <label
             for="note"
             class="block text-sm font-medium leading-6"
-            :class="`text-teal-950`"
+            :class="`text-slate-950`"
           >
             {{ _local(['common', 'notes']) }}
 
@@ -205,18 +245,18 @@
               name="note"
               type="text"
               class="block w-full rounded-md border-0 py-1.5 px-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
-              :class="`text-teal-950 ring-teal-800 placeholder:text-teal-400 focus:ring-teal-800`"
+              :class="`text-slate-950 ring-slate-800 placeholder:text-slate-400 focus:ring-slate-800`"
             ></textarea>
           </div>
         </div>
 
         <div class="pt-3">
           <button
-            class="flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600"
+            class="flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600"
             :class="
               !canCreateParticipation
                 ? 'bg-gray-300'
-                : `bg-teal-950 hover:bg-teal-900`
+                : `bg-slate-950 hover:bg-slate-900`
             "
             :disabled="!canCreateParticipation"
             @click="createParticipation()"
@@ -238,6 +278,8 @@ let alias = ref<string>()
 let fideid = ref<string>()
 let godfather = ref<string>()
 let note = ref<string>()
+let isMotorized = ref<boolean>(false)
+let isReserve = ref<boolean>(false)
 let creationError = ref<boolean>(false)
 let linkExistError = ref<boolean>(false)
 let creationSuccess = ref<boolean>(false)
@@ -253,7 +295,7 @@ if (!event.isOpen) {
 const title = event.title ? event.title : event.name
 
 useHead({
-  titleTemplate: 'Inscription au ' + title,
+  titleTemplate: _local(['common', 'registerToEvent']) + ' ' + title,
   link: [
     {
       rel: 'icon',
@@ -268,7 +310,7 @@ const canCreateParticipation = computed<boolean>(() => {
     !isValidEmail(email.value) ||
     !email.value ||
     !alias.value ||
-    !fideid.value
+    (!fideid.value && event.showFideid)
   ) {
     return false
   }
