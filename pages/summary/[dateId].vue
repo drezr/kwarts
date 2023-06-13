@@ -31,8 +31,17 @@
           {{ _local(['common', 'availables']) }} ({{ availables.length }})
         </div>
 
-        <div v-for="available in availables" class="px-6 py-2 border-b">
+        <div
+          v-for="available in availables"
+          class="px-6 py-2 border-b flex items-center"
+        >
           {{ available.alias }}
+
+          <span
+            v-if="available.isMotorized && date.event.showIsMotorized"
+            v-html="_icon('car-front-fill', _color.pick('blue'), 20)"
+            class="ml-2"
+          ></span>
         </div>
       </div>
 
@@ -48,8 +57,17 @@
           {{ _local(['common', 'notAvailables']) }} ({{ notAvailables.length }})
         </div>
 
-        <div v-for="notAvailable in notAvailables" class="px-6 py-2 border-b">
+        <div
+          v-for="notAvailable in notAvailables"
+          class="px-6 py-2 border-b flex items-center"
+        >
           {{ notAvailable.alias }}
+
+          <span
+            v-if="notAvailable.isMotorized && date.event.showIsMotorized"
+            v-html="_icon('car-front-fill', _color.pick('blue'), 20)"
+            class="ml-2"
+          ></span>
         </div>
       </div>
 
@@ -65,8 +83,17 @@
           {{ _local(['common', 'unknowns']) }} ({{ unknowns.length }})
         </div>
 
-        <div v-for="unknown in unknowns" class="px-6 py-2 border-b">
+        <div
+          v-for="unknown in unknowns"
+          class="px-6 py-2 border-b flex items-center"
+        >
           {{ unknown.alias }}
+
+          <span
+            v-if="unknown.isMotorized && date.event.showIsMotorized"
+            v-html="_icon('car-front-fill', _color.pick('blue'), 20)"
+            class="ml-2"
+          ></span>
         </div>
       </div>
     </div>

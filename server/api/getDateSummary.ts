@@ -24,6 +24,7 @@ export default defineEventHandler(async (e) => {
               alias: true,
               position: true,
               isHidden: true,
+              isMotorized: true,
               userId: true,
             }
           },
