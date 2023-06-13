@@ -220,7 +220,7 @@
         v-model="event.isFree"
         type="checkbox"
         id="isFree"
-        class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+        class="cursor-pointer mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
         @change="updateEvent('isFree', event.isFree, 0)"
       />
 
@@ -235,7 +235,7 @@
         v-model="event.showIsMotorized"
         type="checkbox"
         id="showIsMotorized"
-        class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+        class="cursor-pointer mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
         @change="updateEvent('showIsMotorized', event.showIsMotorized, 0)"
       />
 
@@ -250,7 +250,7 @@
         v-model="event.showIsReserve"
         type="checkbox"
         id="showIsReserve"
-        class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+        class="cursor-pointer mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
         @change="updateEvent('showIsReserve', event.showIsReserve, 0)"
       />
 
@@ -265,7 +265,7 @@
         v-model="event.isOpen"
         type="checkbox"
         id="registerPage"
-        class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+        class="cursor-pointer mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
         @change="updateEvent('isOpen', event.isOpen, 0)"
       />
 
@@ -305,7 +305,7 @@
           v-model="event.registerShowDates"
           type="checkbox"
           id="registerShowDates"
-          class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+          class="cursor-pointer mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
           @change="updateEvent('registerShowDates', event.registerShowDates, 0)"
         />
 
@@ -320,7 +320,7 @@
           v-model="event.showFideid"
           type="checkbox"
           id="showFideid"
-          class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+          class="cursor-pointer mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
           @change="updateEvent('showFideid', event.showFideid, 0)"
         />
 
@@ -335,7 +335,7 @@
           v-model="event.hasGodfather"
           type="checkbox"
           id="hasGodfather"
-          class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+          class="cursor-pointer mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
           @change="updateEvent('hasGodfather', event.hasGodfather, 0)"
         />
 
@@ -386,7 +386,7 @@
         v-model="event.isListingOpen"
         type="checkbox"
         id="listingPage"
-        class="mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+        class="cursor-pointer mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
         @change="updateEvent('isListingOpen', event.isListingOpen, 0)"
       />
 
@@ -552,68 +552,32 @@
   </div>
 
   <div
-    class="p-5 mx-auto"
+    class="mx-auto"
     v-show="modalTab == 'people'"
     ref="modalPeople"
     style="max-width: 1000px"
   >
-    <div class="flex justify-center">
-      <button
-        v-if="peopleView == 'classic'"
-        class="bg-purple-900 hover:bg-purple-800 flex w-full justify-center rounded-md px-3 py-1.5 mb-4 text-sm font-semibold leading-6 text-white shadow-sm"
-        @click="sortUsersByName()"
-      >
-        <span
-          v-html="_icon('sort-alpha-down', 'white', 24)"
-          class="mr-2"
-        ></span>
-        {{ _local(['common', 'sortUsersByName']) }}
-      </button>
-
-      <button
-        v-if="peopleView == 'classic'"
-        class="bg-green-700 hover:bg-green-600 flex w-full justify-center rounded-md px-3 py-1.5 mb-4 text-sm font-semibold leading-6 text-white shadow-sm ml-1"
-        @click="toggleNewElement()"
-      >
-        <span
-          v-html="_icon('person-fill-add', 'white', 24)"
-          class="mr-2"
-        ></span>
-        {{ _local(['common', 'createUser']) }}
-      </button>
-
-      <button
-        class="bg-blue-700 hover:bg-blue-600 flex w-96 justify-center rounded-md px-3 py-1.5 mb-4 text-sm font-semibold leading-6 text-white shadow-sm ml-1"
-        @click="peopleView = peopleView == 'classic' ? 'table' : 'classic'"
-      >
-        <span
-          v-html="
-            _icon(peopleView == 'classic' ? 'table' : 'list-ul', 'white', 24)
-          "
-          class="mr-2"
-        ></span>
-        {{
-          _local([
-            'common',
-            peopleView == 'classic' ? 'tableView' : 'classicView',
-          ])
-        }}
-      </button>
-    </div>
-
     <div
-      v-if="peopleView == 'table'"
       class="max-w-full w-full absolute left-0 pb-3 overflow-auto"
-      style="height: calc(100vh - 186px)"
+      style="height: calc(100vh - 109px)"
     >
       <table class="border-collapse w-full">
         <thead>
           <tr>
             <th
-              v-for="keyword in computedManagedFields"
-              class="p-1 font-bold bg-gray-200 text-gray-600 border border-gray-300 text-sm px-3 cursor-pointer hover:brightness-105 first:pointer-events-none last:pointer-events-none"
+              v-for="(keyword, i) in computedManagedFields"
+              class="font-bold bg-gray-200 text-gray-600 border border-gray-300 text-sm cursor-pointer hover:brightness-105 last:pointer-events-none"
+              :class="{ 'px-3 py-1': i != 0 }"
               @click="sortUserLinksBy(keyword.field)"
             >
+              <div v-if="i == 0" class="flex justify-center">
+                <span
+                  v-html="_icon('save-fill', _color.pick('green', -2), 24)"
+                  :title="_local(['common', 'savePeoplePosition'])"
+                  @click="updateUserLinkPositions()"
+                ></span>
+              </div>
+
               {{ _local(['common', keyword.locale]) }}
             </th>
           </tr>
@@ -631,7 +595,6 @@
             disabled: false,
             ghostClass: 'ghost',
           }"
-          @change="updateUserLinkPositions()"
           :tag="'tbody'"
           class="bg-white"
         >
@@ -654,13 +617,32 @@
               </td>
 
               <td class="border h-6 p-0">
-                <input
-                  type="text"
-                  v-model="element.user.email"
-                  class="border-none text-sm h-full w-full bg-gray-200"
-                  style="min-width: 200px"
-                  disabled
-                />
+                <div class="flex">
+                  <input
+                    type="text"
+                    v-model="element.user.email"
+                    class="border-none text-sm h-full w-full"
+                    style="min-width: 200px"
+                  />
+
+                  <div
+                    v-if="element.user.email != getEmail(element)"
+                    class="cursor-pointer flex items-center justify-center hover:brightness-110 px-2 rounded-md"
+                    style="margin-left: 2px"
+                    :class="
+                      isValidEmail(element.user.email) &&
+                      !cloneEvent.userLinks.find(
+                        (u: EventUser) => u.user.email == element.user.email
+                      )
+                      ? 'bg-green-600'
+                      : 'bg-gray-500 pointer-events-none'
+                    "
+                    :title="_local(['common', 'updateEmail'])"
+                    @click="updateUserEmail(element)"
+                  >
+                    <span v-html="_icon('save', 'white', 20)"></span>
+                  </div>
+                </div>
               </td>
 
               <td class="border h-6 p-0">
@@ -745,6 +727,7 @@
                 <input
                   type="checkbox"
                   v-model="element.isMotorized"
+                  class="cursor-pointer"
                   @click="
                     ;(element.isMotorized = !element.isMotorized),
                       updateUserLink(element, 'isMotorized', 0)
@@ -756,6 +739,7 @@
                 <input
                   type="checkbox"
                   v-model="element.isReserve"
+                  class="cursor-pointer"
                   @click="
                     ;(element.isReserve = !element.isReserve),
                       updateUserLink(element, 'isReserve', 0)
@@ -767,6 +751,7 @@
                 <input
                   type="checkbox"
                   v-model="element.hasPaid"
+                  class="cursor-pointer"
                   @click="
                     ;(element.hasPaid = !element.hasPaid),
                       updateUserLink(element, 'hasPaid', 0)
@@ -789,6 +774,7 @@
                 <input
                   type="checkbox"
                   v-model="element.isHidden"
+                  class="cursor-pointer"
                   @click="
                     ;(element.isHidden = !element.isHidden),
                       updateUserLink(element, 'isHidden', 0)
@@ -800,6 +786,7 @@
                 <input
                   type="checkbox"
                   v-model="element.isValidated"
+                  class="cursor-pointer"
                   @click="
                     ;(element.isValidated = !element.isValidated),
                       updateUserLink(element, 'isValidated', 0)
@@ -811,11 +798,16 @@
                 <input
                   type="checkbox"
                   v-model="element.isOwner"
+                  class="cursor-pointer"
                   :disabled="element.userId == loggedUserId"
+                  :class="{
+                    'pointer-events-none': element.userId == loggedUserId,
+                    'text-gray-400': element.userId == loggedUserId,
+                  }"
                 />
               </td>
 
-              <td class="text-center border h-6 p-0 w-28">
+              <td class="text-center border h-6 p-0">
                 <div class="w-full h-full flex justify-center items-center">
                   <div
                     class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110"
@@ -873,470 +865,84 @@
           </template>
         </draggable>
       </table>
-    </div>
 
-    <draggable
-      v-if="peopleView == 'classic'"
-      v-model="event.userLinks"
-      @start="dragging = true"
-      @end="dragging = false"
-      handle=".handle"
-      item-key="id"
-      v-bind="{
-        animation: 200,
-        group: 'description',
-        disabled: false,
-        ghostClass: 'ghost',
-      }"
-      @change="updateUserLinkPositions()"
-    >
-      <template #item="{ element }">
-        <div class="mb-3 flex items-center">
+      <div class="flex justify-center sticky left-0">
+        <button
+          class="bg-green-700 hover:bg-green-600 flex w-96 justify-center rounded-md px-3 py-1.5 mb-4 text-sm font-semibold leading-6 text-white shadow-sm mt-1"
+          @click="addUserDialog.showModal()"
+        >
           <span
-            v-html="_icon('grip-horizontal', _color.pick('pink'), 16)"
-            class="cursor-grab hover:brightness-110 mr-2 handle"
+            v-html="_icon('person-fill-add', 'white', 24)"
+            class="mr-2"
           ></span>
-
-          <div class="flex flex-grow flex-wrap justify-center items-center">
-            <input
-              type="text"
-              v-model="element.alias"
-              class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
-              :placeholder="_local(['common', 'alias'])"
-              style="height: 38px; min-width: 200px"
-              @input="updateUserLink(element, 'alias', 300)"
-            />
-
-            <input
-              class="overflow-hidden flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 ring-gray-300 placeholder:text-gray-400 shadow-sm ring-1 ring-inset text-sm leading-6 focus:ring-slate-600"
-              :placeholder="_local(['common', 'email'])"
-              style="height: 38px; min-width: 200px"
-              v-model="element.user.email"
-            />
-
-            <div
-              v-if="element.user.email != getEmail(element)"
-              class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 mr-1 command-button"
-              :class="
-                isValidEmail(element.user.email) &&
-                  !cloneEvent.userLinks.find(
-                    (u: EventUser) => u.user.email == element.user.email
-                  )
-                  ? 'bg-green-600'
-                  : 'bg-gray-500 pointer-events-none'
-              "
-              :title="_local(['common', 'updateEmail'])"
-              @click="updateUserEmail(element)"
-            >
-              <span v-html="_icon('save', 'white', 20)"></span>
-            </div>
-
-            <div class="flex items-center">
-              <div
-                class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 mr-1 command-button"
-                :class="[
-                  { 'bg-red-500': !element.isPasswordSent },
-                  { 'bg-green-600': element.isPasswordSent },
-                ]"
-                :title="
-                  element.isPasswordSent
-                    ? _local(['common', 'passwordSent'])
-                    : _local(['common', 'passwordNotSent'])
-                "
-                @click="sendPassword(element)"
-              >
-                <span
-                  v-html="
-                    _icon(
-                      element.isPasswordSent
-                        ? 'envelope-check-fill'
-                        : 'envelope-x-fill',
-                      'white',
-                      24
-                    )
-                  "
-                ></span>
-              </div>
-
-              <div
-                v-if="!event.isFree"
-                class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 mr-1 command-button"
-                :class="[
-                  { 'bg-green-600': element.hasPaid },
-                  { 'bg-red-500': !element.hasPaid },
-                ]"
-                :title="
-                  element.hasPaid
-                    ? _local(['common', 'hasPaidTooltip'])
-                    : _local(['common', 'hasNotPaidTooltip'])
-                "
-                @click="
-                  ;(element.hasPaid = !element.hasPaid),
-                    updateUserLink(element, 'hasPaid', 0)
-                "
-              >
-                <span
-                  v-html="_icon('currency-euro', 'white', 30)"
-                  style="position: relative; left: -2px"
-                ></span>
-              </div>
-
-              <div
-                class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 mr-1 command-button"
-                :class="[
-                  { 'bg-green-600': element.isValidated },
-                  { 'bg-red-500': !element.isValidated },
-                ]"
-                :title="
-                  element.isValidated
-                    ? _local(['common', 'isValidatedTooltip'])
-                    : _local(['common', 'isNotValidatedTooltip'])
-                "
-                @click="
-                  ;(element.isValidated = !element.isValidated),
-                    updateUserLink(element, 'isValidated', 0)
-                "
-              >
-                <span
-                  v-html="
-                    _icon(element.isValidated ? 'check' : 'x', 'white', 30)
-                  "
-                ></span>
-              </div>
-
-              <div
-                class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 mr-1 command-button"
-                :class="[
-                  { 'bg-orange-500': element.isHidden },
-                  { 'bg-blue-500': !element.isHidden },
-                ]"
-                :title="
-                  element.isHidden
-                    ? _local(['common', 'isHiddenTooltip'])
-                    : _local(['common', 'isVisibleTooltip'])
-                "
-                @click="
-                  ;(element.isHidden = !element.isHidden),
-                    updateUserLink(element, 'isHidden', 0)
-                "
-              >
-                <span
-                  v-html="
-                    _icon(
-                      !element.isHidden ? 'eye-fill' : 'eye-slash-fill',
-                      'white',
-                      20
-                    )
-                  "
-                ></span>
-              </div>
-
-              <div
-                class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 mr-1 command-button"
-                :class="[
-                  {
-                    'bg-purple-500':
-                      element.isOwner && element.userId != loggedUserId,
-                  },
-                  { 'bg-yellow-500': !element.isOwner },
-                  { 'bg-gray-200': element.userId == loggedUserId },
-                  { 'pointer-events-none': element.userId == loggedUserId },
-                ]"
-                :title="
-                  element.isOwner
-                    ? _local(['common', 'isOwnerTooltip'])
-                    : _local(['common', 'isNotOwnerTooltip'])
-                "
-                @click="updateUserLinkIsOwner(element)"
-              >
-                <span
-                  v-html="
-                    _icon(
-                      element.isOwner ? 'person-fill-gear' : 'person-fill',
-                      element.userId == loggedUserId ? 'grey' : 'white',
-                      26
-                    )
-                  "
-                ></span>
-              </div>
-
-              <div
-                class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 mr-1 command-button"
-                :class="[
-                  { 'bg-orange-500': hasMoreInfo(element) },
-                  { 'bg-gray-500': !hasMoreInfo(element) },
-                ]"
-                :title="_local(['common', 'moreInfo'])"
-                @click="
-                  moreInfoDialog.showModal(),
-                    (moreInfoSelectedUserLink = element)
-                "
-              >
-                <span v-html="_icon('three-dots', 'white', 26)"></span>
-              </div>
-
-              <div
-                class="cursor-pointer rounded-full relative flex items-center justify-center hover:brightness-110 command-button bg-gray-200"
-                :class="{
-                  'pointer-events-none': element.userId == loggedUserId,
-                }"
-                :title="_local(['common', 'delete'])"
-                @click="deleteUserLink(element)"
-              >
-                <span
-                  v-html="
-                    _icon(
-                      'trash-fill',
-                      _color.pick(
-                        element.userId == loggedUserId ? 'grey' : 'red'
-                      ),
-                      20
-                    )
-                  "
-                ></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </template>
-    </draggable>
-
-    <div class="mb-3 flex items-center" v-if="showAddUser">
-      <span
-        v-html="_icon('x-lg', 'black', 16)"
-        class="cursor-pointer hover:opacity-70 mr-2"
-        @click="showAddUser = false"
-      ></span>
-
-      <div class="flex flex-grow flex-wrap">
-        <input
-          v-model="newUserAlias"
-          ref="newUserAliasInput"
-          type="text"
-          class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
-          :placeholder="_local(['common', 'alias'])"
-          style="height: 38px; width: 150px"
-          @keyup.enter="
-            newUserAlias &&
-            ((newUserEmail &&
-              isValidEmail(newUserEmail) &&
-              !event.userLinks.find((u) => u.user.email == newUserEmail)) ||
-              !newUserEmail)
-              ? createUser()
-              : null
-          "
-        />
-
-        <input
-          v-model="newUserEmail"
-          type="email"
-          class="flex-grow mb-1 mx-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset text-sm leading-6"
-          :class="[
-            {
-              'focus:ring-red-600':
-                (newUserEmail && !isValidEmail(newUserEmail)) ||
-                event.userLinks.find((u) => u.user.email == newUserEmail),
-              'focus:ring-green-700':
-                isValidEmail(newUserEmail) &&
-                !event.userLinks.find((u) => u.user.email == newUserEmail),
-            },
-          ]"
-          :placeholder="_local(['common', 'email'])"
-          style="height: 38px; width: 150px"
-          @keyup.enter="
-            newUserAlias &&
-            ((newUserEmail &&
-              isValidEmail(newUserEmail) &&
-              !event.userLinks.find((u) => u.user.email == newUserEmail)) ||
-              !newUserEmail)
-              ? createUser()
-              : null
-          "
-        />
+          {{ _local(['common', 'createUser']) }}
+        </button>
       </div>
-
-      <span
-        v-html="
-          _icon(
-            'save-fill',
-            newUserAlias &&
-              ((newUserEmail &&
-                isValidEmail(newUserEmail) &&
-                !event.userLinks.find((u) => u.user.email == newUserEmail)) ||
-                !newUserEmail)
-              ? 'green'
-              : 'grey',
-            26
-          )
-        "
-        class="cursor-pointer hover:brightness-110 ml-1"
-        :class="[
-          {
-            'pointer-events-none': !(
-              newUserAlias &&
-              ((newUserEmail &&
-                isValidEmail(newUserEmail) &&
-                !event.userLinks.find((u) => u.user.email == newUserEmail)) ||
-                !newUserEmail)
-            ),
-          },
-        ]"
-        @click="createUser()"
-      ></span>
     </div>
   </div>
 
   <dialog
-    ref="moreInfoDialog"
-    @mousedown="closeDialog($event, moreInfoDialog)"
+    ref="addUserDialog"
+    @mousedown="closeDialog($event, addUserDialog)"
     class="w-96"
   >
-    <div v-if="moreInfoSelectedUserLink">
-      <div class="font-bold text-lg mb-3 flex">
-        <span v-html="_icon('person-fill', 'grey', 26)" class="mr-2"></span>
-
-        {{ moreInfoSelectedUserLink.alias }}
-      </div>
-
-      <div class="mb-1">
-        <label for="fideid" class="text-xs">
-          {{ _local(['common', 'fideid']) }}
-        </label>
-
-        <input
-          id="fideid"
-          v-model="moreInfoSelectedUserLink.fideid"
-          type="text"
-          class="w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
-          :placeholder="_local(['common', 'fideid'])"
-          @input="updateUserLink(moreInfoSelectedUserLink, 'fideid', 300)"
-        />
-      </div>
-
-      <div class="mb-1">
-        <label for="elo" class="text-xs">
-          {{ _local(['common', 'elo']) }}
-        </label>
-
-        <input
-          id="elo"
-          v-model="moreInfoSelectedUserLink.elo"
-          type="text"
-          class="w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
-          :placeholder="_local(['common', 'elo'])"
-          @input="updateUserLink(moreInfoSelectedUserLink, 'elo', 300)"
-        />
-      </div>
-
-      <div class="mb-1">
-        <label for="phone" class="text-xs">
-          {{ _local(['common', 'phone']) }}
-        </label>
-
-        <input
-          id="phone"
-          v-model="moreInfoSelectedUserLink.phone"
-          type="text"
-          class="w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
-          :placeholder="_local(['common', 'phone'])"
-          @input="updateUserLink(moreInfoSelectedUserLink, 'phone', 300)"
-        />
-      </div>
-
-      <div class="mb-1">
-        <label for="nationality" class="text-xs">
-          {{ _local(['common', 'nationality']) }}
-        </label>
-
-        <input
-          id="nationality"
-          v-model="moreInfoSelectedUserLink.nationality"
-          type="text"
-          class="w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
-          :placeholder="_local(['common', 'nationality'])"
-          @input="updateUserLink(moreInfoSelectedUserLink, 'nationality', 300)"
-        />
-      </div>
-
-      <div class="mb-1">
-        <label for="paymentNote" class="text-xs">
-          {{ _local(['common', 'paymentNote']) }}
-        </label>
-
-        <textarea
-          id="paymentNote"
-          v-model="moreInfoSelectedUserLink.paymentNote"
-          type="text"
-          class="w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
-          :placeholder="_local(['common', 'paymentNote'])"
-          @input="updateUserLink(moreInfoSelectedUserLink, 'paymentNote', 300)"
-          rows="3"
-        ></textarea>
-      </div>
-
-      <div class="mb-1" v-if="event.isOpen">
-        <label for="note" class="text-xs">
-          {{ _local(['common', 'notesFromUser']) }}
-        </label>
-
-        <textarea
-          id="note"
-          v-model="moreInfoSelectedUserLink.note"
-          type="text"
-          class="w-full block rounded border-0 py-1.5 px-1.5 bg-gray-200 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
-          :placeholder="_local(['common', 'notesFromUser'])"
-          disabled
-          rows="3"
-        ></textarea>
-      </div>
-
-      <div class="mb-1" v-if="event.isOpen && event.hasGodfather">
-        <label for="godfather" class="text-xs">
-          {{ _local(['common', 'godfatherFromUser']) }}
-        </label>
-
-        <input
-          id="godfather"
-          v-model="moreInfoSelectedUserLink.godfather"
-          type="text"
-          class="w-full block rounded border-0 py-1.5 px-1.5 bg-gray-200 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
-          :placeholder="_local(['common', 'godfatherFromUser'])"
-          disabled
-        />
-      </div>
-
-      <label
-        v-if="event.showIsMotorized"
-        for="isMotorized"
-        class="flex items-center text-sm font-medium leading-6 text-gray-900 my-6 hover:opacity-70"
-      >
-        <input
-          v-model="moreInfoSelectedUserLink.isMotorized"
-          type="checkbox"
-          id="isMotorized"
-          class="mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-          @change="updateUserLink(moreInfoSelectedUserLink, 'isMotorized', 0)"
-        />
-
-        {{ _local(['common', 'isMotorizedTooltip']) }}
+    <div class="mb-2">
+      <label for="newUserAlias" class="text-xs font-bold">
+        {{ _local(['common', 'names']) }}
       </label>
 
-      <label
-        v-if="event.showIsReserve"
-        for="isReserve"
-        class="flex items-center text-sm font-medium leading-6 text-gray-900 hover:opacity-70"
-      >
-        <input
-          v-model="moreInfoSelectedUserLink.isReserve"
-          type="checkbox"
-          id="isReserve"
-          class="mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
-          @change="updateUserLink(moreInfoSelectedUserLink, 'isReserve', 0)"
-        />
-
-        {{ _local(['common', 'isReserveTooltip']) }}
-      </label>
+      <input
+        id="newUserAlias"
+        v-model="newUserAlias"
+        type="text"
+        class="w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
+        :placeholder="_local(['common', 'names'])"
+      />
     </div>
+
+    <div class="mb-4">
+      <label for="newUserEmail" class="text-xs font-bold">
+        {{ _local(['common', 'email']) }}
+      </label>
+
+      <input
+        id="newUserEmail"
+        v-model="newUserEmail"
+        type="text"
+        class="w-full mb-1 block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset text-sm leading-6"
+        :placeholder="_local(['common', 'email'])"
+        :class="[
+          {
+            'focus:ring-red-600':
+              (newUserEmail && !isValidEmail(newUserEmail)) ||
+              event.userLinks.find((u) => u.user.email == newUserEmail),
+            'focus:ring-green-700':
+              isValidEmail(newUserEmail) &&
+              !event.userLinks.find((u) => u.user.email == newUserEmail),
+          },
+        ]"
+      />
+    </div>
+
+    <button
+      class="flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm"
+      :class="
+        !(
+          newUserAlias &&
+          ((newUserEmail &&
+            isValidEmail(newUserEmail) &&
+            !event.userLinks.find((u) => u.user.email == newUserEmail)) ||
+            !newUserEmail)
+        )
+          ? 'pointer-events-none bg-gray-500'
+          : 'bg-green-700 hover:bg-green-600 '
+      "
+      @click="createUser(), addUserDialog.close()"
+    >
+      <span v-html="_icon('person-fill-add', 'white', 24)" class="mr-2"></span>
+
+      {{ _local(['common', 'createUser']) }}
+    </button>
   </dialog>
 </template>
 
@@ -1397,7 +1003,6 @@ let event = ref<Event>(requestedEvent)
 let cloneEvent = ref(JSON.parse(JSON.stringify(event.value)))
 let dragging = ref<Boolean>(false)
 let modalTab = ref<String>('general')
-let peopleView = ref<String>('classic')
 let fetchThrottleTimer: any = null
 let fetchIsLoading = ref<Boolean>(false)
 let newSlug = ref<any>(event.value.slug)
@@ -1414,8 +1019,7 @@ const modalDates = ref()
 const modalPeople = ref()
 const newDateTitleInput = ref()
 const newUserAliasInput = ref()
-const moreInfoDialog = ref()
-let moreInfoSelectedUserLink = ref()
+const addUserDialog = ref()
 
 let sortInfo: any = { field: null, order: 'ascent' }
 
@@ -1481,21 +1085,6 @@ function toggleNewElement() {
       newUserAliasInput.value.scrollIntoView()
     }, 10)
   }
-}
-
-function hasMoreInfo(userLink: EventUser) {
-  if (
-    userLink.paymentNote ||
-    userLink.note ||
-    userLink.godfather ||
-    userLink.phone ||
-    userLink.fideid ||
-    userLink.elo ||
-    userLink.nationality
-  )
-    return true
-
-  return false
 }
 
 function sortUserLinksBy(field: string) {
@@ -1657,9 +1246,9 @@ async function createUser() {
 
   cloneEvent.value = JSON.parse(JSON.stringify(event.value))
 
-  setTimeout(() => {
-    modalPeople.value.scrollTo(0, 9999999)
-  }, 10)
+  // setTimeout(() => {
+  //   modalPeople.value.scrollTo(0, 9999999)
+  // }, 10)
 
   setTimeout(() => {
     fetchIsLoading.value = false
@@ -1706,16 +1295,6 @@ async function updateUserLinkPositions() {
   setTimeout(() => {
     fetchIsLoading.value = false
   }, 500)
-}
-
-async function sortUsersByName() {
-  event.value.userLinks.sort((a: EventUser, b: EventUser) =>
-    a.alias.localeCompare(b.alias)
-  )
-
-  setTimeout(() => {
-    updateUserLinkPositions()
-  }, 10)
 }
 
 async function updateUserLinkIsOwner(userLink: EventUser) {

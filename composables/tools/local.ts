@@ -631,7 +631,13 @@ const localisation = {
       en: '',
     },
     passwordSentShort: {
-      fr: 'MDP envoyé',
+      fr: 'MDP',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    savePeoplePosition: {
+      fr: 'Sauvegarder la position des personnes',
       nl: '',
       de: '',
       en: '',
