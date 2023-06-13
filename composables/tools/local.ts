@@ -109,7 +109,7 @@ const localisation = {
       en: '',
     },
     showFideid: {
-      fr: "Donner la possibilité d'indiquer un matricule FIDE",
+      fr: "Donner la possibilité de renseigner un matricule FIDE",
       nl: '',
       de: '',
       en: '',

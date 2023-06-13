@@ -610,25 +610,7 @@
         <thead>
           <tr>
             <th
-              v-for="keyword in [
-                { field: '', locale: '' },
-                { field: 'alias', locale: 'names' },
-                { field: 'email', locale: 'email' },
-                { field: 'phone', locale: 'phoneShort' },
-                { field: 'nationality', locale: 'nationality' },
-                { field: 'fideid', locale: 'fideid' },
-                { field: 'elo', locale: 'elo' },
-                { field: 'hasPaid', locale: 'paid' },
-                { field: 'paymentNote', locale: 'paymentNote' },
-                { field: 'isValidated', locale: 'validated' },
-                { field: 'isHidden', locale: 'hidden' },
-                { field: 'isMotorized', locale: 'motorized' },
-                { field: 'isReserve', locale: 'reserve' },
-                { field: 'note', locale: 'notes' },
-                { field: 'godfather', locale: 'godfather' },
-                { field: 'isOwner', locale: 'owner' },
-                { field: 'isPasswordSent', locale: 'passwordSentShort' },
-              ]"
+              v-for="keyword in computedManagedFields"
               class="p-1 font-bold bg-gray-200 text-gray-600 border border-gray-300 text-sm px-3 cursor-pointer hover:brightness-105"
               @click="sortUserLinksBy(keyword.field)"
             >
@@ -692,13 +674,19 @@
               </td>
 
               <td class="border h-6 p-0">
-                <input
-                  type="text"
+                <select
                   v-model="element.nationality"
                   class="border-none text-sm h-full w-full bg-transparent"
                   style="min-width: 105px"
-                  @input="updateUserLink(element, 'nationality', 300)"
-                />
+                  @change="updateUserLink(element, 'nationality', 300)"
+                >
+                  <option
+                    v-for="ctry in country.countries.all"
+                    :value="ctry.alpha2.toLowerCase()"
+                  >
+                    {{ ctry.name }}
+                  </option>
+                </select>
               </td>
 
               <td class="border h-6">
@@ -721,7 +709,53 @@
                 />
               </td>
 
-              <td class="text-center border p-0">
+              <td class="border h-6 p-0">
+                <textarea
+                  v-model="element.note"
+                  class="border-none text-sm p-1 relative h-full w-full bg-gray-100"
+                  style="top: 3px; min-width: 200px"
+                  disabled
+                  rows="1"
+                >
+                </textarea>
+              </td>
+
+              <td class="border h-6 p-0" v-if="event.hasGodfather">
+                <input
+                  type="text"
+                  v-model="element.godfather"
+                  class="border-none text-sm h-full w-full bg-gray-100"
+                  style="min-width: 130px"
+                  disabled
+                />
+              </td>
+
+              <td
+                class="text-center border h-6 p-0"
+                v-if="event.showIsMotorized"
+              >
+                <input
+                  type="checkbox"
+                  v-model="element.isMotorized"
+                  @click="
+                    ;(element.isMotorized = !element.isMotorized),
+                      updateUserLink(element, 'isMotorized', 0)
+                  "
+                />
+              </td>
+
+              <td class="text-center border h-6 p-0" v-if="event.showIsReserve">
+                <input
+                  type="checkbox"
+                  v-model="element.isReserve"
+                  @click="
+                    ;(element.isReserve = !element.isReserve),
+                      updateUserLink(element, 'isReserve', 0)
+                  "
+                />
+              </td>
+
+              <td class="text-center border p-0" v-if="!event.isFree">
                 <input
                   type="checkbox"
                   v-model="element.hasPaid"
@@ -732,7 +766,7 @@
                 />
               </td>
 
-              <td class="border h-6 p-0">
+              <td class="border h-6 p-0" v-if="!event.isFree">
                 <textarea
                   v-model="element.paymentNote"
                   class="border-none text-sm p-1 relative h-full w-full bg-transparent"
@@ -741,17 +775,6 @@
                   @input="updateUserLink(element, 'paymentNote', 300)"
                 >
                 </textarea>
-              </td>
-
-              <td class="text-center border h-6 p-0">
-                <input
-                  type="checkbox"
-                  v-model="element.isValidated"
-                  @click="
-                    ;(element.isValidated = !element.isValidated),
-                      updateUserLink(element, 'isValidated', 0)
-                  "
-                />
               </td>
 
               <td class="text-center border h-6 p-0">
@@ -768,42 +791,11 @@
               <td class="text-center border h-6 p-0">
                 <input
                   type="checkbox"
-                  v-model="element.isMotorized"
+                  v-model="element.isValidated"
                   @click="
-                    ;(element.isMotorized = !element.isMotorized),
-                      updateUserLink(element, 'isMotorized', 0)
+                    ;(element.isValidated = !element.isValidated),
+                      updateUserLink(element, 'isValidated', 0)
                   "
-                />
-              </td>
-
-              <td class="text-center border h-6 p-0">
-                <input
-                  type="checkbox"
-                  v-model="element.isReserve"
-                  @click="
-                    ;(element.isReserve = !element.isReserve),
-                      updateUserLink(element, 'isReserve', 0)
-                  "
-                />
-              </td>
-
-              <td class="border h-6 p-0">
-                <textarea
-                  v-model="element.note"
-                  class="border-none text-sm p-1 relative h-full w-full bg-gray-100"
-                  style="top: 3px; min-width: 200px"
-                  disabled
-                  rows="1"
-                >
-                </textarea>
-              </td>
-
-              <td class="border h-6 p-0">
-                <input
-                  type="text"
-                  v-model="element.godfather"
-                  class="border-none w-32 text-sm h-full bg-gray-100"
-                  disabled
                 />
               </td>
 
@@ -1317,6 +1309,7 @@
 </template>
 
 <script setup lang="ts">
+import country from 'country-data'
 import draggable from 'vuedraggable'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -1392,6 +1385,45 @@ const newUserAliasInput = ref()
 const moreInfoDialog = ref()
 let moreInfoSelectedUserLink = ref()
 
+let sortInfo: any = { field: null, order: 'ascent' }
+
+let computedManagedFields = computed<any[]>(() => {
+  let managedFields = []
+
+  managedFields.push({ field: '', locale: '' })
+  managedFields.push({ field: 'alias', locale: 'names' })
+  managedFields.push({ field: 'email', locale: 'email' })
+  managedFields.push({ field: 'phone', locale: 'phoneShort' })
+  managedFields.push({ field: 'nationality', locale: 'nationality' })
+  managedFields.push({ field: 'fideid', locale: 'fideid' })
+  managedFields.push({ field: 'elo', locale: 'elo' })
+  managedFields.push({ field: 'note', locale: 'notes' })
+
+  if (event.value.hasGodfather) {
+    managedFields.push({ field: 'godfather', locale: 'godfather' })
+  }
+
+  if (event.value.showIsMotorized) {
+    managedFields.push({ field: 'isMotorized', locale: 'motorized' })
+  }
+
+  if (event.value.showIsReserve) {
+    managedFields.push({ field: 'isReserve', locale: 'reserve' })
+  }
+
+  if (!event.value.isFree) {
+    managedFields.push({ field: 'hasPaid', locale: 'paid' })
+    managedFields.push({ field: 'paymentNote', locale: 'paymentNote' })
+  }
+
+  managedFields.push({ field: 'isHidden', locale: 'hidden' })
+  managedFields.push({ field: 'isValidated', locale: 'validated' })
+  managedFields.push({ field: 'isOwner', locale: 'owner' })
+  managedFields.push({ field: 'isPasswordSent', locale: 'passwordSentShort' })
+
+  return managedFields
+})
+
 function getEmail(userLink: EventUser) {
   const targetLink = cloneEvent.value.userLinks.find(
     (ul: EventUser) => userLink.id == ul.id
@@ -1434,6 +1466,16 @@ function hasMoreInfo(userLink: EventUser) {
 }
 
 function sortUserLinksBy(field: string) {
+  if (sortInfo.field == field && sortInfo.order == 'ascent') {
+    sortInfo.order = 'descent'
+  } else if (sortInfo.field == field && sortInfo.order == 'descent') {
+    sortInfo.order = 'ascent'
+  } else {
+    sortInfo.order = 'ascent'
+  }
+
+  sortInfo.field = field
+
   const stringFields = [
     'alias',
     'phone',
@@ -1460,8 +1502,13 @@ function sortUserLinksBy(field: string) {
       let x = a[field as keyof EventUser]
       let y = b[field as keyof EventUser]
 
-      if (x) return y ? String(x).localeCompare(String(y)) : -1
-      else if (y) return x ? String(y).localeCompare(String(x)) : 1
+      if (sortInfo.order == 'ascent') {
+        if (x) return y ? String(x).localeCompare(String(y)) : -1
+        else if (y) return x ? String(y).localeCompare(String(x)) : 1
+      } else {
+        if (x) return y ? String(y).localeCompare(String(x)) : -1
+        else if (y) return x ? String(x).localeCompare(String(y)) : 1
+      }
 
       return 0
     })
@@ -1470,15 +1517,24 @@ function sortUserLinksBy(field: string) {
       let x = a[field as keyof EventUser]
       let y = b[field as keyof EventUser]
 
-      return Number(y) - Number(x)
+      if (sortInfo.order == 'ascent') {
+        return Number(y) - Number(x)
+      } else {
+        return Number(x) - Number(y)
+      }
     })
   } else if (field == 'email') {
     event.value.userLinks.sort((a: EventUser, b: EventUser) => {
       let x = a.user.email
       let y = b.user.email
 
-      if (x) return y ? x.localeCompare(y) : -1
-      else if (y) return x ? y.localeCompare(x) : 1
+      if (sortInfo.order == 'ascent') {
+        if (x) return y ? x.localeCompare(y) : -1
+        else if (y) return x ? y.localeCompare(x) : 1
+      } else {
+        if (x) return y ? x.localeCompare(y) : 1
+        else if (y) return x ? y.localeCompare(x) : -1
+      }
 
       return 0
     })
