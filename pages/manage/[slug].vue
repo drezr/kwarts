@@ -686,7 +686,7 @@
                   type="text"
                   v-model="element.phone"
                   class="border-none text-sm h-full w-full bg-transparent"
-                  style="min-width: 120px"
+                  style="min-width: 100px"
                   @input="updateUserLink(element, 'phone', 300)"
                 />
               </td>
@@ -696,7 +696,7 @@
                   type="text"
                   v-model="element.nationality"
                   class="border-none text-sm h-full w-full bg-transparent"
-                  style="min-width: 120px"
+                  style="min-width: 105px"
                   @input="updateUserLink(element, 'nationality', 300)"
                 />
               </td>
@@ -716,7 +716,7 @@
                   type="text"
                   v-model="element.elo"
                   class="border-none text-sm h-full w-full bg-transparent"
-                  style="min-width: 120px"
+                  style="min-width: 125px"
                   @input="updateUserLink(element, 'elo', 300)"
                 />
               </td>
@@ -736,7 +736,7 @@
                 <textarea
                   v-model="element.paymentNote"
                   class="border-none text-sm p-1 relative h-full w-full bg-transparent"
-                  style="top: 3px; min-width: 200px"
+                  style="top: 3px; min-width: 170px"
                   rows="1"
                   @input="updateUserLink(element, 'paymentNote', 300)"
                 >

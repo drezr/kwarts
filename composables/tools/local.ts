@@ -613,7 +613,7 @@ const localisation = {
       en: '',
     },
     owner: {
-      fr: 'Administrateur',
+      fr: 'Admin',
       nl: '',
       de: '',
       en: '',
