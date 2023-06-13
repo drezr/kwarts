@@ -611,7 +611,7 @@
           <tr>
             <th
               v-for="keyword in computedManagedFields"
-              class="p-1 font-bold bg-gray-200 text-gray-600 border border-gray-300 text-sm px-3 cursor-pointer hover:brightness-105"
+              class="p-1 font-bold bg-gray-200 text-gray-600 border border-gray-300 text-sm px-3 cursor-pointer hover:brightness-105 first:pointer-events-none last:pointer-events-none"
               @click="sortUserLinksBy(keyword.field)"
             >
               {{ _local(['common', keyword.locale]) }}
@@ -673,20 +673,28 @@
                 />
               </td>
 
-              <td class="border h-6 p-0">
-                <select
-                  v-model="element.nationality"
-                  class="border-none text-sm h-full w-full bg-transparent"
-                  style="min-width: 105px"
-                  @change="updateUserLink(element, 'nationality', 300)"
-                >
-                  <option
-                    v-for="ctry in country.countries.all"
-                    :value="ctry.alpha2.toLowerCase()"
+              <td class="border h-6 p-0" style="max-width: 200px">
+                <div class="flex items-center h-full">
+                  <img
+                    v-if="element.nationality"
+                    :src="`https://flagcdn.com/h20/${element.nationality}.png`"
+                    class="mx-1"
+                  />
+
+                  <select
+                    v-model="element.nationality"
+                    class="border-none text-sm bg-transparent h-full"
+                    style="min-width: 105px"
+                    @change="updateUserLink(element, 'nationality', 300)"
                   >
-                    {{ ctry.name }}
-                  </option>
-                </select>
+                    <option
+                      v-for="ctry in country.countries.all"
+                      :value="ctry.alpha2.toLowerCase()"
+                    >
+                      {{ ctry.name }}
+                    </option>
+                  </select>
+                </div>
               </td>
 
               <td class="border h-6">
@@ -835,6 +843,30 @@
                       "
                     ></span>
                   </div>
+                </div>
+              </td>
+
+              <td class="text-center border h-6 p-0">
+                <div
+                  class="cursor-pointer relative flex items-center justify-center hover:brightness-110 command-button"
+                  style="top: 0"
+                  :class="{
+                    'pointer-events-none': element.userId == loggedUserId,
+                  }"
+                  :title="_local(['common', 'delete'])"
+                  @click="deleteUserLink(element)"
+                >
+                  <span
+                    v-html="
+                      _icon(
+                        'trash-fill',
+                        _color.pick(
+                          element.userId == loggedUserId ? 'grey' : 'red'
+                        ),
+                        20
+                      )
+                    "
+                  ></span>
                 </div>
               </td>
             </tr>
@@ -1420,6 +1452,7 @@ let computedManagedFields = computed<any[]>(() => {
   managedFields.push({ field: 'isValidated', locale: 'validated' })
   managedFields.push({ field: 'isOwner', locale: 'owner' })
   managedFields.push({ field: 'isPasswordSent', locale: 'passwordSentShort' })
+  managedFields.push({ field: '', locale: '' })
 
   return managedFields
 })
