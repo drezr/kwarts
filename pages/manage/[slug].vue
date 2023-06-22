@@ -214,7 +214,7 @@
 
     <label
       for="isFree"
-      class="flex text-sm font-medium leading-6 text-gray-900"
+      class="flex text-sm font-medium leading-6 text-gray-900 cursor-pointer hover:opacity-90"
     >
       <input
         v-model="event.isFree"
@@ -229,7 +229,7 @@
 
     <label
       for="showIsMotorized"
-      class="flex text-sm font-medium leading-6 text-gray-900"
+      class="flex text-sm font-medium leading-6 text-gray-900 cursor-pointer hover:opacity-90"
     >
       <input
         v-model="event.showIsMotorized"
@@ -244,7 +244,7 @@
 
     <label
       for="showIsReserve"
-      class="flex text-sm font-medium leading-6 text-gray-900"
+      class="flex text-sm font-medium leading-6 text-gray-900 cursor-pointer hover:opacity-90"
     >
       <input
         v-model="event.showIsReserve"
@@ -259,7 +259,7 @@
 
     <label
       for="registerPage"
-      class="flex text-sm font-medium leading-6 text-gray-900 pt-3"
+      class="flex text-sm font-medium leading-6 text-gray-900 pt-3 cursor-pointer hover:opacity-90"
     >
       <input
         v-model="event.isOpen"
@@ -299,7 +299,7 @@
 
       <label
         for="registerShowDates"
-        class="flex text-sm font-medium leading-6 text-gray-900"
+        class="flex text-sm font-medium leading-6 text-gray-900 cursor-pointer hover:opacity-90"
       >
         <input
           v-model="event.registerShowDates"
@@ -314,7 +314,7 @@
 
       <label
         for="showFideid"
-        class="flex text-sm font-medium leading-6 text-gray-900"
+        class="flex text-sm font-medium leading-6 text-gray-900 cursor-pointer hover:opacity-90"
       >
         <input
           v-model="event.showFideid"
@@ -328,8 +328,25 @@
       </label>
 
       <label
+        for="sendMailOnRegister"
+        class="flex text-sm font-medium leading-6 text-gray-900 cursor-pointer hover:opacity-90"
+      >
+        <input
+          v-model="event.sendMailOnRegister"
+          type="checkbox"
+          id="sendMailOnRegister"
+          class="cursor-pointer mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+          @change="
+            updateEvent('sendMailOnRegister', event.sendMailOnRegister, 0)
+          "
+        />
+
+        {{ _local(['common', 'eventSendMailOnRegister']) }}
+      </label>
+
+      <label
         for="hasGodfather"
-        class="flex text-sm font-medium leading-6 text-gray-900"
+        class="flex text-sm font-medium leading-6 text-gray-900 cursor-pointer hover:opacity-90"
       >
         <input
           v-model="event.hasGodfather"
@@ -367,7 +384,7 @@
         />
       </div>
 
-      <div class="text-center font-bold text-blue-500 hover:opacity-80">
+      <div class="text-center font-bold text-blue-500 hover:opacity-90">
         <a
           :href="`/register/${event.slug}`"
           target="_blank"
@@ -380,7 +397,7 @@
 
     <label
       for="listingPage"
-      class="flex text-sm font-medium leading-6 text-gray-900 pt-3 mt-3"
+      class="flex text-sm font-medium leading-6 text-gray-900 pt-3 mt-3 cursor-pointer hover:opacity-90"
     >
       <input
         v-model="event.isListingOpen"
@@ -400,7 +417,7 @@
         { 'pointer-events-none': !event.isListingOpen },
       ]"
     >
-      <div class="text-center font-bold text-blue-500 hover:opacity-80">
+      <div class="text-center font-bold text-blue-500 hover:opacity-90">
         <a :href="`/listing/${event.slug}`" target="_blank" class="inline-flex">
           {{ _local(['common', 'checkListingPage']) }}
         </a>
@@ -559,7 +576,7 @@
   >
     <div
       class="max-w-full w-full absolute left-0 pb-3 overflow-auto"
-      style="height: calc(100vh - 109px)"
+      style="height: calc(100vh - 114px)"
     >
       <table class="border-collapse w-full">
         <thead>
@@ -700,14 +717,16 @@
               </td>
 
               <td class="border h-6 p-0">
-                <textarea
-                  v-model="element.note"
-                  class="border-none text-sm p-1 relative h-full w-full bg-gray-100"
-                  style="top: 3px; min-width: 200px"
-                  disabled
-                  rows="1"
-                >
-                </textarea>
+                <ClientOnly>
+                  <textarea
+                    v-model="element.note"
+                    class="border-none text-sm p-1 relative h-full w-full bg-gray-100"
+                    style="top: 3px; min-width: 200px"
+                    disabled
+                    rows="1"
+                  >
+                  </textarea>
+                </ClientOnly>
               </td>
 
               <td class="border h-6 p-0" v-if="event.hasGodfather">
@@ -728,7 +747,7 @@
                   type="checkbox"
                   v-model="element.isMotorized"
                   class="cursor-pointer"
-                  @click="
+                  @input="
                     ;(element.isMotorized = !element.isMotorized),
                       updateUserLink(element, 'isMotorized', 0)
                   "
@@ -740,7 +759,7 @@
                   type="checkbox"
                   v-model="element.isReserve"
                   class="cursor-pointer"
-                  @click="
+                  @input="
                     ;(element.isReserve = !element.isReserve),
                       updateUserLink(element, 'isReserve', 0)
                   "
@@ -752,7 +771,7 @@
                   type="checkbox"
                   v-model="element.hasPaid"
                   class="cursor-pointer"
-                  @click="
+                  @input="
                     ;(element.hasPaid = !element.hasPaid),
                       updateUserLink(element, 'hasPaid', 0)
                   "
@@ -760,14 +779,16 @@
               </td>
 
               <td class="border h-6 p-0" v-if="!event.isFree">
-                <textarea
-                  v-model="element.paymentNote"
-                  class="border-none text-sm p-1 relative h-full w-full bg-transparent"
-                  style="top: 3px; min-width: 170px"
-                  rows="1"
-                  @input="updateUserLink(element, 'paymentNote', 300)"
-                >
-                </textarea>
+                <ClientOnly>
+                  <textarea
+                    v-model="element.paymentNote"
+                    class="border-none text-sm p-1 relative h-full w-full bg-transparent"
+                    style="top: 3px; min-width: 170px"
+                    rows="1"
+                    @input="updateUserLink(element, 'paymentNote', 300)"
+                  >
+                  </textarea>
+                </ClientOnly>
               </td>
 
               <td class="text-center border h-6 p-0">
@@ -775,7 +796,7 @@
                   type="checkbox"
                   v-model="element.isHidden"
                   class="cursor-pointer"
-                  @click="
+                  @input="
                     ;(element.isHidden = !element.isHidden),
                       updateUserLink(element, 'isHidden', 0)
                   "
@@ -787,7 +808,7 @@
                   type="checkbox"
                   v-model="element.isValidated"
                   class="cursor-pointer"
-                  @click="
+                  @input="
                     ;(element.isValidated = !element.isValidated),
                       updateUserLink(element, 'isValidated', 0)
                   "
@@ -804,6 +825,7 @@
                     'pointer-events-none': element.userId == loggedUserId,
                     'text-gray-400': element.userId == loggedUserId,
                   }"
+                  @change="updateUserLink(element, 'isOwner', 0)"
                 />
               </td>
 

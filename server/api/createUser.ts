@@ -15,7 +15,7 @@ export default defineEventHandler(async (e) => {
   const fideid: string = params.fideid
   const eventId: number = parseInt(params.eventId)
   const isRegister: boolean = Boolean(params.isRegister === 'true')
-  
+
   let dates: any = params.dates
   let isMotorized: any
   let isReserve: any
@@ -31,6 +31,18 @@ export default defineEventHandler(async (e) => {
   const event = await prisma.event.findUnique({
     where: {
       id: eventId,
+    },
+    include: {
+      userLinks: {
+        select: {
+          isOwner: true,
+          user: {
+            select: {
+              email: true,
+            },
+          },
+        },
+      },
     },
   })
 
@@ -104,7 +116,6 @@ export default defineEventHandler(async (e) => {
     },
   })
 
-
   if (dates) {
     for (let date of dates) {
       date = JSON.parse(date)
@@ -122,8 +133,10 @@ export default defineEventHandler(async (e) => {
   if (isRegister) {
     const emailContent = `
     ${_local(['emailText', 'sendPasswordHello'])},<br><br>
-    ${_local(['emailText', 'newRegisterInfo'])}.<br><br>
-    <a href="${process.env.WEBSITE_HOST}/event/${event.slug}" title="${event.name}">
+    ${_local(['emailText', 'newRegisterInfo'])} : <b>${alias}</b><br><br>
+    <a href="${process.env.WEBSITE_HOST}/event/${event.slug}" title="${
+      event.name
+    }">
     ${_local(['emailText', 'sendPasswordClickhere'])}
     </a><br><br>
     ${_local(['emailText', 'sendPasswordSeeyousoon'])} !
@@ -139,12 +152,17 @@ export default defineEventHandler(async (e) => {
       },
     })
 
-    await transporter.sendMail({
-      from: `${process.env.EMAIL_AUTHOR} <${process.env.EMAIL_USER}>`,
-      to: user?.email,
-      subject: _local(['emailText', 'sendPasswordTitle']),
-      html: emailContent,
-    })
+    for (const ul of event.userLinks) {
+      if (ul.isOwner) {
+        transporter.sendMail({
+          from: `${process.env.EMAIL_AUTHOR} <${process.env.EMAIL_USER}>`,
+          to: ul.user.email,
+          subject:
+            event.name + ' : ' + _local(['emailText', 'newRegisterInfo']),
+          html: emailContent,
+        })
+      }
+    }
   }
 
   return userLink

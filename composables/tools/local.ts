@@ -109,7 +109,7 @@ const localisation = {
       en: '',
     },
     showFideid: {
-      fr: "Donner la possibilité de renseigner un matricule FIDE",
+      fr: 'Donner la possibilité de renseigner un matricule FIDE',
       nl: '',
       de: '',
       en: '',
@@ -122,6 +122,12 @@ const localisation = {
     },
     registerShowDatesTooltip: {
       fr: "Vos disponibilités pour l'évènement",
+      nl: '',
+      de: '',
+      en: '',
+    },
+    eventSendMailOnRegister: {
+      fr: "Recevoir un email lorsqu'une nouvelle personne s'inscrit à l'évènement",
       nl: '',
       de: '',
       en: '',
@@ -583,13 +589,13 @@ const localisation = {
       en: '',
     },
     successRegister: {
-      fr: 'Merci, vous avez bien été inscrit(e) à l\'évènement',
+      fr: "Merci, vous avez bien été inscrit(e) à l'évènement",
       nl: '',
       de: '',
       en: '',
     },
     registerAnotherPerson: {
-      fr: 'Inscrire une autre personne à l\'évènement',
+      fr: "Inscrire une autre personne à l'évènement",
       nl: '',
       de: '',
       en: '',
@@ -675,7 +681,7 @@ const localisation = {
       en: '',
     },
     newRegisterInfo: {
-      fr: "Une nouvelle personne s'est enregistrée à l'évènement",
+      fr: "Une nouvelle personne s'est inscrite à l'évènement",
       nl: '',
       de: '',
       en: '',
