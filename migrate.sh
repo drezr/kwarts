@@ -1,8 +1,9 @@
 #!/bin/bash
 
-mkdir -p prisma/migrations/$1
-npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > prisma/migrations/$1/migration.sql
-npx prisma migrate resolve --applied $1
+ts=$(date +%s)
+mkdir -p prisma/migrations/$ts
+npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > prisma/migrations/$ts/migration.sql
+npx prisma migrate resolve --applied $ts
 npx prisma db push
 npx prisma generate
 

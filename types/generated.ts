@@ -31,6 +31,7 @@ export interface Event {
     showFideid: boolean,
     registerShowDates: boolean,
     isFree: boolean,
+    sendMailOnRegister: boolean,
     hasGodfather: boolean,
     isOpen: boolean,
     userLinks: EventUser[],

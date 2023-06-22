@@ -15,7 +15,7 @@ Then, run:
 
 ```bash
 npm install
-sh migrate.sh init
+sh migrate.sh
 ```
 
 ## Development Server
@@ -39,5 +39,5 @@ npm run build
 On `schema.prisma` updates, run:
 
 ```bash
-sh migrate.sh MIGRATIONNUMBER
+sh migrate.sh
 ```

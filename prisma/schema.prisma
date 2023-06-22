@@ -21,26 +21,27 @@ model User {
 }
 
 model Event {
-  id                Int         @id @default(autoincrement())
-  name              String
-  title             String?
-  slug              String?
-  logo              String?
-  icon              String?
-  theme             String?
-  homepage          String?
-  backlinkText      String?
-  godfatherInfoLink String?
-  isListingOpen     Boolean     @default(false)
-  showIsMotorized   Boolean     @default(false)
-  showIsReserve     Boolean     @default(false)
-  showFideid        Boolean     @default(false)
-  registerShowDates Boolean     @default(false)
-  isFree            Boolean     @default(true)
-  hasGodfather      Boolean     @default(false)
-  isOpen            Boolean     @default(false)
-  userLinks         EventUser[]
-  dates             Date[]
+  id                 Int         @id @default(autoincrement())
+  name               String
+  title              String?
+  slug               String?
+  logo               String?
+  icon               String?
+  theme              String?
+  homepage           String?
+  backlinkText       String?
+  godfatherInfoLink  String?
+  isListingOpen      Boolean     @default(false)
+  showIsMotorized    Boolean     @default(false)
+  showIsReserve      Boolean     @default(false)
+  showFideid         Boolean     @default(false)
+  registerShowDates  Boolean     @default(false)
+  isFree             Boolean     @default(true)
+  sendMailOnRegister Boolean     @default(true)
+  hasGodfather       Boolean     @default(false)
+  isOpen             Boolean     @default(false)
+  userLinks          EventUser[]
+  dates              Date[]
 }
 
 model Date {
