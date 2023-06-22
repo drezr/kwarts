@@ -16,19 +16,20 @@
     "autoprefixer": "^10.4.14",
     "nuxt": "^3.4.2",
     "postcss": "^8.4.23",
-    "prisma": "^4.15.0",
+    "prisma": "^4.16.1",
     "tailwindcss": "^3.3.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@prisma/client": "^4.15.0",
+    "@prisma/client": "^4.16.1",
     "@tailwindcss/forms": "^0.5.3",
     "@types/country-data": "^0.0.2",
     "@vuepic/vue-datepicker": "^4.5.1",
     "bootstrap-icons": "^1.10.4",
     "country-data": "^0.0.31",
     "nodemailer": "^6.9.1",
+    "npm": "^9.7.2",
     "uuid": "^9.0.0",
     "vuedraggable": "^4.1.0"
   }
