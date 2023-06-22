@@ -1,6 +1,10 @@
 import prisma from '~/server/prisma'
 import authorize from '~/server/authorize'
 import { v4 as uuidv4 } from 'uuid'
+// @ts-ignore
+import nodemailer from 'nodemailer'
+
+import { getLocal as _local } from '~/composables/tools/local'
 
 export default defineEventHandler(async (e) => {
   const params: any = getQuery(e)
@@ -10,6 +14,7 @@ export default defineEventHandler(async (e) => {
   const godfather: string = params.godfather
   const fideid: string = params.fideid
   const eventId: number = parseInt(params.eventId)
+  const isRegister: boolean = Boolean(params.isRegister === 'true')
   
   let dates: any = params.dates
   let isMotorized: any
@@ -112,6 +117,34 @@ export default defineEventHandler(async (e) => {
         },
       })
     }
+  }
+
+  if (isRegister) {
+    const emailContent = `
+    ${_local(['emailText', 'sendPasswordHello'])},<br><br>
+    ${_local(['emailText', 'newRegisterInfo'])}.<br><br>
+    <a href="${process.env.WEBSITE_HOST}/event/${event.slug}" title="${event.name}">
+    ${_local(['emailText', 'sendPasswordClickhere'])}
+    </a><br><br>
+    ${_local(['emailText', 'sendPasswordSeeyousoon'])} !
+  `
+
+    let transporter = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      secure: true,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    })
+
+    await transporter.sendMail({
+      from: `${process.env.EMAIL_AUTHOR} <${process.env.EMAIL_USER}>`,
+      to: user?.email,
+      subject: _local(['emailText', 'sendPasswordTitle']),
+      html: emailContent,
+    })
   }
 
   return userLink

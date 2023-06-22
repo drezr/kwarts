@@ -287,12 +287,10 @@
           <button
             class="flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600"
             :class="
-              !canCreateParticipation
-                ? 'bg-gray-300'
-                : `bg-slate-950 hover:bg-slate-900`
+              !canRegister ? 'bg-gray-300' : `bg-slate-950 hover:bg-slate-900`
             "
-            :disabled="!canCreateParticipation"
-            @click="createParticipation()"
+            :disabled="!canRegister"
+            @click="register()"
           >
             {{ _local(['common', 'registerTo']) }} {{ event.name }}
           </button>
@@ -355,7 +353,7 @@ useHead({
 
 setDates()
 
-const canCreateParticipation = computed<boolean>(() => {
+const canRegister = computed<boolean>(() => {
   if (
     !isValidEmail(email.value) ||
     !email.value ||
@@ -368,7 +366,7 @@ const canCreateParticipation = computed<boolean>(() => {
   return true
 })
 
-async function createParticipation() {
+async function register() {
   const result = await _fetch('/api/createUser', {
     email: email.value,
     alias: alias.value,
@@ -378,6 +376,7 @@ async function createParticipation() {
     isReserve: isReserve.value,
     dates: dates,
     eventId: event.id,
+    isRegister: true,
   })
 
   if (result && result.id) {

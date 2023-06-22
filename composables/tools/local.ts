@@ -674,6 +674,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    newRegisterInfo: {
+      fr: "Une nouvelle personne s'est enregistrée à l'évènement",
+      nl: '',
+      de: '',
+      en: '',
+    },
   },
 }
 
