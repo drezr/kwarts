@@ -5,10 +5,10 @@
       style="width: 550px"
     >
       <div style="width: 350px" class="border-r p-2">
-        {{ _local(['common', 'player']) }}
+        {{ _local(['common', 'players']) }} ({{ event.userLinks.length }})
       </div>
 
-      <div class="p-2">{{ _local(['common', 'club']) }}</div>
+      <div class="p-2">{{ _local(['common', 'clubs']) }}</div>
     </div>
 
     <div

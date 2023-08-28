@@ -54,6 +54,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    players: {
+      fr: 'Joueurs',
+      nl: '',
+      de: '',
+      en: '',
+    },
     eventManagement: {
       fr: "Gestion de l'évènement",
       nl: '',
@@ -428,6 +434,12 @@ const localisation = {
     },
     club: {
       fr: 'Club',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    clubs: {
+      fr: 'Clubs',
       nl: '',
       de: '',
       en: '',
