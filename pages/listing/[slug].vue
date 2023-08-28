@@ -1,18 +1,38 @@
 <template>
   <div>
     <div
-      v-for="(userLink, i) in event.userLinks"
-      class="p-2 border-l border-r first:border-t last:border-b border-slate-200 w-96"
-      :class="{ 'bg-slate-100': i % 2 }"
+      class="border-l border-r first:border-t last:border-b border-slate-200 bg-slate-100 font-bold flex"
+      style="width: 550px"
     >
-      <img
-        v-if="userLink.nationality"
-        :src="`https://flagcdn.com/h20/${userLink.nationality}.png`"
-        class="inline mr-2 relative"
-        style="top: -2px"
-      />
-      <span class="font-bold mr-2">{{ userLink.alias }}</span>
-      <span v-if="userLink.elo">({{ userLink.elo }})</span>
+      <div style="width: 350px" class="border-r p-2">
+        {{ _local(['common', 'player']) }}
+      </div>
+
+      <div class="p-2">{{ _local(['common', 'club']) }}</div>
+    </div>
+
+    <div
+      v-for="(userLink, i) in event.userLinks"
+      class="border-l border-r first:border-t last:border-b border-slate-200 flex"
+      :class="{ 'bg-slate-100': i % 2 }"
+      style="width: 550px"
+    >
+      <div style="width: 350px" class="border-r p-2">
+        <img
+          v-if="userLink.nationality"
+          :src="`https://flagcdn.com/h20/${userLink.nationality}.png`"
+          class="inline mr-2 relative"
+          style="top: -2px"
+        />
+
+        <span class="font-bold mr-2">{{ userLink.alias }}</span>
+
+        <span v-if="userLink.elo">({{ userLink.elo }})</span>
+      </div>
+
+      <div class="p-2">
+        {{ userLink.club }}
+      </div>
     </div>
   </div>
 </template>
@@ -33,7 +53,7 @@ let requestedEvent = await _fetch('/api/getListingBySlug', {
 if (!requestedEvent) logout()
 
 requestedEvent.userLinks = requestedEvent.userLinks.filter(
-  (u: EventUser) => u.isValidated && !u.isHidden
+  (u: EventUser) => u.isValidated && !u.isHidden,
 )
 
 const title = requestedEvent.title

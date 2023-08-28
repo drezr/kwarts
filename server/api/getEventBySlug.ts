@@ -28,6 +28,7 @@ export default defineEventHandler(async (e) => {
           godfather: true,
           fideid: true,
           elo: true,
+          club: true,
           phone: true,
           nationality: true,
           hasPaid: authorization.isOwner,

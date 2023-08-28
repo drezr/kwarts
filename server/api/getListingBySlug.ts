@@ -16,6 +16,7 @@ export default defineEventHandler(async (e) => {
           alias: true,
           fideid: true,
           elo: true,
+          club: true,
           nationality: true,
           isValidated: true,
           isHidden: true,

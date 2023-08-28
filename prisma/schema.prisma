@@ -77,6 +77,7 @@ model EventUser {
   godfather      String?
   note           String?
   elo            String?
+  club           String?
   nationality    String?
   hasPaid        Boolean  @default(false)
   paymentNote    String?

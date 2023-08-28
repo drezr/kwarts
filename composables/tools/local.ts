@@ -48,6 +48,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    player: {
+      fr: 'Joueur',
+      nl: '',
+      de: '',
+      en: '',
+    },
     eventManagement: {
       fr: "Gestion de l'évènement",
       nl: '',
@@ -415,7 +421,13 @@ const localisation = {
       en: '',
     },
     elo: {
-      fr: 'Classement Elo',
+      fr: 'Elo',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    club: {
+      fr: 'Club',
       nl: '',
       de: '',
       en: '',

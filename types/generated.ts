@@ -69,6 +69,7 @@ export interface EventUser {
     godfather?: string,
     note?: string,
     elo?: string,
+    club?: string,
     nationality?: string,
     hasPaid: boolean,
     paymentNote?: string,

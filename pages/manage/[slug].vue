@@ -711,8 +711,18 @@
                   type="text"
                   v-model="element.elo"
                   class="border-none text-sm h-full w-full bg-transparent"
-                  style="min-width: 125px"
+                  style="min-width: 60px"
                   @input="updateUserLink(element, 'elo', 300)"
+                />
+              </td>
+
+              <td class="border h-6">
+                <input
+                  type="text"
+                  v-model="element.club"
+                  class="border-none text-sm h-full w-full bg-transparent"
+                  style="min-width: 125px"
+                  @input="updateUserLink(element, 'club', 300)"
                 />
               </td>
 
@@ -1013,8 +1023,6 @@ requestedEvent.userLinks.sort(
   (a: EventUser, b: EventUser) => a.position - b.position,
 )
 
-console.log(requestedEvent)
-
 useState<String>('eventName', () => requestedEvent.name)
 
 const isOwner = loggedUserLink ? ref<boolean>(loggedUserLink.isOwner) : false
@@ -1057,6 +1065,7 @@ let computedManagedFields = computed<any[]>(() => {
   managedFields.push({ field: 'nationality', locale: 'nationality' })
   managedFields.push({ field: 'fideid', locale: 'fideid' })
   managedFields.push({ field: 'elo', locale: 'elo' })
+  managedFields.push({ field: 'club', locale: 'club' })
   managedFields.push({ field: 'note', locale: 'notes' })
 
   if (event.value.hasGodfather) {
