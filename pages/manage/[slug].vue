@@ -579,7 +579,7 @@
       style="height: calc(100vh - 114px)"
     >
       <table class="border-collapse w-full">
-        <thead>
+        <thead class="sticky top-0 z-10">
           <tr>
             <th
               v-for="(keyword, i) in computedManagedFields"
