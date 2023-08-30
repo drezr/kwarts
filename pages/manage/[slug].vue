@@ -583,8 +583,160 @@
   </div>
 
   <div class="mx-auto" v-show="modalTab == 'groups'">
-    <div v-for="date in event.dates">
-      {{ _date.formatDatetime(String(date.date)) }}
+    <div class="flex">
+      <div class="w-64 flex-shrink-0">
+        <div
+          class="py-1 px-2 m-1 rounded bg-slate-700 text-white flex items-center"
+        >
+          <span v-html="_icon('calendar3', 'white', 20)" class="mr-2"></span>
+
+          {{ _local(['common', 'dates']) }}
+        </div>
+
+        <div
+          v-for="(date, i) in event.dates"
+          class="cursor-pointer py-1 px-2 m-1 rounded hover:bg-slate-600 hover:text-white"
+          :class="[
+            { 'bg-slate-300': selectedDateIndex != i },
+            { 'bg-slate-600': selectedDateIndex == i },
+            { 'text-white': selectedDateIndex == i },
+          ]"
+          @click="selectedDateIndex = i"
+        >
+          <div class="font-bold">
+            {{ date.title }}
+            ({{ date.groups.length }})
+          </div>
+
+          <div>
+            {{ _date.formatDatetime(String(date.date)) }}
+          </div>
+        </div>
+      </div>
+
+      <div class="w-64 flex-shrink-0 mx-1">
+        <div
+          class="py-1 px-2 m-1 rounded bg-slate-700 text-white flex items-center"
+        >
+          <span v-html="_icon('people', 'white', 20)" class="mr-2"></span>
+          {{ _local(['common', 'withoutGroup']) }}
+        </div>
+
+        <draggable
+          v-model="event.userLinks"
+          @start="dragging = true"
+          @end="dragging = false"
+          item-key="id"
+          :group="{ name: 'people', pull: 'clone', put: false }"
+          :sort="false"
+        >
+          <template #item="{ element }">
+            <div
+              class="cursor-grab py-1 px-2 m-1 rounded bg-orange-300 hover:bg-orange-700 hover:text-white text-sm flex items-center"
+            >
+              <div class="flex-grow">{{ element.alias }}</div>
+
+              <div
+                class="w-4 h-4 ml-2 rounded-full flex-shrink-0"
+                :class="[
+                  {
+                    'bg-gray-600':
+                      event.dates[selectedDateIndex].availabilities.find(
+                        (a) => a.userId == element.user.id
+                      )?.isAvailable == undefined,
+                  },
+                  {
+                    'bg-red-600':
+                      event.dates[selectedDateIndex].availabilities.find(
+                        (a) => a.userId == element.user.id
+                      )?.isAvailable == false,
+                  },
+                  {
+                    'bg-green-600':
+                      event.dates[selectedDateIndex].availabilities.find(
+                        (a) => a.userId == element.user.id
+                      )?.isAvailable == true,
+                  },
+                ]"
+              ></div>
+            </div>
+          </template>
+        </draggable>
+      </div>
+
+      <div>
+        <button @click="createSingleGroup()">
+          {{ _local(['common', 'addMultipleGroup']) }}
+        </button>
+
+        <div class="flex flex-wrap">
+          <div
+            v-for="group in selectedDateGroups"
+            class="border border-slate-500 w-64 m-1 rounded relative"
+          >
+            <div class="flex items-center">
+              <input
+                type="text"
+                v-model="group.name"
+                class="border bg-transparent my-1 ml-1 rounded flex-grow"
+                @input="updateGroup(group)"
+              />
+
+              <span
+                @click="deleteGroup(group)"
+                v-html="_icon('trash-fill', _color.pick('red'), 20)"
+                class="m-2 cursor-pointer"
+              ></span>
+            </div>
+
+            <draggable
+              v-model="group.userLinks"
+              @start="dragging = true"
+              @end="dragging = false"
+              item-key="id"
+              group="people"
+              style="
+                position: relative;
+                top: 0px;
+                min-height: 44px;
+                height: calc(100% - 50px);
+              "
+            >
+              <template #item="{ element }">
+                <div
+                  class="cursor-grab py-1 px-2 m-1 rounded bg-orange-300 hover:bg-orange-500 hover:text-white text-sm flex items-center z-10"
+                >
+                  <div class="flex-grow">{{ element.alias }}</div>
+
+                  <span
+                    @click="removeFromGroup(group, element)"
+                    v-html="_icon('trash-fill', _color.pick('red'), 18)"
+                    class="ml-2 cursor-pointer"
+                  ></span>
+                </div>
+              </template>
+            </draggable>
+
+            <div
+              v-if="group.userLinks.length == 0"
+              class="border-2 border-gray-300 border-dashed rounded m-2 p-2 flex justify-center items-center text-gray-400"
+              style="position: absolute; top: 50px; width: calc(100% - 15px)"
+            >
+              {{ _local(['common', 'dropUserHere']) }}
+            </div>
+          </div>
+
+          <div
+            class="cursor-pointer border border-slate-500 rounded w-64 h-28 m-1 flex justify-center items-center hover:bg-slate-900"
+            @click="createSingleGroup()"
+          >
+            <span
+              v-html="_icon('plus', 'rgb(100 116 139)', 50)"
+              :title="_local(['common', 'createSingleGroup'])"
+            ></span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1055,6 +1207,7 @@ let event = ref<Event>(requestedEvent)
 let cloneEvent = ref(JSON.parse(JSON.stringify(event.value)))
 let dragging = ref<Boolean>(false)
 let modalTab = ref<String>('groups')
+let selectedDateIndex = ref(0)
 let fetchThrottleTimer: any = null
 let fetchIsLoading = ref<Boolean>(false)
 let newSlug = ref<any>(event.value.slug)
@@ -1074,6 +1227,10 @@ const newUserAliasInput = ref()
 const addUserDialog = ref()
 
 let sortInfo: any = { field: null, order: 'ascent' }
+
+let selectedDateGroups = computed(() => {
+  return event.value.dates[selectedDateIndex.value].groups
+})
 
 let computedManagedFields = computed<any[]>(() => {
   let managedFields = []
@@ -1511,6 +1668,48 @@ async function deleteDate(date: Date) {
       fetchIsLoading.value = false
     }, 500)
   }
+}
+
+// Groups
+
+async function createSingleGroup() {
+  const newGroup = await _fetch('/api/createSingleGroup', {
+    dateId: event.value.dates[selectedDateIndex.value].id,
+  })
+
+  event.value.dates[selectedDateIndex.value].groups.push(newGroup)
+}
+
+async function updateGroup(group: Group) {
+  fetchIsLoading.value = true
+  clearTimeout(fetchThrottleTimer)
+
+  fetchThrottleTimer = setTimeout(async () => {
+    const newGroup = await _fetch('/api/updateGroup', {
+      groupId: group.id,
+      name: group.name,
+    })
+
+    fetchIsLoading.value = false
+  }, 500)
+}
+
+async function deleteGroup(group: Group) {
+  const newGroup = await _fetch('/api/deleteGroup', {
+    groupId: group.id,
+  })
+
+  const groups = event.value.dates[selectedDateIndex.value].groups.filter(
+    (g: Group) => g.id != group.id
+  )
+
+  event.value.dates[selectedDateIndex.value].groups = groups
+}
+
+async function removeFromGroup(group: Group, userLink: EventUser) {
+  group.userLinks = group.userLinks.filter(
+    (ul: EventUser) => ul.id !== userLink.id
+  )
 }
 
 //let dialog1Node = ref()

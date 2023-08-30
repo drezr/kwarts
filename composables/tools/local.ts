@@ -198,6 +198,18 @@ const localisation = {
       de: '',
       en: '',
     },
+    withoutGroup: {
+      fr: 'Sans groupe',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    dropUserHere: {
+      fr: 'Glissez les personnes ici',
+      nl: '',
+      de: '',
+      en: '',
+    },
     people: {
       fr: 'Personnes',
       nl: '',

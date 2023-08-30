@@ -91,6 +91,9 @@ export interface EventUser {
 
 export interface Group {
     id: number,
+    name?: string,
+    color?: string,
+    position: number,
     date: Date,
     dateId: number,
     userLinks: EventUser[],

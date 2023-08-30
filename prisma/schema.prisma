@@ -101,6 +101,9 @@ model EventUser {
 
 model Group {
   id        Int         @id @default(autoincrement())
+  name      String?
+  color     String?
+  position  Int
   date      Date        @relation(fields: [dateId], references: [id])
   dateId    Int
   userLinks EventUser[]

@@ -47,7 +47,11 @@ export default defineEventHandler(async (e) => {
       dates: {
         include: {
           availabilities: true,
-          groups: true,
+          groups: {
+            include: {
+              userLinks: true,
+            },
+          },
         },
       },
     },
