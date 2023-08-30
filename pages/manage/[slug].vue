@@ -44,6 +44,20 @@
     </span>
 
     <span
+      class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer flex mx-1"
+      :class="{ 'bg-slate-900': modalTab == 'groups' }"
+      @click="modalTab = 'groups'"
+    >
+      <span
+        v-html="_icon('person-bounding-box', 'white', 16)"
+        class="mr-2 relative"
+        style="top: 2px"
+      ></span>
+
+      {{ _local(['common', 'groups']) }}
+    </span>
+
+    <span
       class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium cursor-pointer flex"
       :class="{ 'bg-slate-900': modalTab == 'people' }"
       @click="modalTab = 'people'"
@@ -62,7 +76,7 @@
         _icon(
           fetchIsLoading ? 'arrow-clockwise' : 'check',
           _color.pick(fetchIsLoading ? 'blue' : 'green'),
-          30,
+          30
         )
       "
       class="hover:brightness-110 ml-3"
@@ -507,7 +521,7 @@
                 _icon(
                   element.isHidden ? 'lock-fill' : 'unlock-fill',
                   'white',
-                  20,
+                  20
                 )
               "
             ></span>
@@ -568,6 +582,12 @@
     </div>
   </div>
 
+  <div class="mx-auto" v-show="modalTab == 'groups'">
+    <div v-for="date in event.dates">
+      {{ _date.formatDatetime(String(date.date)) }}
+    </div>
+  </div>
+
   <div
     class="mx-auto"
     v-show="modalTab == 'people'"
@@ -575,8 +595,8 @@
     style="max-width: 1000px"
   >
     <div
-      class="max-w-full w-full absolute left-0 pb-3 overflow-auto"
-      style="height: calc(100vh - 114px)"
+      class="max-w-full w-full absolute left-0 overflow-auto"
+      style="height: calc(100vh - 124px)"
     >
       <table class="border-collapse w-full">
         <thead class="sticky top-0 z-10">
@@ -862,7 +882,7 @@
                             ? 'envelope-check-fill'
                             : 'envelope-x-fill',
                           'white',
-                          16,
+                          16
                         )
                       "
                     ></span>
@@ -885,9 +905,9 @@
                       _icon(
                         'trash-fill',
                         _color.pick(
-                          element.userId == loggedUserId ? 'grey' : 'red',
+                          element.userId == loggedUserId ? 'grey' : 'red'
                         ),
-                        20,
+                        20
                       )
                     "
                   ></span>
@@ -898,7 +918,7 @@
         </draggable>
       </table>
 
-      <div class="flex justify-center sticky left-0">
+      <div class="flex justify-center sticky left-0 bottom-0 mt-4">
         <button
           class="bg-green-700 hover:bg-green-600 flex w-96 justify-center rounded-md px-3 py-1.5 mb-4 text-sm font-semibold leading-6 text-white shadow-sm mt-1"
           @click="addUserDialog.showModal()"
@@ -996,7 +1016,7 @@ let requestedEvent = await _fetch('/api/getEventBySlug', {
 if (!requestedEvent) logout()
 
 const loggedUserLink = requestedEvent.userLinks.find(
-  (ul: any) => ul.user.id == loggedUserId.value,
+  (ul: any) => ul.user.id == loggedUserId.value
 )
 
 if (!loggedUserLink) logout()
@@ -1020,7 +1040,7 @@ useHead({
 
 requestedEvent.dates.sort((a: Date, b: Date) => a.position - b.position)
 requestedEvent.userLinks.sort(
-  (a: EventUser, b: EventUser) => a.position - b.position,
+  (a: EventUser, b: EventUser) => a.position - b.position
 )
 
 useState<String>('eventName', () => requestedEvent.name)
@@ -1034,7 +1054,7 @@ if (!isOwner) {
 let event = ref<Event>(requestedEvent)
 let cloneEvent = ref(JSON.parse(JSON.stringify(event.value)))
 let dragging = ref<Boolean>(false)
-let modalTab = ref<String>('general')
+let modalTab = ref<String>('groups')
 let fetchThrottleTimer: any = null
 let fetchIsLoading = ref<Boolean>(false)
 let newSlug = ref<any>(event.value.slug)
@@ -1096,7 +1116,7 @@ let computedManagedFields = computed<any[]>(() => {
 
 function getEmail(userLink: EventUser) {
   const targetLink = cloneEvent.value.userLinks.find(
-    (ul: EventUser) => userLink.id == ul.id,
+    (ul: EventUser) => userLink.id == ul.id
   )
 
   return targetLink?.user.email
@@ -1291,7 +1311,7 @@ async function createUser() {
 async function updateUserLink(
   userLink: EventUser,
   key: string,
-  throttle: number,
+  throttle: number
 ) {
   fetchIsLoading.value = true
   clearTimeout(fetchThrottleTimer)
@@ -1379,12 +1399,12 @@ async function deleteUserLink(userLink: EventUser) {
     })
 
     event.value.userLinks = event.value.userLinks.filter(
-      (ul: EventUser) => userLink.id != ul.id,
+      (ul: EventUser) => userLink.id != ul.id
     )
 
     for (let date of event.value.dates) {
       date.availabilities = date.availabilities.filter(
-        (a) => a.userId != userLink.user.id,
+        (a) => a.userId != userLink.user.id
       )
     }
 

@@ -48,6 +48,7 @@ export interface Date {
     event: Event,
     eventId: number,
     availabilities: Availability[],
+    groups: Group[],
 }
 
 export interface Availability {
@@ -85,4 +86,12 @@ export interface EventUser {
     eventId: number,
     user: User,
     userId: number,
+    groups: Group[],
+}
+
+export interface Group {
+    id: number,
+    date: Date,
+    dateId: number,
+    userLinks: EventUser[],
 }

@@ -192,6 +192,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    groups: {
+      fr: 'Groupes',
+      nl: '',
+      de: '',
+      en: '',
+    },
     people: {
       fr: 'Personnes',
       nl: '',

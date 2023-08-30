@@ -42,6 +42,7 @@ interface Date {
     event: Event,
     eventId: number,
     availabilities: Availability[],
+    groups: Group[],
 }
 
 interface Availability {
@@ -79,4 +80,12 @@ interface EventUser {
     eventId: number,
     user: User,
     userId: number,
+    groups: Group[],
+}
+
+interface Group {
+    id: number,
+    date: Date,
+    dateId: number,
+    userLinks: EventUser[],
 }
