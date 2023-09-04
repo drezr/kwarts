@@ -1798,6 +1798,8 @@ async function updateGroupUser(e: any) {
         groupUserId: newGroup.groupUsers[index].id,
         position: Number(index),
       })
+
+      newGroup.groupUsers[index].position = Number(index)
     }
   }
 
@@ -1807,6 +1809,8 @@ async function updateGroupUser(e: any) {
         groupUserId: oldGroup.groupUsers[index].id,
         position: Number(index),
       })
+
+      oldGroup.groupUsers[index].position = Number(index)
     }
   }
 
