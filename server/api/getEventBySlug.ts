@@ -57,6 +57,7 @@ export default defineEventHandler(async (e: any) => {
                     select: {
                       id: true,
                       alias: true,
+                      elo: true,
                       user: {
                         select: {
                           id: true,
