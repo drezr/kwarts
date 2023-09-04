@@ -623,16 +623,17 @@
         </div>
 
         <draggable
-          v-model="event.userLinks"
-          @start="dragging = true"
-          @end="dragging = false"
+          v-model="groupsUserList[selectedDateIndex]"
           item-key="id"
-          :group="{ name: 'people', pull: 'clone', put: false }"
-          :sort="false"
+          :group="{ name: 'people' }"
+          class="bg-slate-200 rounded px-1 pb-1"
+          style="padding-top: 1px; min-height: 400px"
+          @end="groupChange"
+          :data-groupid="0"
         >
           <template #item="{ element }">
             <div
-              class="cursor-grab py-1 px-2 m-1 rounded bg-orange-300 hover:bg-orange-700 hover:text-white text-sm flex items-center"
+              class="cursor-grab py-1 px-2 mt-1 rounded bg-orange-300 hover:bg-orange-700 hover:text-white text-sm flex items-center"
             >
               <div class="flex-grow">{{ element.alias }}</div>
 
@@ -673,6 +674,7 @@
           <div
             v-for="group in selectedDateGroups"
             class="border border-slate-500 w-64 m-1 rounded relative"
+            style="min-height: 120px"
           >
             <div class="flex items-center">
               <input
@@ -680,6 +682,7 @@
                 v-model="group.name"
                 class="border bg-transparent my-1 ml-1 rounded flex-grow"
                 @input="updateGroup(group)"
+                :placeholder="_local(['common', 'groupName'])"
               />
 
               <span
@@ -691,8 +694,6 @@
 
             <draggable
               v-model="group.userLinks"
-              @start="dragging = true"
-              @end="dragging = false"
               item-key="id"
               group="people"
               style="
@@ -701,18 +702,14 @@
                 min-height: 44px;
                 height: calc(100% - 50px);
               "
+              @end="groupChange"
+              :data-groupid="group.id"
             >
               <template #item="{ element }">
                 <div
                   class="cursor-grab py-1 px-2 m-1 rounded bg-orange-300 hover:bg-orange-500 hover:text-white text-sm flex items-center z-10"
                 >
                   <div class="flex-grow">{{ element.alias }}</div>
-
-                  <span
-                    @click="removeFromGroup(group, element)"
-                    v-html="_icon('trash-fill', _color.pick('red'), 18)"
-                    class="ml-2 cursor-pointer"
-                  ></span>
                 </div>
               </template>
             </draggable>
@@ -727,7 +724,8 @@
           </div>
 
           <div
-            class="cursor-pointer border border-slate-500 rounded w-64 h-28 m-1 flex justify-center items-center hover:bg-slate-900"
+            class="cursor-pointer border border-slate-500 rounded w-64 m-1 flex justify-center items-center hover:bg-slate-900"
+            style="height: 120px"
             @click="createSingleGroup()"
           >
             <span
@@ -1165,6 +1163,8 @@ let requestedEvent = await _fetch('/api/getEventBySlug', {
   slug: slug,
 })
 
+//console.log(requestedEvent)
+
 if (!requestedEvent) logout()
 
 const loggedUserLink = requestedEvent.userLinks.find(
@@ -1225,6 +1225,7 @@ const modalPeople = ref()
 const newDateTitleInput = ref()
 const newUserAliasInput = ref()
 const addUserDialog = ref()
+let groupsUserList = ref([])
 
 let sortInfo: any = { field: null, order: 'ascent' }
 
@@ -1270,6 +1271,25 @@ let computedManagedFields = computed<any[]>(() => {
 
   return managedFields
 })
+
+for (const date of event.value.dates) {
+  let userList = []
+  let filteredList = []
+
+  for (const group of date.groups) {
+    for (const user of group.userLinks) {
+      userList.push(user)
+    }
+  }
+
+  for (const user of event.value.userLinks) {
+    if (!userList.find((u: EventUser) => u.id == user.id)) {
+      filteredList.push(user)
+    }
+  }
+
+  groupsUserList.value.push(filteredList)
+}
 
 function getEmail(userLink: EventUser) {
   const targetLink = cloneEvent.value.userLinks.find(
@@ -1706,10 +1726,11 @@ async function deleteGroup(group: Group) {
   event.value.dates[selectedDateIndex.value].groups = groups
 }
 
-async function removeFromGroup(group: Group, userLink: EventUser) {
-  group.userLinks = group.userLinks.filter(
-    (ul: EventUser) => ul.id !== userLink.id,
-  )
+async function groupChange(e: CustomEvent) {
+  console.log(e.from.dataset.groupid)
+  console.log(e.to.dataset.groupid)
+  console.log(e.oldIndex)
+  console.log(e.newIndex)
 }
 
 //let dialog1Node = ref()

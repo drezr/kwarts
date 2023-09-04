@@ -1,7 +1,7 @@
 import prisma from '~/server/prisma'
 import authorize from '~/server/authorize'
 
-export default defineEventHandler(async (e) => {
+export default defineEventHandler(async (e: any) => {
   const params: any = getQuery(e)
   const slug: string = params.slug
   const authData = JSON.parse(params.auth)
@@ -49,7 +49,17 @@ export default defineEventHandler(async (e) => {
           availabilities: true,
           groups: {
             include: {
-              userLinks: true,
+              userLinks: {
+                select: {
+                  id: true,
+                  alias: true,
+                  user: {
+                    select: {
+                      id: true,
+                    },
+                  },
+                },
+              },
             },
           },
         },
