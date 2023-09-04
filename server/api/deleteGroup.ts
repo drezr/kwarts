@@ -10,6 +10,12 @@ export default defineEventHandler(async (e) => {
 
   const groupId = parseInt(params.groupId)
 
+  await prisma.groupUser.deleteMany({
+    where: {
+      groupId: groupId,
+    },
+  })
+
   await prisma.group.delete({
     where: {
       id: groupId,

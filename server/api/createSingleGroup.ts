@@ -25,7 +25,7 @@ export default defineEventHandler(async (e) => {
         position: date.groups.length,
       },
       include: {
-        userLinks: true,
+        groupUsers: true,
       },
     })
 

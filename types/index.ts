@@ -80,7 +80,7 @@ interface EventUser {
     eventId: number,
     user: User,
     userId: number,
-    groups: Group[],
+    groupUsers: GroupUser[],
 }
 
 interface Group {
@@ -90,5 +90,14 @@ interface Group {
     position: number,
     date: Date,
     dateId: number,
-    userLinks: EventUser[],
+    groupUsers: GroupUser[],
+}
+
+interface GroupUser {
+    id: number,
+    position: number,
+    group: Group,
+    groupId: number,
+    userLink: EventUser,
+    userLinkId: number,
 }

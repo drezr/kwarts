@@ -49,13 +49,19 @@ export default defineEventHandler(async (e: any) => {
           availabilities: true,
           groups: {
             include: {
-              userLinks: {
+              groupUsers: {
                 select: {
                   id: true,
-                  alias: true,
-                  user: {
+                  position: true,
+                  userLink: {
                     select: {
                       id: true,
+                      alias: true,
+                      user: {
+                        select: {
+                          id: true,
+                        },
+                      },
                     },
                   },
                 },

@@ -69,7 +69,7 @@ model Availability {
 }
 
 model EventUser {
-  id             Int      @id @default(autoincrement())
+  id             Int         @id @default(autoincrement())
   position       Int
   alias          String
   password       String
@@ -80,31 +80,42 @@ model EventUser {
   elo            String?
   club           String?
   nationality    String?
-  hasPaid        Boolean  @default(false)
+  hasPaid        Boolean     @default(false)
   paymentNote    String?
   isMotorized    Boolean?
   isReserve      Boolean?
-  isValidated    Boolean  @default(false)
-  isPasswordSent Boolean  @default(false)
-  isHidden       Boolean  @default(false)
-  isAdmin        Boolean  @default(false)
-  isOwner        Boolean  @default(false)
+  isValidated    Boolean     @default(false)
+  isPasswordSent Boolean     @default(false)
+  isHidden       Boolean     @default(false)
+  isAdmin        Boolean     @default(false)
+  isOwner        Boolean     @default(false)
   token          String?
-  event          Event    @relation(fields: [eventId], references: [id])
+  event          Event       @relation(fields: [eventId], references: [id])
   eventId        Int
-  user           User     @relation(fields: [userId], references: [id])
+  user           User        @relation(fields: [userId], references: [id])
   userId         Int
-  groups         Group[]
+  groupUsers     GroupUser[]
 
   @@unique([eventId, userId])
 }
 
 model Group {
-  id        Int         @id @default(autoincrement())
-  name      String?
-  color     String?
-  position  Int
-  date      Date        @relation(fields: [dateId], references: [id])
-  dateId    Int
-  userLinks EventUser[]
+  id         Int         @id @default(autoincrement())
+  name       String?
+  color      String?
+  position   Int
+  date       Date        @relation(fields: [dateId], references: [id])
+  dateId     Int
+  groupUsers GroupUser[]
+}
+
+model GroupUser {
+  id         Int       @id @default(autoincrement())
+  position   Int
+  group      Group     @relation(fields: [groupId], references: [id])
+  groupId    Int
+  userLink   EventUser @relation(fields: [userLinkId], references: [id])
+  userLinkId Int
+
+  @@unique([groupId, userLinkId])
 }

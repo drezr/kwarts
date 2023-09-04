@@ -76,7 +76,7 @@
         _icon(
           fetchIsLoading ? 'arrow-clockwise' : 'check',
           _color.pick(fetchIsLoading ? 'blue' : 'green'),
-          30,
+          30
         )
       "
       class="hover:brightness-110 ml-3"
@@ -521,7 +521,7 @@
                 _icon(
                   element.isHidden ? 'lock-fill' : 'unlock-fill',
                   'white',
-                  20,
+                  20
                 )
               "
             ></span>
@@ -625,17 +625,22 @@
         <draggable
           v-model="groupsUserList[selectedDateIndex]"
           item-key="id"
-          :group="{ name: 'people' }"
           class="bg-slate-200 rounded px-1 pb-1"
           style="padding-top: 1px; min-height: 400px"
-          @end="groupChange"
+          @end="updateGroupUser"
           :data-groupid="0"
+          v-bind="{
+            animation: 200,
+            group: 'people',
+            disabled: false,
+            ghostClass: 'ghost',
+          }"
         >
           <template #item="{ element }">
             <div
-              class="cursor-grab py-1 px-2 mt-1 rounded bg-orange-300 hover:bg-orange-700 hover:text-white text-sm flex items-center"
+              class="cursor-grab py-1 px-2 mt-1 rounded bg-orange-300 hover:bg-orange-700 hover:text-white text-sm flex items-center z-10"
             >
-              <div class="flex-grow">{{ element.alias }}</div>
+              <div class="flex-grow">{{ element.userLink.alias }}</div>
 
               <div
                 class="w-4 h-4 ml-2 rounded-full flex-shrink-0"
@@ -643,19 +648,19 @@
                   {
                     'bg-gray-600':
                       event.dates[selectedDateIndex].availabilities.find(
-                        (a) => a.userId == element.user.id,
+                        (a) => a.userId == element.userLink.user.id
                       )?.isAvailable == undefined,
                   },
                   {
                     'bg-red-600':
                       event.dates[selectedDateIndex].availabilities.find(
-                        (a) => a.userId == element.user.id,
+                        (a) => a.userId == element.userLink.user.id
                       )?.isAvailable == false,
                   },
                   {
                     'bg-green-600':
                       event.dates[selectedDateIndex].availabilities.find(
-                        (a) => a.userId == element.user.id,
+                        (a) => a.userId == element.userLink.user.id
                       )?.isAvailable == true,
                   },
                 ]"
@@ -693,30 +698,37 @@
             </div>
 
             <draggable
-              v-model="group.userLinks"
+              v-model="group.groupUsers"
               item-key="id"
-              group="people"
               style="
                 position: relative;
                 top: 0px;
                 min-height: 44px;
                 height: calc(100% - 50px);
               "
-              @end="groupChange"
+              @end="updateGroupUser"
               :data-groupid="group.id"
+              v-bind="{
+                animation: 200,
+                group: 'people',
+                disabled: false,
+                ghostClass: 'ghost',
+              }"
             >
               <template #item="{ element }">
                 <div
                   class="cursor-grab py-1 px-2 m-1 rounded bg-orange-300 hover:bg-orange-500 hover:text-white text-sm flex items-center z-10"
                 >
-                  <div class="flex-grow">{{ element.alias }}</div>
+                  <div class="flex-grow">
+                    {{ element.userLink.alias }} {{ element.id }}
+                  </div>
                 </div>
               </template>
             </draggable>
 
             <div
-              v-if="group.userLinks.length == 0"
-              class="border-2 border-gray-300 border-dashed rounded m-2 p-2 flex justify-center items-center text-gray-400"
+              v-if="group.groupUsers.length == 0"
+              class="border-2 border-gray-300 border-dashed rounded m-2 p-2 flex justify-center items-center text-gray-400 z-0"
               style="position: absolute; top: 50px; width: calc(100% - 15px)"
             >
               {{ _local(['common', 'dropUserHere']) }}
@@ -1032,7 +1044,7 @@
                             ? 'envelope-check-fill'
                             : 'envelope-x-fill',
                           'white',
-                          16,
+                          16
                         )
                       "
                     ></span>
@@ -1055,9 +1067,9 @@
                       _icon(
                         'trash-fill',
                         _color.pick(
-                          element.userId == loggedUserId ? 'grey' : 'red',
+                          element.userId == loggedUserId ? 'grey' : 'red'
                         ),
-                        20,
+                        20
                       )
                     "
                   ></span>
@@ -1168,7 +1180,7 @@ let requestedEvent = await _fetch('/api/getEventBySlug', {
 if (!requestedEvent) logout()
 
 const loggedUserLink = requestedEvent.userLinks.find(
-  (ul: any) => ul.user.id == loggedUserId.value,
+  (ul: any) => ul.user.id == loggedUserId.value
 )
 
 if (!loggedUserLink) logout()
@@ -1192,7 +1204,7 @@ useHead({
 
 requestedEvent.dates.sort((a: Date, b: Date) => a.position - b.position)
 requestedEvent.userLinks.sort(
-  (a: EventUser, b: EventUser) => a.position - b.position,
+  (a: EventUser, b: EventUser) => a.position - b.position
 )
 
 useState<String>('eventName', () => requestedEvent.name)
@@ -1225,7 +1237,7 @@ const modalPeople = ref()
 const newDateTitleInput = ref()
 const newUserAliasInput = ref()
 const addUserDialog = ref()
-let groupsUserList = ref([])
+let groupsUserList = ref<any[]>([])
 
 let sortInfo: any = { field: null, order: 'ascent' }
 
@@ -1277,14 +1289,21 @@ for (const date of event.value.dates) {
   let filteredList = []
 
   for (const group of date.groups) {
-    for (const user of group.userLinks) {
-      userList.push(user)
+    group.groupUsers.sort(
+      (a: GroupUser, b: GroupUser) => a.position - b.position
+    )
+
+    for (const groupUser of group.groupUsers) {
+      userList.push(groupUser)
     }
   }
 
+  let i = 0
+
   for (const user of event.value.userLinks) {
-    if (!userList.find((u: EventUser) => u.id == user.id)) {
-      filteredList.push(user)
+    if (!userList.find((u: GroupUser) => u.userLink.id == user.id)) {
+      filteredList.push({ userLink: user, position: i })
+      i += 1
     }
   }
 
@@ -1293,7 +1312,7 @@ for (const date of event.value.dates) {
 
 function getEmail(userLink: EventUser) {
   const targetLink = cloneEvent.value.userLinks.find(
-    (ul: EventUser) => userLink.id == ul.id,
+    (ul: EventUser) => userLink.id == ul.id
   )
 
   return targetLink?.user.email
@@ -1488,7 +1507,7 @@ async function createUser() {
 async function updateUserLink(
   userLink: EventUser,
   key: string,
-  throttle: number,
+  throttle: number
 ) {
   fetchIsLoading.value = true
   clearTimeout(fetchThrottleTimer)
@@ -1576,12 +1595,12 @@ async function deleteUserLink(userLink: EventUser) {
     })
 
     event.value.userLinks = event.value.userLinks.filter(
-      (ul: EventUser) => userLink.id != ul.id,
+      (ul: EventUser) => userLink.id != ul.id
     )
 
     for (let date of event.value.dates) {
       date.availabilities = date.availabilities.filter(
-        (a) => a.userId != userLink.user.id,
+        (a) => a.userId != userLink.user.id
       )
     }
 
@@ -1715,22 +1734,85 @@ async function updateGroup(group: Group) {
 }
 
 async function deleteGroup(group: Group) {
-  const newGroup = await _fetch('/api/deleteGroup', {
+  await _fetch('/api/deleteGroup', {
     groupId: group.id,
   })
 
+  for (const groupUser of group.groupUsers) {
+    groupsUserList.value[selectedDateIndex.value].push(groupUser)
+  }
+
   const groups = event.value.dates[selectedDateIndex.value].groups.filter(
-    (g: Group) => g.id != group.id,
+    (g: Group) => g.id != group.id
   )
 
   event.value.dates[selectedDateIndex.value].groups = groups
 }
 
-async function groupChange(e: CustomEvent) {
-  console.log(e.from.dataset.groupid)
-  console.log(e.to.dataset.groupid)
-  console.log(e.oldIndex)
-  console.log(e.newIndex)
+async function updateGroupUser(e: any) {
+  const userLink = e.item._underlying_vm_.userLink
+  const oldGroupId = e.from.dataset.groupid
+  const newGroupId = e.to.dataset.groupid
+  let groupPositionsUpdates = []
+  let newGroup = null
+  let oldGroup = null
+
+  if (newGroupId != 0) {
+    for (const date of event.value.dates) {
+      newGroup = date.groups.find((g: Group) => g.id == newGroupId)
+
+      if (newGroup) break
+    }
+  }
+
+  if (oldGroupId != 0) {
+    for (const date of event.value.dates) {
+      oldGroup = date.groups.find((g: Group) => g.id == oldGroupId)
+
+      if (oldGroup) break
+    }
+  }
+
+  // console.log('oldGroup:', oldGroup)
+  // console.log('newGroup:', newGroup)
+
+  const newGroupUser = await _fetch('/api/updateGroupUser', {
+    userLinkId: userLink.id,
+    oldGroupId: oldGroupId,
+    newGroupId: newGroupId,
+  })
+
+  if (oldGroupId == 0 && newGroupId != 0) {
+    let groupUser = newGroup?.groupUsers.find(
+      (gu: GroupUser) => gu.userLink.id == userLink.id
+    )
+
+    if (groupUser) {
+      groupUser.id = newGroupUser.id
+    }
+  }
+
+  if (newGroup) {
+    for (let index in newGroup.groupUsers) {
+      groupPositionsUpdates.push({
+        groupUserId: newGroup.groupUsers[index].id,
+        position: Number(index),
+      })
+    }
+  }
+
+  if (oldGroup) {
+    for (let index in oldGroup.groupUsers) {
+      groupPositionsUpdates.push({
+        groupUserId: oldGroup.groupUsers[index].id,
+        position: Number(index),
+      })
+    }
+  }
+
+  await _fetch('/api/updateGroupUserPosition', {
+    updates: JSON.stringify(groupPositionsUpdates),
+  })
 }
 
 //let dialog1Node = ref()

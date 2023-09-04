@@ -86,7 +86,7 @@ export interface EventUser {
     eventId: number,
     user: User,
     userId: number,
-    groups: Group[],
+    groupUsers: GroupUser[],
 }
 
 export interface Group {
@@ -96,5 +96,14 @@ export interface Group {
     position: number,
     date: Date,
     dateId: number,
-    userLinks: EventUser[],
+    groupUsers: GroupUser[],
+}
+
+export interface GroupUser {
+    id: number,
+    position: number,
+    group: Group,
+    groupId: number,
+    userLink: EventUser,
+    userLinkId: number,
 }
