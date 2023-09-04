@@ -192,6 +192,18 @@ const localisation = {
       de: '',
       en: '',
     },
+    copyToClipBoard: {
+      fr: 'Copier dans le presse-papier',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    textCopiedToClipboard: {
+      fr: 'Copié dans le presse papier ✔',
+      nl: '',
+      de: '',
+      en: '',
+    },
     createSingleGroup: {
       fr: 'Créer un groupe pour cette date',
       nl: '',

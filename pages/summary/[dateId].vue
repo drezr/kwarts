@@ -24,7 +24,7 @@
       <div
         v-for="group in date.groups"
         class="border-l"
-        style="min-width: 300px"
+        style="min-width: 250px"
       >
         <div
           class="px-6 py-2 border-b bg-blue-700 text-white flex items-center font-bold"
@@ -36,9 +36,16 @@
 
         <div
           v-for="groupUser in group.groupUsers"
-          class="px-6 py-2 border-b flex items-center"
+          class="px-6 py-2 border-b flex items-center hover:bg-slate-100 cursor-pointer"
+          @click="
+            userInfoDialog.showModal(), (selectedUserInfo = groupUser.userLink)
+          "
         >
           {{ groupUser.userLink.alias }}
+
+          <small v-if="groupUser.userLink.elo" class="ml-1">
+            ({{ groupUser.userLink.elo }})
+          </small>
 
           <span
             v-if="mergedData.find((u: any) => u.userId == groupUser.userLink.user.id)?.isMotorized && date.event.showIsMotorized"
@@ -131,6 +138,71 @@
       </div>
     </div>
   </div>
+
+  <dialog
+    ref="userInfoDialog"
+    @mousedown="closeDialog($event, userInfoDialog)"
+    style="width: 400px"
+  >
+    <div v-if="selectedUserInfo" class="text-center">
+      <div class="text-xl flex font-bold mb-8 justify-center">
+        <span v-html="_icon('person-fill', 'black', 28)" class="mr-2"></span>
+
+        {{ selectedUserInfo.alias }}
+      </div>
+
+      <div class="mb-6">
+        <div class="flex justify-center mb-2">
+          <span v-html="_icon('telephone', 'black', 20)" class="mr-2"></span>
+
+          <b class="mr-2">{{ _local(['common', 'phone']) }} :</b>
+        </div>
+
+        <div v-if="selectedUserInfo.phone" class="flex justify-center">
+          <a
+            v-if="selectedUserInfo.phone"
+            :href="`tel:${selectedUserInfo.phone}`"
+            class="text-blue-600 text-xl hover:opacity-80"
+            >{{ selectedUserInfo.phone }}</a
+          >
+
+          <span
+            v-html="_icon('clipboard', 'rgba(37, 99, 235, 0.8)', 26)"
+            class="ml-3 cursor-pointer hover:opacity-60"
+            :title="_local(['common', 'copyToClipBoard'])"
+            @click="copyToClipboard(selectedUserInfo.phone)"
+          ></span>
+        </div>
+
+        <div v-else>?</div>
+      </div>
+
+      <div>
+        <div class="flex justify-center mb-2">
+          <span v-html="_icon('envelope-at', 'black', 20)" class="mr-2"></span>
+
+          <b class="mr-2">{{ _local(['common', 'email']) }} :</b>
+        </div>
+
+        <div v-if="selectedUserInfo.user.email" class="flex justify-center">
+          <a
+            :href="`mailto:${selectedUserInfo.user.email}`"
+            class="text-blue-600 text-lg hover:opacity-80"
+            >{{ selectedUserInfo.user.email }}</a
+          >
+
+          <span
+            v-html="_icon('clipboard', 'rgba(37, 99, 235, 0.8)', 26)"
+            class="ml-3 cursor-pointer hover:opacity-60"
+            :title="_local(['common', 'copyToClipBoard'])"
+            @click="copyToClipboard(selectedUserInfo.user.email)"
+          ></span>
+        </div>
+
+        <div v-else>?</div>
+      </div>
+    </div>
+  </dialog>
 </template>
 
 <script setup lang="ts">
@@ -155,6 +227,8 @@ useHead({
   ],
 })
 
+const userInfoDialog = ref()
+const selectedUserInfo = ref()
 let mergedData = ref<any[]>([])
 
 for (const userLink of date.event.userLinks) {
@@ -181,6 +255,12 @@ unknowns.sort((a, b) => a.alias.localeCompare(b.alias))
 
 for (let group of date.groups) {
   group.groupUsers.sort((a: GroupUser, b: GroupUser) => a.position - b.position)
+}
+
+function copyToClipboard(str: string) {
+  navigator.clipboard.writeText(str)
+
+  alert(_local(['common', 'textCopiedToClipboard']))
 }
 </script>
 

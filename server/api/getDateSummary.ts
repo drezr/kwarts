@@ -40,9 +40,12 @@ export default defineEventHandler(async (e) => {
                 select: {
                   id: true,
                   alias: true,
+                  elo: true,
+                  phone: true,
                   user: {
                     select: {
                       id: true,
+                      email: true,
                     },
                   },
                 },

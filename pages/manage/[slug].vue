@@ -640,7 +640,13 @@
             <div
               class="cursor-grab py-1 px-2 mt-1 rounded bg-orange-300 hover:bg-orange-700 hover:text-white text-sm flex items-center z-10"
             >
-              <div class="flex-grow">{{ element.userLink.alias }}</div>
+              <div class="flex-grow">
+                {{ element.userLink.alias }}
+
+                <small v-if="element.userLink.elo">
+                  ({{ element.userLink.elo }})
+                </small>
+              </div>
 
               <div
                 v-if="
@@ -731,7 +737,13 @@
                   class="cursor-grab py-1 px-2 m-1 rounded bg-blue-300 hover:bg-blue-500 hover:text-white text-sm flex items-center z-10"
                 >
                   <div class="flex flex-grow justify-between">
-                    {{ element.userLink.alias }}
+                    <div>
+                      {{ element.userLink.alias }}
+
+                      <small v-if="element.userLink.elo">
+                        ({{ element.userLink.elo }})
+                      </small>
+                    </div>
 
                     <div
                       v-if="
