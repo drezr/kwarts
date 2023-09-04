@@ -27,6 +27,27 @@ export default defineEventHandler(async (e) => {
     },
     include: {
       availabilities: true,
+      groups: {
+        include: {
+          groupUsers: {
+            select: {
+              id: true,
+              position: true,
+              userLink: {
+                select: {
+                  id: true,
+                  alias: true,
+                  user: {
+                    select: {
+                      id: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   })
 

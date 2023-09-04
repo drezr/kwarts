@@ -10,7 +10,6 @@ export default defineEventHandler(async (e) => {
 
   const dateId: number = parseInt(params.dateId)
 
-
   const date = await prisma.date.findUnique({
     where: {
       id: dateId,
@@ -26,12 +25,33 @@ export default defineEventHandler(async (e) => {
               isHidden: true,
               isMotorized: true,
               userId: true,
-            }
+            },
           },
-        }
+        },
       },
       availabilities: true,
-    }
+      groups: {
+        include: {
+          groupUsers: {
+            select: {
+              id: true,
+              position: true,
+              userLink: {
+                select: {
+                  id: true,
+                  alias: true,
+                  user: {
+                    select: {
+                      id: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   })
 
   return date

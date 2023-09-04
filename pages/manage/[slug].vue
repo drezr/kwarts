@@ -643,6 +643,17 @@
               <div class="flex-grow">{{ element.userLink.alias }}</div>
 
               <div
+                v-if="
+                  event.userLinks.find((u) => u.id == element.userLink.id)
+                    ?.isMotorized
+                "
+              >
+                <span
+                  v-html="_icon('car-front-fill', _color.pick('blue'), 20)"
+                ></span>
+              </div>
+
+              <div
                 class="w-4 h-4 ml-2 rounded-full flex-shrink-0"
                 :class="[
                   {
@@ -717,10 +728,23 @@
             >
               <template #item="{ element }">
                 <div
-                  class="cursor-grab py-1 px-2 m-1 rounded bg-orange-300 hover:bg-orange-500 hover:text-white text-sm flex items-center z-10"
+                  class="cursor-grab py-1 px-2 m-1 rounded bg-blue-300 hover:bg-blue-500 hover:text-white text-sm flex items-center z-10"
                 >
-                  <div class="flex-grow">
-                    {{ element.userLink.alias }} {{ element.id }}
+                  <div class="flex flex-grow justify-between">
+                    {{ element.userLink.alias }}
+
+                    <div
+                      v-if="
+                        event.userLinks.find((u) => u.id == element.userLink.id)
+                          ?.isMotorized
+                      "
+                    >
+                      <span
+                        v-html="
+                          _icon('car-front-fill', _color.pick('blue'), 20)
+                        "
+                      ></span>
+                    </div>
                   </div>
                 </div>
               </template>
@@ -736,14 +760,27 @@
           </div>
 
           <div
-            class="cursor-pointer border border-slate-500 rounded w-64 m-1 flex justify-center items-center hover:bg-slate-900"
+            class="cursor-pointer border border-slate-500 rounded w-64 m-1 flex flex-col justify-center items-center hover:bg-slate-900"
             style="height: 120px"
             @click="createSingleGroup()"
           >
-            <span
-              v-html="_icon('plus', 'rgb(100 116 139)', 50)"
-              :title="_local(['common', 'createSingleGroup'])"
-            ></span>
+            <span v-html="_icon('plus', 'rgb(100 116 139)', 50)"></span>
+
+            <div class="text-slate-500 text-center px-2 text-sm">
+              {{ _local(['common', 'createSingleGroup']) }}
+            </div>
+          </div>
+
+          <div
+            class="cursor-pointer border border-slate-500 rounded w-64 m-1 flex flex-col justify-center items-center hover:bg-slate-900"
+            style="height: 120px"
+            @click="createMultipleGroupsDialog.showModal()"
+          >
+            <span v-html="_icon('database-add', 'rgb(100 116 139)', 50)"></span>
+
+            <div class="text-slate-500 text-center px-2 text-sm">
+              {{ _local(['common', 'createMultipleGroups']) }}
+            </div>
           </div>
         </div>
       </div>
@@ -1158,6 +1195,35 @@
       {{ _local(['common', 'createUser']) }}
     </button>
   </dialog>
+
+  <dialog
+    ref="createMultipleGroupsDialog"
+    @mousedown="closeDialog($event, createMultipleGroupsDialog)"
+    class="w-96"
+  >
+    <div class="mb-2">
+      <label for="newUserAlias" class="text-xs font-bold">
+        {{ _local(['common', 'groupName']) }}
+      </label>
+
+      <input
+        id="createMultipleGroupsInput"
+        v-model="createMultipleGroupsInput"
+        type="text"
+        class="w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
+        :placeholder="_local(['common', 'groupName'])"
+      />
+    </div>
+
+    <button
+      class="flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm bg-green-700 hover:bg-green-600"
+      @click="createMultipleGroups(), createMultipleGroupsDialog.close()"
+    >
+      <span v-html="_icon('database-add', 'white', 24)" class="mr-2"></span>
+
+      {{ _local(['common', 'createMultipleGroups']) }}
+    </button>
+  </dialog>
 </template>
 
 <script setup lang="ts">
@@ -1218,7 +1284,7 @@ if (!isOwner) {
 let event = ref<Event>(requestedEvent)
 let cloneEvent = ref(JSON.parse(JSON.stringify(event.value)))
 let dragging = ref<Boolean>(false)
-let modalTab = ref<String>('groups')
+let modalTab = ref<String>('general')
 let selectedDateIndex = ref(0)
 let fetchThrottleTimer: any = null
 let fetchIsLoading = ref<Boolean>(false)
@@ -1237,6 +1303,8 @@ const modalPeople = ref()
 const newDateTitleInput = ref()
 const newUserAliasInput = ref()
 const addUserDialog = ref()
+const createMultipleGroupsDialog = ref()
+const createMultipleGroupsInput = ref()
 let groupsUserList = ref<any[]>([])
 
 let sortInfo: any = { field: null, order: 'ascent' }
@@ -1817,6 +1885,24 @@ async function updateGroupUser(e: any) {
   await _fetch('/api/updateGroupUserPosition', {
     updates: JSON.stringify(groupPositionsUpdates),
   })
+}
+
+async function createMultipleGroups() {
+  let newGroups = await _fetch('/api/createMultipleGroups', {
+    eventId: event.value.id,
+    name: createMultipleGroupsInput.value,
+  })
+
+  if (newGroups) {
+    newGroups = JSON.parse(newGroups)
+
+    for (let date of event.value.dates) {
+      const targetGroup = newGroups.find((g: Group) => g.dateId == date.id)
+      date.groups.push(targetGroup)
+    }
+  }
+
+  createMultipleGroupsInput.value = ''
 }
 
 //let dialog1Node = ref()

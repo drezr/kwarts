@@ -104,7 +104,7 @@ model Group {
   name       String?
   color      String?
   position   Int
-  date       Date        @relation(fields: [dateId], references: [id])
+  date       Date        @relation(fields: [dateId], references: [id], onDelete: Cascade)
   dateId     Int
   groupUsers GroupUser[]
 }
@@ -112,7 +112,7 @@ model Group {
 model GroupUser {
   id         Int       @id @default(autoincrement())
   position   Int
-  group      Group     @relation(fields: [groupId], references: [id])
+  group      Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId    Int
   userLink   EventUser @relation(fields: [userLinkId], references: [id])
   userLinkId Int

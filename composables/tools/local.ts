@@ -192,6 +192,18 @@ const localisation = {
       de: '',
       en: '',
     },
+    createSingleGroup: {
+      fr: 'Créer un groupe pour cette date',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    createMultipleGroups: {
+      fr: 'Créer un groupe pour chaque date',
+      nl: '',
+      de: '',
+      en: '',
+    },
     groupName: {
       fr: 'Nom du groupe',
       nl: '',
