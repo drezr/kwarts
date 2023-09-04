@@ -76,7 +76,7 @@
         _icon(
           fetchIsLoading ? 'arrow-clockwise' : 'check',
           _color.pick(fetchIsLoading ? 'blue' : 'green'),
-          30
+          30,
         )
       "
       class="hover:brightness-110 ml-3"
@@ -521,7 +521,7 @@
                 _icon(
                   element.isHidden ? 'lock-fill' : 'unlock-fill',
                   'white',
-                  20
+                  20,
                 )
               "
             ></span>
@@ -642,19 +642,19 @@
                   {
                     'bg-gray-600':
                       event.dates[selectedDateIndex].availabilities.find(
-                        (a) => a.userId == element.user.id
+                        (a) => a.userId == element.user.id,
                       )?.isAvailable == undefined,
                   },
                   {
                     'bg-red-600':
                       event.dates[selectedDateIndex].availabilities.find(
-                        (a) => a.userId == element.user.id
+                        (a) => a.userId == element.user.id,
                       )?.isAvailable == false,
                   },
                   {
                     'bg-green-600':
                       event.dates[selectedDateIndex].availabilities.find(
-                        (a) => a.userId == element.user.id
+                        (a) => a.userId == element.user.id,
                       )?.isAvailable == true,
                   },
                 ]"
@@ -665,9 +665,9 @@
       </div>
 
       <div>
-        <button @click="createSingleGroup()">
+        <!-- <button @click="createSingleGroup()">
           {{ _local(['common', 'addMultipleGroup']) }}
-        </button>
+        </button> -->
 
         <div class="flex flex-wrap">
           <div
@@ -1034,7 +1034,7 @@
                             ? 'envelope-check-fill'
                             : 'envelope-x-fill',
                           'white',
-                          16
+                          16,
                         )
                       "
                     ></span>
@@ -1057,9 +1057,9 @@
                       _icon(
                         'trash-fill',
                         _color.pick(
-                          element.userId == loggedUserId ? 'grey' : 'red'
+                          element.userId == loggedUserId ? 'grey' : 'red',
                         ),
-                        20
+                        20,
                       )
                     "
                   ></span>
@@ -1168,7 +1168,7 @@ let requestedEvent = await _fetch('/api/getEventBySlug', {
 if (!requestedEvent) logout()
 
 const loggedUserLink = requestedEvent.userLinks.find(
-  (ul: any) => ul.user.id == loggedUserId.value
+  (ul: any) => ul.user.id == loggedUserId.value,
 )
 
 if (!loggedUserLink) logout()
@@ -1192,7 +1192,7 @@ useHead({
 
 requestedEvent.dates.sort((a: Date, b: Date) => a.position - b.position)
 requestedEvent.userLinks.sort(
-  (a: EventUser, b: EventUser) => a.position - b.position
+  (a: EventUser, b: EventUser) => a.position - b.position,
 )
 
 useState<String>('eventName', () => requestedEvent.name)
@@ -1273,7 +1273,7 @@ let computedManagedFields = computed<any[]>(() => {
 
 function getEmail(userLink: EventUser) {
   const targetLink = cloneEvent.value.userLinks.find(
-    (ul: EventUser) => userLink.id == ul.id
+    (ul: EventUser) => userLink.id == ul.id,
   )
 
   return targetLink?.user.email
@@ -1468,7 +1468,7 @@ async function createUser() {
 async function updateUserLink(
   userLink: EventUser,
   key: string,
-  throttle: number
+  throttle: number,
 ) {
   fetchIsLoading.value = true
   clearTimeout(fetchThrottleTimer)
@@ -1556,12 +1556,12 @@ async function deleteUserLink(userLink: EventUser) {
     })
 
     event.value.userLinks = event.value.userLinks.filter(
-      (ul: EventUser) => userLink.id != ul.id
+      (ul: EventUser) => userLink.id != ul.id,
     )
 
     for (let date of event.value.dates) {
       date.availabilities = date.availabilities.filter(
-        (a) => a.userId != userLink.user.id
+        (a) => a.userId != userLink.user.id,
       )
     }
 
@@ -1700,7 +1700,7 @@ async function deleteGroup(group: Group) {
   })
 
   const groups = event.value.dates[selectedDateIndex.value].groups.filter(
-    (g: Group) => g.id != group.id
+    (g: Group) => g.id != group.id,
   )
 
   event.value.dates[selectedDateIndex.value].groups = groups
@@ -1708,7 +1708,7 @@ async function deleteGroup(group: Group) {
 
 async function removeFromGroup(group: Group, userLink: EventUser) {
   group.userLinks = group.userLinks.filter(
-    (ul: EventUser) => ul.id !== userLink.id
+    (ul: EventUser) => ul.id !== userLink.id,
   )
 }
 
