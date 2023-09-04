@@ -638,7 +638,7 @@
         >
           <template #item="{ element }">
             <div
-              class="cursor-grab py-1 px-2 mt-1 rounded bg-orange-300 hover:bg-orange-700 hover:text-white text-sm flex items-center z-10"
+              class="cursor-grab py-1 px-2 mt-1 rounded bg-orange-300 hover:bg-orange-700 hover:text-white text-sm flex items-center mx-1"
             >
               <div class="flex-grow">
                 {{ element.userLink.alias }}
@@ -731,33 +731,54 @@
                 disabled: false,
                 ghostClass: 'ghost',
               }"
+              class="pb-1"
             >
               <template #item="{ element }">
                 <div
-                  class="cursor-grab py-1 px-2 m-1 rounded bg-blue-300 hover:bg-blue-500 hover:text-white text-sm flex items-center z-10"
+                  class="cursor-grab py-1 px-2 mt-1 rounded bg-blue-300 hover:bg-blue-700 hover:text-white text-sm flex items-center mx-1"
                 >
-                  <div class="flex flex-grow justify-between">
-                    <div>
-                      {{ element.userLink.alias }}
+                  <div class="flex-grow">
+                    {{ element.userLink.alias }}
 
-                      <small v-if="element.userLink.elo">
-                        ({{ element.userLink.elo }})
-                      </small>
-                    </div>
-
-                    <div
-                      v-if="
-                        event.userLinks.find((u) => u.id == element.userLink.id)
-                          ?.isMotorized
-                      "
-                    >
-                      <span
-                        v-html="
-                          _icon('car-front-fill', _color.pick('blue'), 20)
-                        "
-                      ></span>
-                    </div>
+                    <small v-if="element.userLink.elo">
+                      ({{ element.userLink.elo }})
+                    </small>
                   </div>
+
+                  <div
+                    v-if="
+                      event.userLinks.find((u) => u.id == element.userLink.id)
+                        ?.isMotorized
+                    "
+                  >
+                    <span
+                      v-html="_icon('car-front-fill', _color.pick('blue'), 20)"
+                    ></span>
+                  </div>
+
+                  <div
+                    class="w-4 h-4 ml-2 rounded-full flex-shrink-0"
+                    :class="[
+                      {
+                        'bg-gray-600':
+                          event.dates[selectedDateIndex].availabilities.find(
+                            (a) => a.userId == element.userLink.user.id
+                          )?.isAvailable == undefined,
+                      },
+                      {
+                        'bg-red-600':
+                          event.dates[selectedDateIndex].availabilities.find(
+                            (a) => a.userId == element.userLink.user.id
+                          )?.isAvailable == false,
+                      },
+                      {
+                        'bg-green-600':
+                          event.dates[selectedDateIndex].availabilities.find(
+                            (a) => a.userId == element.userLink.user.id
+                          )?.isAvailable == true,
+                      },
+                    ]"
+                  ></div>
                 </div>
               </template>
             </draggable>
