@@ -828,7 +828,7 @@
   >
     <div
       class="max-w-full w-full absolute left-0 overflow-auto"
-      style="height: calc(100vh - 124px)"
+      style="height: calc(100vh - 110px)"
     >
       <table class="border-collapse w-full">
         <thead class="sticky top-0 z-10">
@@ -836,7 +836,7 @@
             <th
               v-for="(keyword, i) in computedManagedFields"
               class="font-bold bg-gray-200 text-gray-600 border border-gray-300 text-sm cursor-pointer hover:brightness-105 last:pointer-events-none"
-              :class="{ 'px-3 py-1': i != 0 }"
+              :class="{ 'px-1 py-1': i != 0 }"
               @click="sortUserLinksBy(keyword.field)"
             >
               <div v-if="i == 0" class="flex justify-center">
@@ -953,7 +953,7 @@
                   type="text"
                   v-model="element.fideid"
                   class="border-none text-sm h-full w-full bg-transparent"
-                  style="min-width: 120px"
+                  style="min-width: 110px"
                   @input="updateUserLink(element, 'fideid', 300)"
                 />
               </td>
