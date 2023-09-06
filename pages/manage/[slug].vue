@@ -76,7 +76,7 @@
         _icon(
           fetchIsLoading ? 'arrow-clockwise' : 'check',
           _color.pick(fetchIsLoading ? 'blue' : 'green'),
-          30
+          30,
         )
       "
       class="hover:brightness-110 ml-3"
@@ -521,7 +521,7 @@
                 _icon(
                   element.isHidden ? 'lock-fill' : 'unlock-fill',
                   'white',
-                  20
+                  20,
                 )
               "
             ></span>
@@ -665,19 +665,19 @@
                   {
                     'bg-gray-600':
                       event.dates[selectedDateIndex].availabilities.find(
-                        (a) => a.userId == element.userLink.user.id
+                        (a) => a.userId == element.userLink.user.id,
                       )?.isAvailable == undefined,
                   },
                   {
                     'bg-red-600':
                       event.dates[selectedDateIndex].availabilities.find(
-                        (a) => a.userId == element.userLink.user.id
+                        (a) => a.userId == element.userLink.user.id,
                       )?.isAvailable == false,
                   },
                   {
                     'bg-green-600':
                       event.dates[selectedDateIndex].availabilities.find(
-                        (a) => a.userId == element.userLink.user.id
+                        (a) => a.userId == element.userLink.user.id,
                       )?.isAvailable == true,
                   },
                 ]"
@@ -762,19 +762,19 @@
                       {
                         'bg-gray-600':
                           event.dates[selectedDateIndex].availabilities.find(
-                            (a) => a.userId == element.userLink.user.id
+                            (a) => a.userId == element.userLink.user.id,
                           )?.isAvailable == undefined,
                       },
                       {
                         'bg-red-600':
                           event.dates[selectedDateIndex].availabilities.find(
-                            (a) => a.userId == element.userLink.user.id
+                            (a) => a.userId == element.userLink.user.id,
                           )?.isAvailable == false,
                       },
                       {
                         'bg-green-600':
                           event.dates[selectedDateIndex].availabilities.find(
-                            (a) => a.userId == element.userLink.user.id
+                            (a) => a.userId == element.userLink.user.id,
                           )?.isAvailable == true,
                       },
                     ]"
@@ -982,10 +982,10 @@
                 <ClientOnly>
                   <textarea
                     v-model="element.note"
-                    class="border-none text-sm p-1 relative h-full w-full bg-gray-100"
+                    class="border-none text-sm p-1 relative h-full w-full"
                     style="top: 3px; min-width: 200px"
-                    disabled
                     rows="1"
+                    @input="updateUserLink(element, 'note', 300)"
                   >
                   </textarea>
                 </ClientOnly>
@@ -1114,7 +1114,7 @@
                             ? 'envelope-check-fill'
                             : 'envelope-x-fill',
                           'white',
-                          16
+                          16,
                         )
                       "
                     ></span>
@@ -1137,9 +1137,9 @@
                       _icon(
                         'trash-fill',
                         _color.pick(
-                          element.userId == loggedUserId ? 'grey' : 'red'
+                          element.userId == loggedUserId ? 'grey' : 'red',
                         ),
-                        20
+                        20,
                       )
                     "
                   ></span>
@@ -1279,7 +1279,7 @@ let requestedEvent = await _fetch('/api/getEventBySlug', {
 if (!requestedEvent) logout()
 
 const loggedUserLink = requestedEvent.userLinks.find(
-  (ul: any) => ul.user.id == loggedUserId.value
+  (ul: any) => ul.user.id == loggedUserId.value,
 )
 
 if (!loggedUserLink) logout()
@@ -1303,7 +1303,7 @@ useHead({
 
 requestedEvent.dates.sort((a: Date, b: Date) => a.position - b.position)
 requestedEvent.userLinks.sort(
-  (a: EventUser, b: EventUser) => a.position - b.position
+  (a: EventUser, b: EventUser) => a.position - b.position,
 )
 
 useState<String>('eventName', () => requestedEvent.name)
@@ -1391,7 +1391,7 @@ for (const date of event.value.dates) {
 
   for (const group of date.groups) {
     group.groupUsers.sort(
-      (a: GroupUser, b: GroupUser) => a.position - b.position
+      (a: GroupUser, b: GroupUser) => a.position - b.position,
     )
 
     for (const groupUser of group.groupUsers) {
@@ -1413,7 +1413,7 @@ for (const date of event.value.dates) {
 
 function getEmail(userLink: EventUser) {
   const targetLink = cloneEvent.value.userLinks.find(
-    (ul: EventUser) => userLink.id == ul.id
+    (ul: EventUser) => userLink.id == ul.id,
   )
 
   return targetLink?.user.email
@@ -1608,7 +1608,7 @@ async function createUser() {
 async function updateUserLink(
   userLink: EventUser,
   key: string,
-  throttle: number
+  throttle: number,
 ) {
   fetchIsLoading.value = true
   clearTimeout(fetchThrottleTimer)
@@ -1696,12 +1696,12 @@ async function deleteUserLink(userLink: EventUser) {
     })
 
     event.value.userLinks = event.value.userLinks.filter(
-      (ul: EventUser) => userLink.id != ul.id
+      (ul: EventUser) => userLink.id != ul.id,
     )
 
     for (let date of event.value.dates) {
       date.availabilities = date.availabilities.filter(
-        (a) => a.userId != userLink.user.id
+        (a) => a.userId != userLink.user.id,
       )
     }
 
@@ -1844,7 +1844,7 @@ async function deleteGroup(group: Group) {
   }
 
   const groups = event.value.dates[selectedDateIndex.value].groups.filter(
-    (g: Group) => g.id != group.id
+    (g: Group) => g.id != group.id,
   )
 
   event.value.dates[selectedDateIndex.value].groups = groups
@@ -1885,7 +1885,7 @@ async function updateGroupUser(e: any) {
 
   if (oldGroupId == 0 && newGroupId != 0) {
     let groupUser = newGroup?.groupUsers.find(
-      (gu: GroupUser) => gu.userLink.id == userLink.id
+      (gu: GroupUser) => gu.userLink.id == userLink.id,
     )
 
     if (groupUser) {
