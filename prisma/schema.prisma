@@ -100,13 +100,17 @@ model EventUser {
 }
 
 model Group {
-  id         Int         @id @default(autoincrement())
-  name       String?
-  color      String?
-  position   Int
-  date       Date        @relation(fields: [dateId], references: [id], onDelete: Cascade)
-  dateId     Int
-  groupUsers GroupUser[]
+  id          Int         @id @default(autoincrement())
+  name        String?
+  color       String?
+  isAtHome    Boolean     @default(true)
+  isValidated Boolean     @default(false)
+  address     String?
+  versus      String?
+  position    Int
+  date        Date        @relation(fields: [dateId], references: [id], onDelete: Cascade)
+  dateId      Int
+  groupUsers  GroupUser[]
 }
 
 model GroupUser {

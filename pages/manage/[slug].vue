@@ -593,40 +593,79 @@
           {{ _local(['common', 'dates']) }}
         </div>
 
-        <div
-          v-for="(date, i) in event.dates"
-          class="cursor-pointer py-1 px-2 m-1 rounded hover:bg-slate-600 hover:text-white"
-          :class="[
-            { 'bg-slate-300': selectedDateIndex != i },
-            { 'bg-slate-600': selectedDateIndex == i },
-            { 'text-white': selectedDateIndex == i },
-          ]"
-          @click="selectedDateIndex = i"
-        >
-          <div class="font-bold">
-            {{ date.title }}
-            ({{ date.groups.length }})
-          </div>
+        <div style="max-height: calc(100vh - 170px); overflow: auto">
+          <div
+            v-for="(date, i) in event.dates"
+            class="cursor-pointer py-1 px-2 m-1 rounded hover:bg-slate-600 hover:text-white"
+            :class="[
+              { 'bg-slate-300': selectedDateIndex != i },
+              { 'bg-slate-600': selectedDateIndex == i },
+              { 'text-white': selectedDateIndex == i },
+            ]"
+            @click="selectedDateIndex = i"
+          >
+            <div class="font-bold">
+              {{ date.title }}
+              ({{ date.groups.length }})
+            </div>
 
-          <div>
-            {{ _date.formatDatetime(String(date.date)) }}
+            <div>
+              {{ _date.formatDatetime(String(date.date)) }}
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="w-64 flex-shrink-0 mx-1">
+      <div class="w-80 flex-shrink-0 mx-1">
         <div
-          class="py-1 px-2 m-1 rounded bg-slate-700 text-white flex items-center"
+          class="px-2 m-1 rounded bg-slate-700 text-white flex items-center justify-between"
         >
-          <span v-html="_icon('people', 'white', 20)" class="mr-2"></span>
-          {{ _local(['common', 'withoutGroup']) }}
+          <div class="flex items-center">
+            <span v-html="_icon('people', 'white', 20)" class="mr-2"></span>
+            {{ _local(['common', 'withoutGroup']) }}
+          </div>
+
+          <div class="flex items-center">
+            <span
+              v-html="_icon('sort-alpha-up', 'white', 20)"
+              class="rounded cursor-pointer hover:bg-slate-900 p-1"
+              @click="sortGroupUser('groupAzSort')"
+              :title="_local(['common', 'groupAzSort'])"
+            ></span>
+
+            <span
+              v-html="_icon('sort-numeric-down-alt', 'white', 20)"
+              class="rounded cursor-pointer hover:bg-slate-900 p-1"
+              @click="sortGroupUser('groupEloSort')"
+              :title="_local(['common', 'groupEloSort'])"
+            ></span>
+
+            <span
+              v-html="_icon('check-circle', 'white', 20)"
+              class="rounded cursor-pointer hover:bg-slate-900 p-1"
+              @click="sortGroupUser('groupAvailableSort')"
+              :title="_local(['common', 'groupAvailableSort'])"
+            ></span>
+
+            <span
+              v-html="_icon('car-front', 'white', 20)"
+              class="rounded cursor-pointer hover:bg-slate-900 p-1"
+              @click="sortGroupUser('groupIsMotorizedSort')"
+              :title="_local(['common', 'groupIsMotorizedSort'])"
+            ></span>
+          </div>
         </div>
 
         <draggable
           v-model="groupsUserList[selectedDateIndex]"
           item-key="id"
           class="bg-slate-200 rounded px-1 pb-1"
-          style="padding-top: 1px; min-height: 400px"
+          style="
+            padding-top: 1px;
+            min-height: 400px;
+            max-height: calc(100vh - 170px);
+            overflow-y: auto;
+          "
           @end="updateGroupUser"
           :data-groupid="0"
           v-bind="{
@@ -687,133 +726,275 @@
         </draggable>
       </div>
 
-      <div>
-        <!-- <button @click="createSingleGroup()">
-          {{ _local(['common', 'addMultipleGroup']) }}
-        </button> -->
-
-        <div class="flex flex-wrap">
-          <div
-            v-for="group in selectedDateGroups"
-            class="border border-slate-500 w-64 m-1 rounded relative"
-            style="min-height: 120px"
-          >
-            <div class="flex items-center">
-              <input
-                type="text"
-                v-model="group.name"
-                class="border bg-transparent my-1 ml-1 rounded flex-grow"
-                @input="updateGroup(group)"
-                :placeholder="_local(['common', 'groupName'])"
-              />
-
-              <span
-                @click="deleteGroup(group)"
-                v-html="_icon('trash-fill', _color.pick('red'), 20)"
-                class="m-2 cursor-pointer"
-              ></span>
-            </div>
-
-            <draggable
-              v-model="group.groupUsers"
-              item-key="id"
-              style="
-                position: relative;
-                top: 0px;
-                min-height: 44px;
-                height: calc(100% - 50px);
-              "
-              @end="updateGroupUser"
-              :data-groupid="group.id"
-              v-bind="{
-                animation: 200,
-                group: 'people',
-                disabled: false,
-                ghostClass: 'ghost',
-              }"
-              class="pb-1"
+      <div class="flex flex-wrap">
+        <draggable
+          v-model="event.dates[selectedDateIndex].groups"
+          item-key="id"
+          v-bind="{
+            animation: 200,
+            group: 'group',
+          }"
+          handle=".handle"
+          class="flex flex-wrap"
+          @end="updateGroupPosition()"
+        >
+          <template #item="{ element: group }">
+            <div
+              class="border border-slate-500 w-80 m-1 rounded relative"
+              style="min-height: 120px"
             >
-              <template #item="{ element }">
+              <div class="flex items-center">
                 <div
-                  class="cursor-grab py-1 px-2 mt-1 rounded bg-blue-300 hover:bg-blue-700 hover:text-white text-sm flex items-center mx-1"
+                  class="bg-slate-800 text-white font-bold ml-1 py-2 px-3 rounded"
                 >
-                  <div class="flex-grow">
-                    {{ element.userLink.alias }}
+                  {{ group.groupUsers.length }}
+                </div>
 
-                    <small v-if="element.userLink.elo">
-                      ({{ element.userLink.elo }})
-                    </small>
+                <input
+                  type="text"
+                  v-model="group.name"
+                  class="border bg-transparent my-1 ml-1 rounded w-44"
+                  @input="updateGroup(group)"
+                  :placeholder="_local(['common', 'groupName'])"
+                />
+
+                <span
+                  v-html="_icon('grip-vertical', _color.pick('pink'), 20)"
+                  class="m-2 mr-0 cursor-grab hover:opacity-75 handle"
+                ></span>
+
+                <!-- @vue-ignore -->
+                <span
+                  v-html="_icon('caret-down-fill', _color.pick('blue'), 20)"
+                  class="m-2 mr-0 cursor-pointer hover:opacity-75"
+                  @click="group.isExpanded = !group.isExpanded"
+                ></span>
+
+                <span
+                  @click="deleteGroup(group)"
+                  v-html="_icon('trash-fill', _color.pick('red'), 20)"
+                  class="m-2 cursor-pointer"
+                ></span>
+              </div>
+
+              <!-- @vue-ignore -->
+              <div v-if="group.isExpanded">
+                <div class="flex border border-slate-500 mx-1 rounded h-10">
+                  <div
+                    class="hover:bg-slate-300 w-1/2 flex justify-center items-center border-r border-slate-500"
+                    :class="[
+                      { 'bg-slate-800': group.isAtHome },
+                      { 'font-bold': group.isAtHome },
+                      { 'text-white': group.isAtHome },
+                      { 'pointer-events-none': group.isAtHome },
+                      { 'hover:bg-slate-300': !group.isAtHome },
+                      { 'cursor-pointer': !group.isAtHome },
+                    ]"
+                    @click=";(group.isAtHome = true), updateGroup(group)"
+                  >
+                    {{ _local(['common', 'home']) }}
                   </div>
 
                   <div
-                    v-if="
-                      event.userLinks.find((u) => u.id == element.userLink.id)
-                        ?.isMotorized
-                    "
+                    class="w-1/2 flex justify-center items-center"
+                    :class="[
+                      { 'bg-slate-800': !group.isAtHome },
+                      { 'font-bold': !group.isAtHome },
+                      { 'text-white': !group.isAtHome },
+                      { 'pointer-events-none': !group.isAtHome },
+                      { 'hover:bg-slate-300': group.isAtHome },
+                      { 'cursor-pointer': group.isAtHome },
+                    ]"
+                    @click=";(group.isAtHome = false), updateGroup(group)"
+                  >
+                    {{ _local(['common', 'away']) }}
+                  </div>
+                </div>
+
+                <div class="flex">
+                  <input
+                    type="text"
+                    v-model="group.versus"
+                    class="border bg-transparent my-1 mx-1 rounded flex-grow"
+                    @input="updateGroup(group)"
+                    :placeholder="_local(['common', 'groupVersus'])"
+                  />
+                </div>
+
+                <div class="flex">
+                  <ClientOnly>
+                    <textarea
+                      v-model="group.address"
+                      class="border bg-transparent my-1 mx-1 rounded flex-grow"
+                      @input="updateGroup(group)"
+                      :placeholder="_local(['common', 'groupAddress'])"
+                      rows="2"
+                    ></textarea>
+                  </ClientOnly>
+                </div>
+
+                <div
+                  class="flex border border-slate-500 mx-1 mb-4 rounded h-10"
+                >
+                  <div
+                    class="hover:bg-slate-300 w-1/2 flex justify-center items-center border-r border-slate-500"
+                    :class="[
+                      { 'bg-green-800': group.isValidated },
+                      { 'font-bold': group.isValidated },
+                      { 'text-white': group.isValidated },
+                      { 'pointer-events-none': group.isValidated },
+                      { 'hover:bg-slate-300': !group.isValidated },
+                      { 'cursor-pointer': !group.isValidated },
+                    ]"
+                    @click=";(group.isValidated = true), updateGroup(group)"
                   >
                     <span
-                      v-html="_icon('car-front-fill', _color.pick('blue'), 20)"
+                      v-html="
+                        _icon(
+                          'check',
+                          !group.isValidated ? 'black' : 'white',
+                          26
+                        )
+                      "
                     ></span>
+
+                    {{ _local(['common', 'validated']) }}
                   </div>
 
                   <div
-                    class="w-4 h-4 ml-2 rounded-full flex-shrink-0"
+                    class="w-1/2 flex justify-center items-center"
                     :class="[
-                      {
-                        'bg-gray-600':
-                          event.dates[selectedDateIndex].availabilities.find(
-                            (a) => a.userId == element.userLink.user.id
-                          )?.isAvailable == undefined,
-                      },
-                      {
-                        'bg-red-600':
-                          event.dates[selectedDateIndex].availabilities.find(
-                            (a) => a.userId == element.userLink.user.id
-                          )?.isAvailable == false,
-                      },
-                      {
-                        'bg-green-600':
-                          event.dates[selectedDateIndex].availabilities.find(
-                            (a) => a.userId == element.userLink.user.id
-                          )?.isAvailable == true,
-                      },
+                      { 'bg-orange-700': !group.isValidated },
+                      { 'font-bold': !group.isValidated },
+                      { 'text-white': !group.isValidated },
+                      { 'pointer-events-none': !group.isValidated },
+                      { 'hover:bg-slate-300': group.isValidated },
+                      { 'cursor-pointer': group.isValidated },
                     ]"
-                  ></div>
+                    @click=";(group.isValidated = false), updateGroup(group)"
+                  >
+                    <span
+                      v-html="
+                        _icon(
+                          'hourglass-split',
+                          group.isValidated ? 'black' : 'white',
+                          15
+                        )
+                      "
+                      style="position: relative; top: 1px; margin-right: 4px"
+                    ></span>
+
+                    {{ _local(['common', 'pending']) }}
+                  </div>
                 </div>
-              </template>
-            </draggable>
+              </div>
 
-            <div
-              v-if="group.groupUsers.length == 0"
-              class="border-2 border-gray-300 border-dashed rounded m-2 p-2 flex justify-center items-center text-gray-400 z-0"
-              style="position: absolute; top: 50px; width: calc(100% - 15px)"
-            >
-              {{ _local(['common', 'dropUserHere']) }}
+              <draggable
+                v-model="group.groupUsers"
+                item-key="id"
+                style="
+                  position: relative;
+                  top: 0px;
+                  min-height: 44px;
+                  height: calc(100% - 50px);
+                "
+                @end="updateGroupUser"
+                :data-groupid="group.id"
+                v-bind="{
+                  animation: 200,
+                  group: 'people',
+                }"
+                class="pb-1"
+              >
+                <template #item="{ element: groupUser }">
+                  <div
+                    class="cursor-grab py-1 px-2 mt-1 rounded bg-blue-300 hover:bg-blue-700 hover:text-white text-sm flex items-center mx-1"
+                  >
+                    <div class="flex-grow">
+                      {{ groupUser.userLink.alias }}
+
+                      <small v-if="groupUser.userLink.elo">
+                        ({{ groupUser.userLink.elo }})
+                      </small>
+                    </div>
+
+                    <div
+                      v-if="
+                        event.userLinks.find(
+                          (u) => u.id == groupUser.userLink.id
+                        )?.isMotorized
+                      "
+                    >
+                      <span
+                        v-html="
+                          _icon('car-front-fill', _color.pick('blue'), 20)
+                        "
+                      ></span>
+                    </div>
+
+                    <div
+                      class="w-4 h-4 ml-2 rounded-full flex-shrink-0"
+                      :class="[
+                        {
+                          'bg-gray-600':
+                            event.dates[selectedDateIndex].availabilities.find(
+                              (a) => a.userId == groupUser.userLink.user.id
+                            )?.isAvailable == undefined,
+                        },
+                        {
+                          'bg-red-600':
+                            event.dates[selectedDateIndex].availabilities.find(
+                              (a) => a.userId == groupUser.userLink.user.id
+                            )?.isAvailable == false,
+                        },
+                        {
+                          'bg-green-600':
+                            event.dates[selectedDateIndex].availabilities.find(
+                              (a) => a.userId == groupUser.userLink.user.id
+                            )?.isAvailable == true,
+                        },
+                      ]"
+                    ></div>
+                  </div>
+                </template>
+              </draggable>
+
+              <div
+                v-if="group.groupUsers.length == 0"
+                class="border-2 border-gray-300 border-dashed rounded m-2 p-2 flex justify-center items-center text-gray-400 z-0"
+                style="
+                  position: absolute;
+                  bottom: 0px;
+                  width: calc(100% - 15px);
+                "
+              >
+                {{ _local(['common', 'dropUserHere']) }}
+              </div>
             </div>
+          </template>
+        </draggable>
+
+        <div
+          class="cursor-pointer border border-slate-500 rounded w-80 m-1 flex flex-col justify-center items-center hover:bg-slate-900"
+          style="height: 120px"
+          @click="createSingleGroup()"
+        >
+          <span v-html="_icon('plus', 'rgb(100 116 139)', 50)"></span>
+
+          <div class="text-slate-500 text-center px-2 text-sm">
+            {{ _local(['common', 'createSingleGroup']) }}
           </div>
+        </div>
 
-          <div
-            class="cursor-pointer border border-slate-500 rounded w-64 m-1 flex flex-col justify-center items-center hover:bg-slate-900"
-            style="height: 120px"
-            @click="createSingleGroup()"
-          >
-            <span v-html="_icon('plus', 'rgb(100 116 139)', 50)"></span>
+        <div
+          class="cursor-pointer border border-slate-500 rounded w-80 m-1 flex flex-col justify-center items-center hover:bg-slate-900"
+          style="height: 120px"
+          @click="createMultipleGroupsDialog.showModal()"
+        >
+          <span v-html="_icon('database-add', 'rgb(100 116 139)', 50)"></span>
 
-            <div class="text-slate-500 text-center px-2 text-sm">
-              {{ _local(['common', 'createSingleGroup']) }}
-            </div>
-          </div>
-
-          <div
-            class="cursor-pointer border border-slate-500 rounded w-64 m-1 flex flex-col justify-center items-center hover:bg-slate-900"
-            style="height: 120px"
-            @click="createMultipleGroupsDialog.showModal()"
-          >
-            <span v-html="_icon('database-add', 'rgb(100 116 139)', 50)"></span>
-
-            <div class="text-slate-500 text-center px-2 text-sm">
-              {{ _local(['common', 'createMultipleGroups']) }}
-            </div>
+          <div class="text-slate-500 text-center px-2 text-sm">
+            {{ _local(['common', 'createMultipleGroups']) }}
           </div>
         </div>
       </div>
@@ -1243,7 +1424,7 @@
         id="createMultipleGroupsInput"
         v-model="createMultipleGroupsInput"
         type="text"
-        class="w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
+        class="w-full block rounded border-0 py-1.5 px-1.5 mt-1 mb-5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 text-sm leading-6"
         :placeholder="_local(['common', 'groupName'])"
       />
     </div>
@@ -1342,10 +1523,6 @@ let groupsUserList = ref<any[]>([])
 
 let sortInfo: any = { field: null, order: 'ascent' }
 
-let selectedDateGroups = computed(() => {
-  return event.value.dates[selectedDateIndex.value].groups
-})
-
 let computedManagedFields = computed<any[]>(() => {
   let managedFields = []
 
@@ -1388,6 +1565,8 @@ let computedManagedFields = computed<any[]>(() => {
 for (const date of event.value.dates) {
   let userList = []
   let filteredList = []
+
+  date.groups.sort((a: Group, b: Group) => a.position - b.position)
 
   for (const group of date.groups) {
     group.groupUsers.sort(
@@ -1828,6 +2007,10 @@ async function updateGroup(group: Group) {
     const newGroup = await _fetch('/api/updateGroup', {
       groupId: group.id,
       name: group.name,
+      address: group.address,
+      versus: group.versus,
+      isAtHome: group.isAtHome,
+      isValidated: group.isValidated,
     })
 
     fetchIsLoading.value = false
@@ -1835,19 +2018,21 @@ async function updateGroup(group: Group) {
 }
 
 async function deleteGroup(group: Group) {
-  await _fetch('/api/deleteGroup', {
-    groupId: group.id,
-  })
+  if (confirm(_local(['common', 'areyousure'])) == true) {
+    await _fetch('/api/deleteGroup', {
+      groupId: group.id,
+    })
 
-  for (const groupUser of group.groupUsers) {
-    groupsUserList.value[selectedDateIndex.value].push(groupUser)
+    for (const groupUser of group.groupUsers) {
+      groupsUserList.value[selectedDateIndex.value].push(groupUser)
+    }
+
+    const groups = event.value.dates[selectedDateIndex.value].groups.filter(
+      (g: Group) => g.id != group.id
+    )
+
+    event.value.dates[selectedDateIndex.value].groups = groups
   }
-
-  const groups = event.value.dates[selectedDateIndex.value].groups.filter(
-    (g: Group) => g.id != group.id
-  )
-
-  event.value.dates[selectedDateIndex.value].groups = groups
 }
 
 async function updateGroupUser(e: any) {
@@ -1873,9 +2058,6 @@ async function updateGroupUser(e: any) {
       if (oldGroup) break
     }
   }
-
-  // console.log('oldGroup:', oldGroup)
-  // console.log('newGroup:', newGroup)
 
   const newGroupUser = await _fetch('/api/updateGroupUser', {
     userLinkId: userLink.id,
@@ -1936,6 +2118,55 @@ async function createMultipleGroups() {
   }
 
   createMultipleGroupsInput.value = ''
+}
+
+function sortGroupUser(sortType: string) {
+  if (sortType == 'groupAzSort') {
+    groupsUserList.value[selectedDateIndex.value].sort((a: any, b: any) =>
+      a.userLink.alias.localeCompare(b.userLink.alias)
+    )
+  } else if (sortType == 'groupEloSort') {
+    groupsUserList.value[selectedDateIndex.value].sort(
+      (a: any, b: any) => b.userLink.elo - a.userLink.elo
+    )
+  } else if (sortType == 'groupAvailableSort') {
+    groupsUserList.value[selectedDateIndex.value].sort((a: any, b: any) => {
+      const u1 = event.value.dates[selectedDateIndex.value].availabilities.find(
+        (av) => av.userId == a.userLink.user.id
+      )
+
+      const u2 = event.value.dates[selectedDateIndex.value].availabilities.find(
+        (av) => av.userId == b.userLink.user.id
+      )
+
+      return u1?.isAvailable === u2?.isAvailable ? 0 : u1?.isAvailable ? -1 : 1
+    })
+  } else if (sortType == 'groupIsMotorizedSort') {
+    groupsUserList.value[selectedDateIndex.value].sort((a: any, b: any) => {
+      const u1 = event.value.userLinks.find((u) => u.id == a.userLink.id)
+      const u2 = event.value.userLinks.find((u) => u.id == b.userLink.id)
+
+      return u1?.isMotorized === u2?.isMotorized ? 0 : u1?.isMotorized ? -1 : 1
+    })
+  }
+}
+
+async function updateGroupPosition() {
+  let groupPositionsUpdates = []
+  const groups = event.value.dates[selectedDateIndex.value].groups
+
+  for (let index in groups) {
+    groupPositionsUpdates.push({
+      groupId: groups[index].id,
+      position: Number(index),
+    })
+
+    groups[index].position = Number(index)
+  }
+
+  await _fetch('/api/updateGroupPosition', {
+    updates: JSON.stringify(groupPositionsUpdates),
+  })
 }
 
 //let dialog1Node = ref()

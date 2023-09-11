@@ -25,23 +25,48 @@
         v-for="group in date.groups"
         class="border-l"
         style="min-width: 250px"
+        :class="[
+          { 'bg-green-100': group.isValidated },
+          { 'bg-orange-100': !group.isValidated },
+        ]"
       >
-        <div
-          class="px-6 py-2 border-b bg-blue-700 text-white flex items-center font-bold"
-        >
-          <span v-html="_icon('people-fill', 'white', 24)" class="mr-3"></span>
+        <div class="px-3 py-2 border-b bg-blue-700 text-white font-bold">
+          <div class="flex items-center">
+            <span
+              v-html="_icon('people-fill', 'white', 24)"
+              class="mr-3"
+            ></span>
 
-          {{ group.name }}
+            {{ group.name }}
+          </div>
+
+          <div
+            v-if="group.versus"
+            class="text-sm text-blue-800 bg-blue-50 rounded px-1 mt-1 font-normal"
+          >
+            {{ group.versus }}
+          </div>
+
+          <div
+            v-if="group.address"
+            class="text-sm text-blue-800 bg-blue-50 rounded px-1 mt-1 whitespace-pre font-normal"
+          >
+            {{ group.address }}
+          </div>
         </div>
 
         <div
-          v-for="groupUser in group.groupUsers"
-          class="px-6 py-2 border-b flex items-center hover:bg-slate-100 cursor-pointer"
+          v-for="(groupUser, i) in group.groupUsers"
+          class="px-6 py-2 border-b flex items-center cursor-pointer"
+          :class="[
+            { 'hover:bg-green-50': group.isValidated },
+            { 'hover:bg-orange-50': !group.isValidated },
+          ]"
           @click="
             userInfoDialog.showModal(), (selectedUserInfo = groupUser.userLink)
           "
         >
-          {{ groupUser.userLink.alias }}
+          {{ i + 1 }}. {{ groupUser.userLink.alias }}
 
           <small v-if="groupUser.userLink.elo" class="ml-1">
             ({{ groupUser.userLink.elo }})
@@ -208,7 +233,6 @@
 <script setup lang="ts">
 const route = useRoute()
 
-const loggedUserId = useCookie<Number>('userId')
 const dateId: Number = Number(route.params.dateId)
 
 const date: Date = await _fetch('/api/getDateSummary', {
@@ -252,6 +276,8 @@ let unknowns = mergedData.value.filter(
 availables.sort((a, b) => a.alias.localeCompare(b.alias))
 notAvailables.sort((a, b) => a.alias.localeCompare(b.alias))
 unknowns.sort((a, b) => a.alias.localeCompare(b.alias))
+
+date.groups.sort((a: Group, b: Group) => a.position - b.position)
 
 for (let group of date.groups) {
   group.groupUsers.sort((a: GroupUser, b: GroupUser) => a.position - b.position)

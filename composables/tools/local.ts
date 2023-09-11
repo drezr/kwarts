@@ -204,6 +204,30 @@ const localisation = {
       de: '',
       en: '',
     },
+    groupAzSort: {
+      fr: 'Trier par ordre alphabétique',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    groupEloSort: {
+      fr: 'Trier par Elo',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    groupAvailableSort: {
+      fr: 'Trier par disponibilité',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    groupIsMotorizedSort: {
+      fr: 'Trier par véhiculé',
+      nl: '',
+      de: '',
+      en: '',
+    },
     createSingleGroup: {
       fr: 'Créer un groupe pour cette date',
       nl: '',
@@ -218,6 +242,30 @@ const localisation = {
     },
     groupName: {
       fr: 'Nom du groupe',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    groupVersus: {
+      fr: 'Adversaire',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    home: {
+      fr: 'Domicile',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    away: {
+      fr: 'Extérieur',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    groupAddress: {
+      fr: 'Adresse',
       nl: '',
       de: '',
       en: '',
@@ -674,6 +722,12 @@ const localisation = {
     },
     validated: {
       fr: 'Validé',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    pending: {
+      fr: 'En attente',
       nl: '',
       de: '',
       en: '',

@@ -10,6 +10,10 @@ export default defineEventHandler(async (e) => {
 
   const groupId: number = parseInt(params.groupId)
   const name: string = params.name
+  const address: string = params.address
+  const versus: string = params.versus
+  const isAtHome: boolean = Boolean(params.isAtHome === 'true')
+  const isValidated: boolean = Boolean(params.isValidated === 'true')
 
   if (!authorization || !authorization.isOwner) return null
 
@@ -19,6 +23,10 @@ export default defineEventHandler(async (e) => {
     },
     data: {
       name: name,
+      address: address,
+      versus: versus,
+      isAtHome: isAtHome,
+      isValidated: isValidated,
     },
   })
 
