@@ -298,7 +298,7 @@ function copyToClipboard(str: string) {
 }
 
 function openMap(group: Group) {
-  window.open(`http://maps.google.com/?q=${group.address}`)
+  window.open(`http://maps.google.com/?q=${group.address?.replace('\n', ' ')}`)
 }
 </script>
 
