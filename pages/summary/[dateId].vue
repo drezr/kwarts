@@ -42,16 +42,24 @@
 
           <div
             v-if="group.versus"
-            class="text-sm text-blue-800 bg-blue-50 rounded px-1 mt-1 font-normal"
+            class="text-sm text-blue-800 bg-blue-50 rounded px-1 mt-1 font-bold"
           >
             {{ group.versus }}
           </div>
 
           <div
             v-if="group.address"
-            class="text-sm text-blue-800 bg-blue-50 rounded px-1 mt-1 whitespace-pre font-normal"
+            class="text-sm text-blue-800 bg-blue-50 rounded px-1 mt-1 font-normal cursor-pointer hover:bg-white flex items-center"
+            @click="openMap(group)"
           >
-            {{ group.address }}
+            <span
+              v-html="_icon('geo-alt-fill', 'rgb(30 64 175)', 24)"
+              class="mr-1"
+            ></span>
+
+            <div class="whitespace-pre-line">
+              {{ group.address }}
+            </div>
           </div>
         </div>
 
@@ -287,6 +295,10 @@ function copyToClipboard(str: string) {
   navigator.clipboard.writeText(str)
 
   alert(_local(['common', 'textCopiedToClipboard']))
+}
+
+function openMap(group: Group) {
+  window.open(`http://maps.google.com/?q=${group.address}`)
 }
 </script>
 
