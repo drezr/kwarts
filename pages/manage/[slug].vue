@@ -76,7 +76,7 @@
         _icon(
           fetchIsLoading ? 'arrow-clockwise' : 'check',
           _color.pick(fetchIsLoading ? 'blue' : 'green'),
-          30
+          30,
         )
       "
       class="hover:brightness-110 ml-3"
@@ -521,7 +521,7 @@
                 _icon(
                   element.isHidden ? 'lock-fill' : 'unlock-fill',
                   'white',
-                  20
+                  20,
                 )
               "
             ></span>
@@ -704,19 +704,19 @@
                   {
                     'bg-gray-600':
                       event.dates[selectedDateIndex].availabilities.find(
-                        (a) => a.userId == element.userLink.user.id
+                        (a) => a.userId == element.userLink.user.id,
                       )?.isAvailable == undefined,
                   },
                   {
                     'bg-red-600':
                       event.dates[selectedDateIndex].availabilities.find(
-                        (a) => a.userId == element.userLink.user.id
+                        (a) => a.userId == element.userLink.user.id,
                       )?.isAvailable == false,
                   },
                   {
                     'bg-green-600':
                       event.dates[selectedDateIndex].availabilities.find(
-                        (a) => a.userId == element.userLink.user.id
+                        (a) => a.userId == element.userLink.user.id,
                       )?.isAvailable == true,
                   },
                 ]"
@@ -853,7 +853,7 @@
                         _icon(
                           'check',
                           !group.isValidated ? 'black' : 'white',
-                          26
+                          26,
                         )
                       "
                     ></span>
@@ -878,7 +878,7 @@
                         _icon(
                           'hourglass-split',
                           group.isValidated ? 'black' : 'white',
-                          15
+                          15,
                         )
                       "
                       style="position: relative; top: 1px; margin-right: 4px"
@@ -921,7 +921,7 @@
                     <div
                       v-if="
                         event.userLinks.find(
-                          (u) => u.id == groupUser.userLink.id
+                          (u) => u.id == groupUser.userLink.id,
                         )?.isMotorized
                       "
                     >
@@ -938,19 +938,19 @@
                         {
                           'bg-gray-600':
                             event.dates[selectedDateIndex].availabilities.find(
-                              (a) => a.userId == groupUser.userLink.user.id
+                              (a) => a.userId == groupUser.userLink.user.id,
                             )?.isAvailable == undefined,
                         },
                         {
                           'bg-red-600':
                             event.dates[selectedDateIndex].availabilities.find(
-                              (a) => a.userId == groupUser.userLink.user.id
+                              (a) => a.userId == groupUser.userLink.user.id,
                             )?.isAvailable == false,
                         },
                         {
                           'bg-green-600':
                             event.dates[selectedDateIndex].availabilities.find(
-                              (a) => a.userId == groupUser.userLink.user.id
+                              (a) => a.userId == groupUser.userLink.user.id,
                             )?.isAvailable == true,
                         },
                       ]"
@@ -1001,15 +1001,11 @@
     </div>
   </div>
 
-  <div
-    class="mx-auto"
-    v-show="modalTab == 'people'"
-    ref="modalPeople"
-    style="max-width: 1000px"
-  >
+  <div class="mx-auto" v-show="modalTab == 'people'" style="max-width: 1000px">
     <div
       class="max-w-full w-full absolute left-0 overflow-auto"
       style="height: calc(100vh - 124px)"
+      ref="modalPeople"
     >
       <table class="border-collapse w-full">
         <thead class="sticky top-0 z-10">
@@ -1295,7 +1291,7 @@
                             ? 'envelope-check-fill'
                             : 'envelope-x-fill',
                           'white',
-                          16
+                          16,
                         )
                       "
                     ></span>
@@ -1318,9 +1314,9 @@
                       _icon(
                         'trash-fill',
                         _color.pick(
-                          element.userId == loggedUserId ? 'grey' : 'red'
+                          element.userId == loggedUserId ? 'grey' : 'red',
                         ),
-                        20
+                        20,
                       )
                     "
                   ></span>
@@ -1460,7 +1456,7 @@ let requestedEvent = await _fetch('/api/getEventBySlug', {
 if (!requestedEvent) logout()
 
 const loggedUserLink = requestedEvent.userLinks.find(
-  (ul: any) => ul.user.id == loggedUserId.value
+  (ul: any) => ul.user.id == loggedUserId.value,
 )
 
 if (!loggedUserLink) logout()
@@ -1484,7 +1480,7 @@ useHead({
 
 requestedEvent.dates.sort((a: Date, b: Date) => a.position - b.position)
 requestedEvent.userLinks.sort(
-  (a: EventUser, b: EventUser) => a.position - b.position
+  (a: EventUser, b: EventUser) => a.position - b.position,
 )
 
 useState<String>('eventName', () => requestedEvent.name)
@@ -1570,7 +1566,7 @@ for (const date of event.value.dates) {
 
   for (const group of date.groups) {
     group.groupUsers.sort(
-      (a: GroupUser, b: GroupUser) => a.position - b.position
+      (a: GroupUser, b: GroupUser) => a.position - b.position,
     )
 
     for (const groupUser of group.groupUsers) {
@@ -1592,7 +1588,7 @@ for (const date of event.value.dates) {
 
 function getEmail(userLink: EventUser) {
   const targetLink = cloneEvent.value.userLinks.find(
-    (ul: EventUser) => userLink.id == ul.id
+    (ul: EventUser) => userLink.id == ul.id,
   )
 
   return targetLink?.user.email
@@ -1635,7 +1631,6 @@ function sortUserLinksBy(field: string) {
     'paymentNote',
     'note',
     'godfather',
-    'elo',
   ]
 
   const boolFields = [
@@ -1646,6 +1641,7 @@ function sortUserLinksBy(field: string) {
     'isReserve',
     'isOwner',
     'isPasswordSent',
+    'elo',
   ]
 
   if (stringFields.includes(field)) {
@@ -1775,9 +1771,10 @@ async function createUser() {
 
   cloneEvent.value = JSON.parse(JSON.stringify(event.value))
 
-  // setTimeout(() => {
-  //   modalPeople.value.scrollTo(0, 9999999)
-  // }, 10)
+  modalPeople.value.scrollTo({
+    top: 9999999999,
+    behavior: 'smooth',
+  })
 
   setTimeout(() => {
     fetchIsLoading.value = false
@@ -1787,7 +1784,7 @@ async function createUser() {
 async function updateUserLink(
   userLink: EventUser,
   key: string,
-  throttle: number
+  throttle: number,
 ) {
   fetchIsLoading.value = true
   clearTimeout(fetchThrottleTimer)
@@ -1826,24 +1823,6 @@ async function updateUserLinkPositions() {
   }, 500)
 }
 
-async function updateUserLinkIsOwner(userLink: EventUser) {
-  if (confirm(_local(['common', 'areyousure']))) {
-    fetchIsLoading.value = true
-
-    userLink.isOwner = !userLink.isOwner
-
-    await _fetch('/api/updateUserLinkIsOwner', {
-      eventId: event.value.id,
-      userLinkId: userLink.id,
-      isOwner: userLink.isOwner,
-    })
-
-    setTimeout(() => {
-      fetchIsLoading.value = false
-    }, 500)
-  }
-}
-
 async function updateUserEmail(userLink: EventUser) {
   fetchIsLoading.value = true
   clearTimeout(fetchThrottleTimer)
@@ -1875,12 +1854,12 @@ async function deleteUserLink(userLink: EventUser) {
     })
 
     event.value.userLinks = event.value.userLinks.filter(
-      (ul: EventUser) => userLink.id != ul.id
+      (ul: EventUser) => userLink.id != ul.id,
     )
 
     for (let date of event.value.dates) {
       date.availabilities = date.availabilities.filter(
-        (a) => a.userId != userLink.user.id
+        (a) => a.userId != userLink.user.id,
       )
     }
 
@@ -2028,7 +2007,7 @@ async function deleteGroup(group: Group) {
     }
 
     const groups = event.value.dates[selectedDateIndex.value].groups.filter(
-      (g: Group) => g.id != group.id
+      (g: Group) => g.id != group.id,
     )
 
     event.value.dates[selectedDateIndex.value].groups = groups
@@ -2067,7 +2046,7 @@ async function updateGroupUser(e: any) {
 
   if (oldGroupId == 0 && newGroupId != 0) {
     let groupUser = newGroup?.groupUsers.find(
-      (gu: GroupUser) => gu.userLink.id == userLink.id
+      (gu: GroupUser) => gu.userLink.id == userLink.id,
     )
 
     if (groupUser) {
@@ -2123,20 +2102,20 @@ async function createMultipleGroups() {
 function sortGroupUser(sortType: string) {
   if (sortType == 'groupAzSort') {
     groupsUserList.value[selectedDateIndex.value].sort((a: any, b: any) =>
-      a.userLink.alias.localeCompare(b.userLink.alias)
+      a.userLink.alias.localeCompare(b.userLink.alias),
     )
   } else if (sortType == 'groupEloSort') {
     groupsUserList.value[selectedDateIndex.value].sort(
-      (a: any, b: any) => b.userLink.elo - a.userLink.elo
+      (a: any, b: any) => b.userLink.elo - a.userLink.elo,
     )
   } else if (sortType == 'groupAvailableSort') {
     groupsUserList.value[selectedDateIndex.value].sort((a: any, b: any) => {
       const u1 = event.value.dates[selectedDateIndex.value].availabilities.find(
-        (av) => av.userId == a.userLink.user.id
+        (av) => av.userId == a.userLink.user.id,
       )
 
       const u2 = event.value.dates[selectedDateIndex.value].availabilities.find(
-        (av) => av.userId == b.userLink.user.id
+        (av) => av.userId == b.userLink.user.id,
       )
 
       return u1?.isAvailable === u2?.isAvailable ? 0 : u1?.isAvailable ? -1 : 1
