@@ -1441,6 +1441,7 @@ import country from 'country-data'
 import draggable from 'vuedraggable'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import { set } from 'nuxt/dist/app/compat/capi'
 
 const route = useRoute()
 
@@ -1558,32 +1559,41 @@ let computedManagedFields = computed<any[]>(() => {
   return managedFields
 })
 
-for (const date of event.value.dates) {
-  let userList = []
-  let filteredList = []
+setFilteredGroupUserList()
 
-  date.groups.sort((a: Group, b: Group) => a.position - b.position)
+function setFilteredGroupUserList() {
+  groupsUserList.value = []
 
-  for (const group of date.groups) {
-    group.groupUsers.sort(
-      (a: GroupUser, b: GroupUser) => a.position - b.position,
-    )
+  for (const date of event.value.dates) {
+    let userList = []
+    let filteredList = []
 
-    for (const groupUser of group.groupUsers) {
-      userList.push(groupUser)
+    date.groups.sort((a: Group, b: Group) => a.position - b.position)
+
+    for (const group of date.groups) {
+      group.groupUsers.sort(
+        (a: GroupUser, b: GroupUser) => a.position - b.position,
+      )
+
+      for (const groupUser of group.groupUsers) {
+        userList.push(groupUser)
+      }
     }
-  }
 
-  let i = 0
+    let i = 0
 
-  for (const user of event.value.userLinks) {
-    if (!userList.find((u: GroupUser) => u.userLink.id == user.id)) {
-      filteredList.push({ userLink: user, position: i })
-      i += 1
+    for (const user of event.value.userLinks) {
+      if (
+        !userList.find((u: GroupUser) => u.userLink.id == user.id) &&
+        !user.isHidden
+      ) {
+        filteredList.push({ userLink: user, position: i })
+        i += 1
+      }
     }
-  }
 
-  groupsUserList.value.push(filteredList)
+    groupsUserList.value.push(filteredList)
+  }
 }
 
 function getEmail(userLink: EventUser) {
@@ -1771,6 +1781,8 @@ async function createUser() {
 
   cloneEvent.value = JSON.parse(JSON.stringify(event.value))
 
+  setFilteredGroupUserList()
+
   modalPeople.value.scrollTo({
     top: 9999999999,
     behavior: 'smooth',
@@ -1797,6 +1809,10 @@ async function updateUserLink(
       userLinkId: userLink.id,
       data: data,
     })
+
+    if (['isHidden', 'isMotorized'].includes(key)) {
+      setFilteredGroupUserList()
+    }
 
     fetchIsLoading.value = false
   }, throttle)
@@ -1862,6 +1878,8 @@ async function deleteUserLink(userLink: EventUser) {
         (a) => a.userId != userLink.user.id,
       )
     }
+
+    setFilteredGroupUserList()
 
     setTimeout(() => {
       fetchIsLoading.value = false
