@@ -726,7 +726,7 @@
         </draggable>
       </div>
 
-      <div class="flex flex-wrap">
+      <div class="overflow-y-auto" style="max-height: calc(100vh - 124px)">
         <draggable
           v-model="event.dates[selectedDateIndex].groups"
           item-key="id"
@@ -739,10 +739,7 @@
           @end="updateGroupPosition()"
         >
           <template #item="{ element: group }">
-            <div
-              class="border border-slate-500 w-80 m-1 rounded relative"
-              style="min-height: 120px"
-            >
+            <div class="border border-slate-500 w-80 m-1 rounded relative">
               <div class="flex items-center">
                 <div
                   class="bg-slate-800 text-white font-bold ml-1 py-2 px-3 rounded"
@@ -893,10 +890,9 @@
                 v-model="group.groupUsers"
                 item-key="id"
                 style="
-                  position: relative;
-                  top: 0px;
-                  min-height: 44px;
-                  height: calc(100% - 50px);
+                  margin-top: 15px;
+                  min-height: 200px;
+                  height: calc(100% - 65px);
                 "
                 @end="updateGroupUser"
                 :data-groupid="group.id"
@@ -964,8 +960,9 @@
                 class="border-2 border-gray-300 border-dashed rounded m-2 p-2 flex justify-center items-center text-gray-400 z-0"
                 style="
                   position: absolute;
-                  bottom: 0px;
+                  top: 60px;
                   width: calc(100% - 15px);
+                  height: calc(100% - 75px);
                 "
               >
                 {{ _local(['common', 'dropUserHere']) }}
