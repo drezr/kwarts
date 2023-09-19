@@ -65,7 +65,7 @@
 
         <div
           v-for="(groupUser, i) in group.groupUsers"
-          class="px-6 py-2 border-b flex items-center cursor-pointer"
+          class="px-6 py-1 border-b flex items-center cursor-pointer justify-between"
           :class="[
             { 'hover:bg-green-50': group.isValidated },
             { 'hover:bg-orange-50': !group.isValidated },
@@ -74,11 +74,27 @@
             userInfoDialog.showModal(), (selectedUserInfo = groupUser.userLink)
           "
         >
-          {{ i + 1 }}. {{ groupUser.userLink.alias }}
+          <div class="mr-2">
+            <div>{{ i + 1 }}. {{ groupUser.userLink.alias }}</div>
 
-          <small v-if="groupUser.userLink.elo" class="ml-1">
-            ({{ groupUser.userLink.elo }})
-          </small>
+            <div style="margin-top: -8px">
+              <small v-if="groupUser.userLink.elo">
+                {{ _local(['common', 'elo']) }}: {{ groupUser.userLink.elo }}
+              </small>
+
+              <small
+                v-if="groupUser.userLink.elo && groupUser.userLink.fideid"
+                class="mx-1"
+              >
+                -
+              </small>
+
+              <small v-if="groupUser.userLink.fideid">
+                {{ _local(['common', 'fideid']) }}:
+                {{ groupUser.userLink.fideid }}
+              </small>
+            </div>
+          </div>
 
           <span
             v-if="mergedData.find((u: any) => u.userId == groupUser.userLink.user.id)?.isMotorized && date.event.showIsMotorized"
@@ -265,20 +281,20 @@ let mergedData = ref<any[]>([])
 
 for (const userLink of date.event.userLinks) {
   const availability = date.availabilities.find(
-    (a: Availability) => a.userId == userLink.userId
+    (a: Availability) => a.userId == userLink.userId,
   )
 
   mergedData.value.push({ ...userLink, ...availability })
 }
 
 let availables = mergedData.value.filter(
-  (md) => md.isAvailable == true && !md.isHidden
+  (md) => md.isAvailable == true && !md.isHidden,
 )
 let notAvailables = mergedData.value.filter(
-  (md) => md.isAvailable == false && !md.isHidden
+  (md) => md.isAvailable == false && !md.isHidden,
 )
 let unknowns = mergedData.value.filter(
-  (md) => md.isAvailable == undefined && !md.isHidden
+  (md) => md.isAvailable == undefined && !md.isHidden,
 )
 
 availables.sort((a, b) => a.alias.localeCompare(b.alias))
