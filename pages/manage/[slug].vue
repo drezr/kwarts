@@ -659,7 +659,7 @@
         <draggable
           v-model="groupsUserList[selectedDateIndex]"
           item-key="id"
-          class="bg-slate-200 rounded px-1 pb-1"
+          class="bg-slate-200 rounded px-1 pb-1 overflow-x-hidden"
           style="
             padding-top: 1px;
             min-height: 400px;
@@ -739,7 +739,7 @@
           @end="updateGroupPosition()"
         >
           <template #item="{ element: group }">
-            <div class="border border-slate-500 w-80 m-1 rounded relative">
+            <div class="border border-slate-500 w-80 m-1 pb-1 rounded relative">
               <div class="flex items-center">
                 <div
                   class="bg-slate-800 text-white font-bold ml-1 py-2 px-3 rounded"
@@ -889,19 +889,28 @@
               <draggable
                 v-model="group.groupUsers"
                 item-key="id"
-                style="
-                  margin-top: 15px;
-                  min-height: 200px;
-                  height: calc(100% - 65px);
-                "
+                style="margin-top: 15px; min-height: 200px"
                 @end="updateGroupUser"
                 :data-groupid="group.id"
                 v-bind="{
                   animation: 200,
                   group: 'people',
                 }"
-                class="pb-1"
+                class="m-1 flex flex-col"
+                :class="
+                  group.groupUsers.length == 0
+                    ? 'border-2 border-gray-300 border-dashed rounded'
+                    : ''
+                "
               >
+                <template #header v-if="group.groupUsers.length == 0">
+                  <div
+                    class="flex justify-center items-center text-gray-400 flex-grow"
+                  >
+                    {{ _local(['common', 'dropUserHere']) }}
+                  </div>
+                </template>
+
                 <template #item="{ element: groupUser }">
                   <div
                     class="cursor-grab py-1 px-2 mt-1 rounded bg-blue-300 hover:bg-blue-700 hover:text-white text-sm flex items-center mx-1"
@@ -954,44 +963,33 @@
                   </div>
                 </template>
               </draggable>
-
-              <div
-                v-if="group.groupUsers.length == 0"
-                class="border-2 border-gray-300 border-dashed rounded m-2 p-2 flex justify-center items-center text-gray-400 z-0"
-                style="
-                  position: absolute;
-                  top: 60px;
-                  width: calc(100% - 15px);
-                  height: calc(100% - 75px);
-                "
-              >
-                {{ _local(['common', 'dropUserHere']) }}
-              </div>
             </div>
           </template>
         </draggable>
 
-        <div
-          class="cursor-pointer border border-slate-500 rounded w-80 m-1 flex flex-col justify-center items-center hover:bg-slate-900"
-          style="height: 120px"
-          @click="createSingleGroup()"
-        >
-          <span v-html="_icon('plus', 'rgb(100 116 139)', 50)"></span>
+        <div class="flex">
+          <div
+            class="cursor-pointer border border-slate-500 rounded w-80 m-1 flex flex-col justify-center items-center hover:bg-slate-900"
+            style="height: 120px"
+            @click="createSingleGroup()"
+          >
+            <span v-html="_icon('plus', 'rgb(100 116 139)', 50)"></span>
 
-          <div class="text-slate-500 text-center px-2 text-sm">
-            {{ _local(['common', 'createSingleGroup']) }}
+            <div class="text-slate-500 text-center px-2 text-sm">
+              {{ _local(['common', 'createSingleGroup']) }}
+            </div>
           </div>
-        </div>
 
-        <div
-          class="cursor-pointer border border-slate-500 rounded w-80 m-1 flex flex-col justify-center items-center hover:bg-slate-900"
-          style="height: 120px"
-          @click="createMultipleGroupsDialog.showModal()"
-        >
-          <span v-html="_icon('database-add', 'rgb(100 116 139)', 50)"></span>
+          <div
+            class="cursor-pointer border border-slate-500 rounded w-80 m-1 flex flex-col justify-center items-center hover:bg-slate-900"
+            style="height: 120px"
+            @click="createMultipleGroupsDialog.showModal()"
+          >
+            <span v-html="_icon('database-add', 'rgb(100 116 139)', 50)"></span>
 
-          <div class="text-slate-500 text-center px-2 text-sm">
-            {{ _local(['common', 'createMultipleGroups']) }}
+            <div class="text-slate-500 text-center px-2 text-sm">
+              {{ _local(['common', 'createMultipleGroups']) }}
+            </div>
           </div>
         </div>
       </div>
@@ -1489,22 +1487,22 @@ if (!isOwner) {
   navigateTo(`/event/` + requestedEvent.slug)
 }
 
-let event = ref<Event>(requestedEvent)
-let cloneEvent = ref(JSON.parse(JSON.stringify(event.value)))
-let dragging = ref<Boolean>(false)
-let modalTab = ref<String>('general')
-let selectedDateIndex = ref(0)
+const event = ref<Event>(requestedEvent)
+const cloneEvent = ref(JSON.parse(JSON.stringify(event.value)))
+const dragging = ref<Boolean>(false)
+const modalTab = ref<String>('general')
+const selectedDateIndex = ref(0)
 let fetchThrottleTimer: any = null
-let fetchIsLoading = ref<Boolean>(false)
-let newSlug = ref<any>(event.value.slug)
-let slugExist = ref<any>(null)
+const fetchIsLoading = ref<Boolean>(false)
+const newSlug = ref<any>(event.value.slug)
+const slugExist = ref<any>(null)
 
-let showAddUser = ref<Boolean>(false)
-let showAddDate = ref<Boolean>(false)
-let newDateTitle = ref<String>()
-let newDateDate = ref<Date | null>()
-let newUserEmail = ref<String>()
-let newUserAlias = ref<String>()
+const showAddUser = ref<Boolean>(false)
+const showAddDate = ref<Boolean>(false)
+const newDateTitle = ref<String>()
+const newDateDate = ref<Date | null>()
+const newUserEmail = ref<String>()
+const newUserAlias = ref<String>()
 
 const modalDates = ref()
 const modalPeople = ref()
@@ -1513,7 +1511,7 @@ const newUserAliasInput = ref()
 const addUserDialog = ref()
 const createMultipleGroupsDialog = ref()
 const createMultipleGroupsInput = ref()
-let groupsUserList = ref<any[]>([])
+const groupsUserList = ref<any[]>([])
 
 let sortInfo: any = { field: null, order: 'ascent' }
 
