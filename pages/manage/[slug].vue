@@ -2138,7 +2138,11 @@ function sortGroupUser(sortType: string) {
         isNaN(parseInt(a.userLink.elo)) &&
         isNaN(parseInt(b.userLink.elo))
       ) {
-        return a.userLink.elo.localeCompare(b.userLink.elo)
+        if (a.userLink.elo == b.userLink.elo) {
+          return a.userLink.alias.localeCompare(b.userLink.alias)
+        } else {
+          return a.userLink.elo.localeCompare(b.userLink.elo)
+        }
       }
 
       return 0
