@@ -2118,9 +2118,31 @@ function sortGroupUser(sortType: string) {
       a.userLink.alias.localeCompare(b.userLink.alias),
     )
   } else if (sortType == 'groupEloSort') {
-    groupsUserList.value[selectedDateIndex.value].sort(
-      (a: any, b: any) => b.userLink.elo - a.userLink.elo,
-    )
+    groupsUserList.value[selectedDateIndex.value].sort((a: any, b: any) => {
+      if (
+        !isNaN(parseInt(a.userLink.elo)) &&
+        !isNaN(parseInt(b.userLink.elo))
+      ) {
+        return b.userLink.elo - a.userLink.elo
+      } else if (
+        isNaN(parseInt(a.userLink.elo)) &&
+        !isNaN(parseInt(b.userLink.elo))
+      ) {
+        return 0
+      } else if (
+        !isNaN(parseInt(a.userLink.elo)) &&
+        isNaN(parseInt(b.userLink.elo))
+      ) {
+        return -1
+      } else if (
+        isNaN(parseInt(a.userLink.elo)) &&
+        isNaN(parseInt(b.userLink.elo))
+      ) {
+        return a.userLink.elo.localeCompare(b.userLink.elo)
+      }
+
+      return 0
+    })
   } else if (sortType == 'groupAvailableSort') {
     groupsUserList.value[selectedDateIndex.value].sort((a: any, b: any) => {
       const u1 = event.value.dates[selectedDateIndex.value].availabilities.find(
