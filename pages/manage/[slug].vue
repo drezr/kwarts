@@ -1125,7 +1125,7 @@
                   type="text"
                   v-model="element.fideid"
                   class="border-none text-sm h-full w-full bg-transparent"
-                  style="min-width: 110px"
+                  style="min-width: 90px"
                   @input="updateUserLink(element, 'fideid', 300)"
                 />
               </td>

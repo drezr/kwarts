@@ -517,7 +517,7 @@ const localisation = {
       en: '',
     },
     fideid: {
-      fr: 'Matricule FIDE',
+      fr: 'Matricule',
       nl: '',
       de: '',
       en: '',
