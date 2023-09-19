@@ -889,7 +889,7 @@
               <draggable
                 v-model="group.groupUsers"
                 item-key="id"
-                style="margin-top: 15px; min-height: 200px"
+                style="margin-top: 15px; min-height: 132px"
                 @end="updateGroupUser"
                 :data-groupid="group.id"
                 v-bind="{
