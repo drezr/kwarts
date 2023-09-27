@@ -124,7 +124,7 @@ async function getData() {
   divisions.value = []
 
   const reqDivisions = await _fetch(
-    'http://152.228.175.239:3456/https://www.frbe-kbsb-ksb.be/api/v1/interclubs/anon/icseries',
+    'https://proxy.echiquiermosan.be/https://www.frbe-kbsb-ksb.be/api/v1/interclubs/anon/icseries',
     {
       idclub: targetClubId.value,
       round: targetRound.value,
@@ -145,7 +145,7 @@ async function getData() {
     )
 
     const results = await _fetch(
-      'http://152.228.175.239:3456/https://www.frbe-kbsb-ksb.be/api/v1/interclubs/anon/icresultdetails',
+      'https://proxy.echiquiermosan.be/https://www.frbe-kbsb-ksb.be/api/v1/interclubs/anon/icresultdetails',
       {
         division: home.division,
         index: home.index,
