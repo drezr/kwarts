@@ -1,24 +1,31 @@
 <template>
-  <button @click="addDivision()" class="border border-gray-500 m-1 p-3">
-    Add division
-  </button>
+  <div class="flex justify-center items-center m-1">
+    <input
+      type="number"
+      v-model="targetClubId"
+      class="mr-2 w-24 h-12 rounded"
+      placeholder="Club"
+    />
 
-  <button @click="copyHTML()" class="border border-gray-500 m-1 p-3">
-    Copy HTML
-  </button>
+    <input
+      type="number"
+      v-model="targetRound"
+      class="mr-2 w-24 h-12 rounded"
+      placeholder="Round"
+    />
 
-  <div
-    v-for="division in divisions"
-    class="m-1 p-1 border border-gray-400 w-fit flex items-center"
-  >
-    <div>
-      <input class="block w-96 mb-1" type="text" v-model="division.title" />
-      <input class="block w-96" type="text" v-model="division.results" />
-    </div>
+    <button
+      @click="getData()"
+      class="border border-gray-500 p-3 h-12 mr-2 rounded"
+      :disabled="!targetClubId || !targetRound"
+      :class="{ 'opacity-20': !targetClubId || !targetRound }"
+    >
+      GO
+    </button>
 
-    <div class="text-3xl text-red-500 ml-1">
-      <button @click="deleteDivision(division)">x</button>
-    </div>
+    <button @click="copyHTML()" class="border border-gray-500 p-3 h-12 rounded">
+      Copy HTML
+    </button>
   </div>
 
   <div
@@ -37,9 +44,9 @@
     <div v-for="division in divisions">
       <div
         style="
-          margin: 0px 10px 0px 10px;
+          margin-top: 20px;
           font-weight: bold;
-          font-size: 24px;
+          font-size: 22px;
           text-align: center;
         "
       >
@@ -54,7 +61,7 @@
         "
       >
         <div
-          v-for="(result, i) in JSON.parse(division.results)"
+          v-for="(result, i) in division.results"
           style="display: flex"
           :style="i % 2 ? 'background-color: rgb(241 245 249);' : ''"
         >
@@ -82,8 +89,10 @@
             align-items: center;
             height: 40px;
             border-top: 1px rgb(156 163 175) solid;
+            background-color: rgba(148, 163, 184, 0.4);
+            font-weight: bold;
           "
-          v-if="JSON.parse(division.results).length > 0"
+          v-if="division.results.length > 0"
         >
           <div>{{ calcResult(division.results) }}</div>
         </div>
@@ -97,25 +106,59 @@ definePageMeta({
   layout: false,
 })
 
+let targetClubId = ref<Number>()
+let targetRound = ref<Number>()
+
 let divisions = ref<any[]>([])
 
-function addDivision() {
-  divisions.value.push({
-    id: Math.random(),
-    title: '',
-    results: '[]',
-  })
-}
+async function getData() {
+  divisions.value = []
 
-function deleteDivision(division: any) {
-  divisions.value = divisions.value.filter((d: any) => d.id !== division.id)
+  const reqDivisions = await _fetch(
+    'https://www.frbe-kbsb-ksb.be/api/v1/interclubs/anon/icseries',
+    {
+      idclub: targetClubId.value,
+      round: targetRound.value,
+    }
+  )
+
+  for (const division of reqDivisions) {
+    let targetEncounter = division.rounds[0].encounters.find(
+      (e: any) =>
+        e.icclub_home == targetClubId || e.icclub_visit == targetClubId.value
+    )
+
+    let home = division.teams.find(
+      (t: any) => t.idclub == targetEncounter.icclub_home
+    )
+    let visitor = division.teams.find(
+      (t: any) => t.idclub == targetEncounter.icclub_visit
+    )
+
+    const results = await _fetch(
+      'https://www.frbe-kbsb-ksb.be/api/v1/interclubs/anon/icresultdetails',
+      {
+        division: home.division,
+        index: home.index,
+        round: targetRound.value,
+        icclub_home: targetEncounter.icclub_home,
+        icclub_visit: targetEncounter.icclub_visit,
+      }
+    )
+
+    divisions.value.push({
+      id: Math.random(),
+      title: `Division ${home.division}${home.index}: ${home.name} - ${visitor.name}`,
+      results: results,
+    })
+  }
 }
 
 function calcResult(results: any) {
   let homeResult = 0
   let visitResult = 0
 
-  for (let result of JSON.parse(results)) {
+  for (let result of results) {
     let hr = result.result.split('-')[0]
     let vr = result.result.split('-')[1]
 
@@ -142,6 +185,8 @@ function copyHTML() {
   if (node) {
     navigator.clipboard.writeText(node.outerHTML)
   }
+
+  alert(_local(['common', 'textCopiedToClipboard']))
 }
 </script>
 
