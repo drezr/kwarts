@@ -5,6 +5,7 @@
       v-model="targetClubId"
       class="mr-2 w-24 h-12 rounded"
       placeholder="Club"
+      v-on:keyup.enter="getData()"
     />
 
     <input
@@ -12,6 +13,7 @@
       v-model="targetRound"
       class="mr-2 w-24 h-12 rounded"
       placeholder="Round"
+      v-on:keyup.enter="getData()"
     />
 
     <button
@@ -102,6 +104,11 @@
 </template>
 
 <script setup lang="ts">
+useHead({
+  link: [{ rel: 'icon', type: 'image/png', href: '/kwarts_logo_mini.png' }],
+  title: 'ICN 2023 - 2024 FRBE-KBSK-KSB',
+})
+
 definePageMeta({
   layout: false,
 })
@@ -112,6 +119,8 @@ let targetRound = ref<Number>()
 let divisions = ref<any[]>([])
 
 async function getData() {
+  if (!targetClubId.value || !targetRound.value) return
+
   divisions.value = []
 
   const reqDivisions = await _fetch(
