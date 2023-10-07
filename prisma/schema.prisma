@@ -114,12 +114,13 @@ model Group {
 }
 
 model GroupUser {
-  id         Int       @id @default(autoincrement())
-  position   Int
-  group      Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  groupId    Int
-  userLink   EventUser @relation(fields: [userLinkId], references: [id])
-  userLinkId Int
+  id          Int       @id @default(autoincrement())
+  position    Int
+  isConfirmed Boolean   @default(false)
+  group       Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId     Int
+  userLink    EventUser @relation(fields: [userLinkId], references: [id])
+  userLinkId  Int
 
   @@unique([groupId, userLinkId])
 }

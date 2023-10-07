@@ -915,6 +915,32 @@
                   <div
                     class="cursor-grab py-1 px-2 mt-1 rounded bg-blue-300 hover:bg-blue-700 hover:text-white text-sm flex items-center mx-1"
                   >
+                    <div
+                      class="h-4 w-7 relative cursor-pointer"
+                      style="top: -2px"
+                    >
+                      <span
+                        v-html="
+                          _icon(
+                            groupUser.isConfirmed
+                              ? 'check-circle-fill'
+                              : 'question-circle-fill',
+                            _color.pick(
+                              groupUser.isConfirmed ? 'green' : 'orange',
+                            ),
+                            20,
+                          )
+                        "
+                        class="hover:opacity-80"
+                        @click="updateGroupUserIsConfirmed(groupUser)"
+                        :title="
+                          groupUser.isConfirmed
+                            ? _local(['common', 'confirmed'])
+                            : _local(['common', 'confirmationPending'])
+                        "
+                      ></span>
+                    </div>
+
                     <div class="flex-grow">
                       {{ groupUser.userLink.alias }}
 
@@ -2232,6 +2258,15 @@ async function updateGroupPosition() {
 
   await _fetch('/api/updateGroupPosition', {
     updates: JSON.stringify(groupPositionsUpdates),
+  })
+}
+
+async function updateGroupUserIsConfirmed(groupUser: GroupUser) {
+  groupUser.isConfirmed = !groupUser.isConfirmed
+
+  await _fetch('/api/updateGroupUserIsConfirmed', {
+    groupUserId: groupUser.id,
+    isConfirmed: groupUser.isConfirmed,
   })
 }
 

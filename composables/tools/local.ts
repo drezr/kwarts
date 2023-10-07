@@ -744,6 +744,18 @@ const localisation = {
       de: '',
       en: '',
     },
+    confirmed: {
+      fr: 'Confirmé',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    confirmationPending: {
+      fr: 'En attente',
+      nl: '',
+      de: '',
+      en: '',
+    },
     paid: {
       fr: 'Payé',
       nl: '',

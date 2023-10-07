@@ -54,6 +54,7 @@ export default defineEventHandler(async (e: any) => {
                 select: {
                   id: true,
                   position: true,
+                  isConfirmed: true,
                   userLink: {
                     select: {
                       id: true,

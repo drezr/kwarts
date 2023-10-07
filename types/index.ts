@@ -100,6 +100,7 @@ interface Group {
 interface GroupUser {
     id: number,
     position: number,
+    isConfirmed: boolean,
     group: Group,
     groupId: number,
     userLink: EventUser,
