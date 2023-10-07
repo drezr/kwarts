@@ -1193,7 +1193,7 @@
                   <textarea
                     v-model="element.note"
                     class="border-none text-sm p-1 relative h-full w-full"
-                    style="top: 3px; min-width: 200px"
+                    style="min-width: 200px; top: 3px"
                     rows="1"
                     @input="updateUserLink(element, 'note', 300)"
                   >
@@ -1205,9 +1205,9 @@
                 <input
                   type="text"
                   v-model="element.godfather"
-                  class="border-none text-sm h-full w-full bg-gray-100"
+                  class="border-none text-sm h-full w-full"
                   style="min-width: 130px"
-                  disabled
+                  @input="updateUserLink(element, 'godfather', 300)"
                 />
               </td>
 
