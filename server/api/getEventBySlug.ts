@@ -1,6 +1,7 @@
 import prisma from '~/server/prisma'
 import authorize from '~/server/authorize'
 
+//@ts-ignore
 export default defineEventHandler(async (e: any) => {
   const params: any = getQuery(e)
   const slug: string = params.slug
@@ -61,6 +62,7 @@ export default defineEventHandler(async (e: any) => {
                       user: {
                         select: {
                           id: true,
+                          email: true,
                         },
                       },
                     },

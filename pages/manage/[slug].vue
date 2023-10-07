@@ -991,6 +991,18 @@
               {{ _local(['common', 'createMultipleGroups']) }}
             </div>
           </div>
+
+          <div
+            class="cursor-pointer border border-slate-500 rounded w-80 m-1 flex flex-col justify-center items-center hover:bg-slate-900"
+            style="height: 120px"
+            @click="getGroupEmailsDialog.showModal()"
+          >
+            <span v-html="_icon('at', 'rgb(100 116 139)', 50)"></span>
+
+            <div class="text-slate-500 text-center px-2 text-sm">
+              {{ _local(['common', 'getGroupEmails']) }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1429,6 +1441,42 @@
       {{ _local(['common', 'createMultipleGroups']) }}
     </button>
   </dialog>
+
+  <dialog
+    ref="getGroupEmailsDialog"
+    @mousedown="closeDialog($event, getGroupEmailsDialog)"
+    class="w-96"
+  >
+    <div
+      @click="copyGroupEmailsToClipboard()"
+      class="flex justify-center cursor-pointer hover:opacity-60 mb-5"
+    >
+      <span v-html="_icon('clipboard', 'rgba(37, 99, 235, 0.8)', 26)"></span>
+
+      <div class="ml-3" style="color: rgba(37, 99, 235, 0.8)">
+        {{ _local(['common', 'copyAllToClipBoard']) }}
+      </div>
+    </div>
+
+    <div class="mb-2">
+      <div v-for="group in event.dates[selectedDateIndex].groups">
+        <div v-for="groupUser in group.groupUsers" class="mb-2">
+          <div class="text-xs font-bold">{{ groupUser.userLink.alias }}</div>
+
+          <div class="flex items-center">
+            {{ groupUser.userLink.user.email }}
+
+            <span
+              v-html="_icon('clipboard', 'rgba(37, 99, 235, 0.8)', 16)"
+              :title="_local(['common', 'copyToClipBoard'])"
+              class="ml-2 cursor-pointer hover:opacity-60"
+              @click="copySingleEmailToClipboard(groupUser.userLink.user.email)"
+            ></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
 </template>
 
 <script setup lang="ts">
@@ -1436,7 +1484,6 @@ import country from 'country-data'
 import draggable from 'vuedraggable'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { set } from 'nuxt/dist/app/compat/capi'
 
 const route = useRoute()
 
@@ -1511,6 +1558,7 @@ const newUserAliasInput = ref()
 const addUserDialog = ref()
 const createMultipleGroupsDialog = ref()
 const createMultipleGroupsInput = ref()
+const getGroupEmailsDialog = ref()
 const groupsUserList = ref<any[]>([])
 
 let sortInfo: any = { field: null, order: 'ascent' }
@@ -2185,6 +2233,24 @@ async function updateGroupPosition() {
   await _fetch('/api/updateGroupPosition', {
     updates: JSON.stringify(groupPositionsUpdates),
   })
+}
+
+function copyGroupEmailsToClipboard() {
+  let emails: string = ''
+
+  for (const group of event.value.dates[selectedDateIndex.value].groups) {
+    for (const groupUser of group.groupUsers) {
+      emails = emails + groupUser.userLink.user.email + ' '
+    }
+  }
+
+  navigator.clipboard.writeText(emails)
+  alert(_local(['common', 'textCopiedToClipboard']))
+}
+
+function copySingleEmailToClipboard(email: any) {
+  navigator.clipboard.writeText(email)
+  alert(_local(['common', 'textCopiedToClipboard']))
 }
 
 //let dialog1Node = ref()

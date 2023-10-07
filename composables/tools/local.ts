@@ -192,6 +192,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    copyAllToClipBoard: {
+      fr: 'Tout copier dans le presse-papier',
+      nl: '',
+      de: '',
+      en: '',
+    },
     copyToClipBoard: {
       fr: 'Copier dans le presse-papier',
       nl: '',
@@ -236,6 +242,12 @@ const localisation = {
     },
     createMultipleGroups: {
       fr: 'Créer un groupe pour chaque date',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    getGroupEmails: {
+      fr: 'Obtenir les adresses email',
       nl: '',
       de: '',
       en: '',
