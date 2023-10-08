@@ -22,6 +22,23 @@ export default defineEventHandler(async (event) => {
   })
 
   if (user) {
+    if (password == user.password) {
+      await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          token: newToken,
+        },
+      })
+
+      return {
+        token: newToken,
+        user: user,
+        events: user.eventLinks,
+      }
+    }
+
     const matchingEvent = user.eventLinks.find((el) => el.password === password)
 
     if (matchingEvent) {

@@ -23,7 +23,7 @@ export function logout() {
   useCookie('token').value = null
   useCookie('eventId').value = null
 
-  navigateTo('/')
+  navigateTo('/login')
 }
 
 export function slugify(str: String) {

@@ -10,6 +10,7 @@ export interface User {
     chosenLanguage: string,
     password?: string,
     token?: string,
+    isAdmin: boolean,
     eventLinks: EventUser[],
     availabilities: Availability[],
 }

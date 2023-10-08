@@ -1,167 +1,177 @@
 <template>
-  <BaseHeader :event="event" />
+  <div v-if="loading == false">
+    <BaseHeader :event="event" />
 
-  <div class="flex py-6">
-    <div class="flex flex-col mx-auto">
-      <div class="flex">
-        <div class="flex justify-center w-44 mx-2">
-          <span
-            v-if="isOwner"
-            v-html="_icon('gear-fill', _color.pick('blue'), 24)"
-            class="mb-1 cursor-pointer hover:brightness-110"
-            @click="navigateTo(`/manage/${event.slug}`)"
-          ></span>
-        </div>
-
-        <div v-for="date in event.dates" class="flex justify-center w-24 mx-2">
-          <span
-            v-html="_icon('list', _color.pick('blue'), 28)"
-            class="cursor-pointer hover:brightness-125"
-            :title="_local(['common', 'summary'])"
-            @click="navigateTo('/summary/' + date.id)"
-          ></span>
-        </div>
-      </div>
-
-      <div v-for="userLink in userLinksLoggedUserFirst" class="flex">
-        <div
-          class="opacity-90 w-44 px-1 rounded-md text-slate-950 bg-slate-50 shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2 flex flex-col items-center justify-center font-semibold text-center overflow-hidden break-normal"
-          :class="[{ 'mb-4': userLink.userId == loggedUserId }]"
-        >
-          {{ userLink.alias }}
-
-          <div class="flex">
+    <div class="flex py-6">
+      <div class="flex flex-col mx-auto">
+        <div class="flex">
+          <div class="flex justify-center w-44 mx-2">
             <span
-              v-if="event.showIsMotorized"
-              v-html="
-                _icon(
-                  selectOptionIcon(userLink, 'isMotorized'),
-                  _color.pick(selectOptionColor(userLink, 'isMotorized')),
-                  28
-                )
-              "
-              class="mx-2 mt-1"
-              :class="[
-                {
-                  'cursor-pointer': isOwner || userLink.userId == loggedUserId,
-                },
-                {
-                  'hover:brightness-125':
-                    isOwner || userLink.userId == loggedUserId,
-                },
-              ]"
-              :title="
-                _local([
-                  'common',
-                  selectOptionTooltip(userLink, 'isMotorized'),
-                ]) +
-                (isOwner || userLink.userId == loggedUserId
-                  ? _local(['common', 'clickToUpdateTooltip'])
-                  : '')
-              "
-              @click="
-                isOwner || userLink.userId == loggedUserId
-                  ? updateIsMotorized(userLink)
-                  : null
-              "
+              v-if="isOwner"
+              v-html="_icon('gear-fill', _color.pick('blue'), 24)"
+              class="mb-1 cursor-pointer hover:brightness-110"
+              @click="navigateTo(`/manage/${event.slug}`)"
             ></span>
+          </div>
 
+          <div
+            v-for="date in event.dates"
+            class="flex justify-center w-24 mx-2"
+          >
             <span
-              v-if="event.showIsReserve"
-              v-html="
-                _icon(
-                  selectOptionIcon(userLink, 'isReserve'),
-                  _color.pick(selectOptionColor(userLink, 'isReserve')),
-                  28
-                )
-              "
-              class="mx-2 mt-1"
-              :class="[
-                {
-                  'cursor-pointer': isOwner || userLink.userId == loggedUserId,
-                },
-                {
-                  'hover:brightness-125':
-                    isOwner || userLink.userId == loggedUserId,
-                },
-              ]"
-              :title="
-                _local(['common', selectOptionTooltip(userLink, 'isReserve')]) +
-                (isOwner || userLink.userId == loggedUserId
-                  ? _local(['common', 'clickToUpdateTooltip'])
-                  : '')
-              "
-              @click="
-                isOwner || userLink.userId == loggedUserId
-                  ? updateIsReserve(userLink)
-                  : null
-              "
+              v-html="_icon('list', _color.pick('blue'), 28)"
+              class="cursor-pointer hover:brightness-125"
+              :title="_local(['common', 'summary'])"
+              @click="navigateTo('/summary/' + date.id)"
             ></span>
           </div>
         </div>
 
-        <div
-          v-for="date in userLink.dates"
-          class="w-24 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2"
-          :class="{
-            'mb-4': userLink.userId == loggedUserId,
-            'bg-slate-150': userLink.userId != loggedUserId && !isOwner,
-            'bg-white': userLink.userId == loggedUserId || isOwner,
-            'opacity-30': date.isLocked,
-            'pointer-events-none':
-              date.isLocked || (userLink.userId != loggedUserId && !isOwner),
-          }"
-        >
-          <div class="divide-y">
-            <div
-              class="text-slate-900 text-sm flex items-center justify-center overflow-hidden"
-            >
+        <div v-for="userLink in userLinksLoggedUserFirst" class="flex">
+          <div
+            class="opacity-90 w-44 px-1 rounded-md text-slate-950 bg-slate-50 shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2 flex flex-col items-center justify-center font-semibold text-center overflow-hidden break-normal"
+            :class="[{ 'mb-4': userLink.userId == loggedUserId }]"
+          >
+            {{ userLink.alias }}
+
+            <div class="flex">
               <span
-                class="h-10 text-center inline-flex flex-col justify-center font-bold"
+                v-if="event.showIsMotorized"
+                v-html="
+                  _icon(
+                    selectOptionIcon(userLink, 'isMotorized'),
+                    _color.pick(selectOptionColor(userLink, 'isMotorized')),
+                    28,
+                  )
+                "
+                class="mx-2 mt-1"
+                :class="[
+                  {
+                    'cursor-pointer':
+                      isOwner || userLink.userId == loggedUserId,
+                  },
+                  {
+                    'hover:brightness-125':
+                      isOwner || userLink.userId == loggedUserId,
+                  },
+                ]"
+                :title="
+                  _local([
+                    'common',
+                    selectOptionTooltip(userLink, 'isMotorized'),
+                  ]) +
+                  (isOwner || userLink.userId == loggedUserId
+                    ? _local(['common', 'clickToUpdateTooltip'])
+                    : '')
+                "
+                @click="
+                  isOwner || userLink.userId == loggedUserId
+                    ? updateIsMotorized(userLink)
+                    : null
+                "
+              ></span>
+
+              <span
+                v-if="event.showIsReserve"
+                v-html="
+                  _icon(
+                    selectOptionIcon(userLink, 'isReserve'),
+                    _color.pick(selectOptionColor(userLink, 'isReserve')),
+                    28,
+                  )
+                "
+                class="mx-2 mt-1"
+                :class="[
+                  {
+                    'cursor-pointer':
+                      isOwner || userLink.userId == loggedUserId,
+                  },
+                  {
+                    'hover:brightness-125':
+                      isOwner || userLink.userId == loggedUserId,
+                  },
+                ]"
+                :title="
+                  _local([
+                    'common',
+                    selectOptionTooltip(userLink, 'isReserve'),
+                  ]) +
+                  (isOwner || userLink.userId == loggedUserId
+                    ? _local(['common', 'clickToUpdateTooltip'])
+                    : '')
+                "
+                @click="
+                  isOwner || userLink.userId == loggedUserId
+                    ? updateIsReserve(userLink)
+                    : null
+                "
+              ></span>
+            </div>
+          </div>
+
+          <div
+            v-for="date in userLink.dates"
+            class="w-24 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 my-1 mx-2"
+            :class="{
+              'mb-4': userLink.userId == loggedUserId,
+              'bg-slate-150': userLink.userId != loggedUserId && !isOwner,
+              'bg-white': userLink.userId == loggedUserId || isOwner,
+              'opacity-30': date.isLocked,
+              'pointer-events-none':
+                date.isLocked || (userLink.userId != loggedUserId && !isOwner),
+            }"
+          >
+            <div class="divide-y">
+              <div
+                class="text-slate-900 text-sm flex items-center justify-center overflow-hidden"
               >
                 <span
-                  v-if="date.title"
-                  class="text-slate-600 font-semibold whitespace-nowrap"
+                  class="h-10 text-center inline-flex flex-col justify-center font-bold"
                 >
-                  <small>{{ date.title }}</small>
-                </span>
+                  <span
+                    v-if="date.title"
+                    class="text-slate-600 font-semibold whitespace-nowrap"
+                  >
+                    <small>{{ date.title }}</small>
+                  </span>
 
-                <span class="relative" :class="[{ 'bottom-1': date.title }]">
-                  {{ _date.formatDatetime(String(date.date)) }}
+                  <span class="relative" :class="[{ 'bottom-1': date.title }]">
+                    {{ _date.formatDatetime(String(date.date)) }}
+                  </span>
                 </span>
-              </span>
-            </div>
-
-            <div
-              class="flex divide-x"
-              v-if="
-                (userLink.userId == loggedUserId || isOwner) && !date.isLocked
-              "
-            >
-              <div
-                class="grow flex items-center justify-center py-2 cursor-pointer hover:animate-pulse"
-                @click="setAvailability(date, userLink, true)"
-              >
-                <span
-                  v-html="selectAvailabilityIcon('on', date, userLink)"
-                ></span>
               </div>
 
               <div
-                class="grow flex items-center justify-center py-2 cursor-pointer hover:animate-pulse"
-                @click="setAvailability(date, userLink, false)"
+                class="flex divide-x"
+                v-if="
+                  (userLink.userId == loggedUserId || isOwner) && !date.isLocked
+                "
               >
-                <span
-                  v-html="selectAvailabilityIcon('off', date, userLink)"
-                ></span>
-              </div>
-            </div>
+                <div
+                  class="grow flex items-center justify-center py-2 cursor-pointer hover:animate-pulse"
+                  @click="setAvailability(date, userLink, true)"
+                >
+                  <span
+                    v-html="selectAvailabilityIcon('on', date, userLink)"
+                  ></span>
+                </div>
 
-            <div v-else>
-              <div class="grow flex items-center justify-center py-2">
-                <span
-                  v-html="selectAvailabilityIcon('unknown', date, userLink)"
-                ></span>
+                <div
+                  class="grow flex items-center justify-center py-2 cursor-pointer hover:animate-pulse"
+                  @click="setAvailability(date, userLink, false)"
+                >
+                  <span
+                    v-html="selectAvailabilityIcon('off', date, userLink)"
+                  ></span>
+                </div>
+              </div>
+
+              <div v-else>
+                <div class="grow flex items-center justify-center py-2">
+                  <span
+                    v-html="selectAvailabilityIcon('unknown', date, userLink)"
+                  ></span>
+                </div>
               </div>
             </div>
           </div>
@@ -172,6 +182,7 @@
 </template>
 
 <script setup lang="ts">
+const loading = ref(true)
 const route = useRoute()
 
 const loggedUserId = useCookie<Number>('userId')
@@ -184,7 +195,7 @@ let requestedEvent = await _fetch('/api/getEventBySlug', {
 if (!requestedEvent) logout()
 
 const loggedUserLink = requestedEvent.userLinks.find(
-  (ul: any) => ul.user.id == loggedUserId.value
+  (ul: any) => ul.user.id == loggedUserId.value,
 )
 
 if (!loggedUserLink) logout()
@@ -208,7 +219,7 @@ useHead({
 
 requestedEvent.dates.sort((a: Date, b: Date) => a.position - b.position)
 requestedEvent.userLinks.sort(
-  (a: EventUser, b: EventUser) => a.position - b.position
+  (a: EventUser, b: EventUser) => a.position - b.position,
 )
 
 useState<String>('eventName', () => requestedEvent.name)
@@ -224,12 +235,12 @@ const userLinksLoggedUserFirst = computed<[EventUserExtended]>(() => {
   let sortedUserLinks = JSON.parse(JSON.stringify(event.value.userLinks))
 
   sortedUserLinks = sortedUserLinks.filter(
-    (ul: any) => ul.userId != loggedUserId.value
+    (ul: any) => ul.userId != loggedUserId.value,
   )
   sortedUserLinks.unshift(loggedUserLink)
 
   sortedUserLinks = sortedUserLinks.filter(
-    (u: EventUser) => !u.isHidden && u.isValidated
+    (u: EventUser) => !u.isHidden && u.isValidated,
   )
 
   for (let userLink of sortedUserLinks) {
@@ -237,7 +248,7 @@ const userLinksLoggedUserFirst = computed<[EventUserExtended]>(() => {
 
     for (let date of userLink.dates) {
       date.availability = date.availabilities.find(
-        (a: Availability) => a.userId == userLink.user.id
+        (a: Availability) => a.userId == userLink.user.id,
       )
     }
   }
@@ -245,13 +256,15 @@ const userLinksLoggedUserFirst = computed<[EventUserExtended]>(() => {
   return sortedUserLinks
 })
 
+loading.value = false
+
 function selectAvailabilityIcon(
   status: string,
   date: Date,
-  userLink: EventUser
+  userLink: EventUser,
 ) {
   const availability = date.availabilities.find(
-    (a: Availability) => a.userId == userLink.userId
+    (a: Availability) => a.userId == userLink.userId,
   )
 
   if (status == 'on') {
@@ -314,10 +327,10 @@ async function updateIsReserve(userLink: EventUser) {
 async function setAvailability(
   date: Date,
   userLink: EventUser,
-  isAvailable: boolean
+  isAvailable: boolean,
 ) {
   const availability = date.availabilities.find(
-    (a: Availability) => a.userId == userLink.userId
+    (a: Availability) => a.userId == userLink.userId,
   )
 
   if (availability) {
@@ -330,7 +343,7 @@ async function setAvailability(
         isAvailable: isAvailable,
         availabilityId: availability.id,
         userId: userLink.userId,
-      }
+      },
     )
   } else {
     // Request new availabilty
@@ -342,7 +355,7 @@ async function setAvailability(
         isAvailable: isAvailable,
         dateId: date.id,
         userId: userLink.userId,
-      }
+      },
     )
 
     date.availabilities.push(newAvailability)
