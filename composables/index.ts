@@ -22,6 +22,7 @@ export function logout() {
   useCookie('userId').value = null
   useCookie('token').value = null
   useCookie('eventId').value = null
+  useCookie('userLogged').value = null
 
   navigateTo('/login')
 }

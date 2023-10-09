@@ -6,9 +6,11 @@ async function authorize(authData: any) {
   if (authData.eventId) {
     const eventUser = await prisma.eventUser.findFirst({
       where: {
-        userId: authData.userId,
-        eventId: authData.eventId,
-        token: authData.token,
+        AND: {
+          userId: authData.userId,
+          eventId: authData.eventId,
+          token: authData.token,
+        },
       },
     })
 
@@ -29,16 +31,17 @@ async function authorize(authData: any) {
       }
     }
   } else {
-    const user = await prisma.user.findFirst({
-      where: {
-        id: authData.userId,
-        token: authData.token,
-      },
-    })
+    if (authData.userId) {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: authData.userId,
+        },
+      })
 
-    if (user) {
-      return {
-        userLogged: true,
+      if (user && user.token == authData.token) {
+        return {
+          userLogged: true,
+        }
       }
     }
   }

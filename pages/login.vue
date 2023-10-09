@@ -114,6 +114,7 @@ async function tryConnect() {
   } else if (request?.events) {
     useCookie('userId').value = request.user.id
     useCookie('token').value = request.token
+    useCookie('userLogged').value = 'true'
 
     useState<User>('loggedUser', () => request.user)
 

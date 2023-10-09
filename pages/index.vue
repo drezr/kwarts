@@ -1,7 +1,9 @@
 <template>
   <div v-if="loading == false">
     <div v-for="userLink in requestedUserLinks">
-      {{ userLink.event.name }}
+      <NuxtLink :to="`/event/${userLink.event.slug}`">{{
+        userLink.event.name
+      }}</NuxtLink>
     </div>
   </div>
 </template>
@@ -13,7 +15,8 @@ useHead({
 })
 
 const loggedUserId = useCookie<Number>('userId')
-const loggedUserToken = useCookie<Number>('token')
+
+if (!loggedUserId.value) logout()
 
 let requestedUserLinks = await _fetch('/api/getUserLinks', {})
 
