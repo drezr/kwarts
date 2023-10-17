@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
       return {
         token: newToken,
         user: user,
-        events: user.eventLinks,
+        userLogged: true,
       }
     }
 
