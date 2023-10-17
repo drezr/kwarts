@@ -1,7 +1,7 @@
 <template>
   <div class="flex py-3 justify-between">
     <div class="flex items-center sticky left-0">
-      <div v-if="route.fullPath != '/'" class="mx-3">
+      <div v-if="route.fullPath != '/'" class="ml-3">
         <span
           v-html="_icon('caret-left-fill', 'rgb(51 65 85)', 40)"
           class="cursor-pointer hover:brightness-125"
@@ -10,7 +10,7 @@
         ></span>
       </div>
 
-      <div class="flex items-center sticky left-0" v-if="event">
+      <div class="flex items-center sticky left-0 ml-3" v-if="event">
         <div class="p-1 rounded-full mr-3 flex-shrink-0">
           <img
             :src="event.logo ? event.logo : '/kwarts_logo_mini.png'"
@@ -22,7 +22,7 @@
         </span>
       </div>
 
-      <div class="flex items-center sticky left-0" v-else>
+      <div class="flex items-center sticky left-0 ml-3" v-else>
         <div class="p-1 rounded-full mr-3 flex-shrink-0">
           <img :src="'/kwarts_logo_mini.png'" class="w-12 rounded" />
         </div>
