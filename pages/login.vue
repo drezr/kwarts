@@ -104,7 +104,8 @@ async function tryConnect() {
   })
 
   if (request?.eventId) {
-    useCookie('userId').value = request.user.id
+    useCookie('userId').value = request.userId
+    useCookie('email').value = request.email
     useCookie('token').value = request.token
     useCookie('eventId').value = request.eventId
 
@@ -112,7 +113,8 @@ async function tryConnect() {
 
     navigateTo('/event/' + request.eventSlug)
   } else if (request?.userLogged) {
-    useCookie('userId').value = request.user.id
+    useCookie('userId').value = request.userId
+    useCookie('email').value = request.email
     useCookie('token').value = request.token
     useCookie('userLogged').value = 'true'
 

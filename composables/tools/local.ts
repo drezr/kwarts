@@ -54,6 +54,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    updatePassword: {
+      fr: 'Changer votre mot de passe',
+      nl: '',
+      de: '',
+      en: '',
+    },
     player: {
       fr: 'Joueur',
       nl: '',

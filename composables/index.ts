@@ -20,6 +20,7 @@ export function isValidEmail(email: String | null | undefined) {
 
 export function logout() {
   useCookie('userId').value = null
+  useCookie('email').value = null
   useCookie('token').value = null
   useCookie('eventId').value = null
   useCookie('userLogged').value = null

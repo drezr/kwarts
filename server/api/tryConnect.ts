@@ -34,7 +34,8 @@ export default defineEventHandler(async (event) => {
 
       return {
         token: newToken,
-        user: user,
+        userId: user.id,
+        email: user.email,
         userLogged: true,
       }
     }
@@ -53,7 +54,7 @@ export default defineEventHandler(async (event) => {
 
       return {
         token: newToken,
-        user: user,
+        userId: user.id,
         eventId: matchingEvent.eventId,
         eventSlug: matchingEvent.event.slug,
       }
