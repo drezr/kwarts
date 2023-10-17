@@ -17,7 +17,14 @@
             class="flex items-center border border-slate-400 m-1 p-3 rounded hover:bg-slate-100 bg-slate-200"
           >
             <div class="w-16">
-              <img :src="userLink.event.logo" class="h-10" />
+              <img
+                :src="
+                  userLink.event.logo
+                    ? userLink.event.logo
+                    : '/kwarts_logo_mini.png'
+                "
+                class="h-10"
+              />
             </div>
             <span class="ml-2 text-slate-800">
               {{
@@ -39,7 +46,14 @@
             class="flex items-center border border-slate-400 m-1 p-3 rounded hover:bg-slate-100 bg-slate-200"
           >
             <div class="w-16">
-              <img :src="userLink.event.logo" class="h-10" />
+              <img
+                :src="
+                  userLink.event.logo
+                    ? userLink.event.logo
+                    : '/kwarts_logo_mini.png'
+                "
+                class="h-10"
+              />
             </div>
             <span class="ml-2 text-slate-800">
               {{

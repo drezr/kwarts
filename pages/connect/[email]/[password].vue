@@ -23,7 +23,8 @@ const request = await _fetch('/api/tryConnect', {
 })
 
 if (request?.eventId) {
-  useCookie('userId').value = request.user.id
+  useCookie('userId').value = request.userId
+  useCookie('email').value = request.email
   useCookie('token').value = request.token
   useCookie('eventId').value = request.eventId
 

@@ -200,6 +200,8 @@ const loggedUserLink = requestedEvent.userLinks.find(
 
 if (!loggedUserLink) logout()
 
+useCookie('eventId').value = requestedEvent.id
+
 const title = requestedEvent.title
   ? requestedEvent.title
   : requestedEvent.name

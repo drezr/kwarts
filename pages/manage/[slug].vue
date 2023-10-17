@@ -1572,6 +1572,8 @@ let requestedEvent = await _fetch('/api/getEventBySlug', {
 
 if (!requestedEvent) logout()
 
+useCookie('eventId').value = requestedEvent.id
+
 const loggedUserLink = requestedEvent.userLinks.find(
   (ul: any) => ul.user.id == loggedUserId.value,
 )

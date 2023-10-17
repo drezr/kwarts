@@ -1,7 +1,7 @@
 export const useFetchWrapper = async (
   url: string,
   params?: Object,
-  options?: Object
+  options?: Object,
 ) => {
   /**
    * Wrapper of useFetch().
@@ -31,6 +31,7 @@ export const useFetchWrapper = async (
     userId: useCookie('userId').value,
     token: useCookie('token').value,
     eventId: useCookie('eventId').value,
+    userLogged: useCookie('userLogged').value,
   }
 
   let fetchedItem = await useFetch(url, opts)

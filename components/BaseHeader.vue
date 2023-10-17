@@ -35,7 +35,16 @@
       @mouseenter="toggleMenu = true"
       @mouseleave="toggleMenu = false"
     >
-      <span v-html="_icon('person', 'rgb(51 65 85)', 18)" class="mr-1"></span>
+      <span
+        v-html="
+          _icon(
+            isUserLogged == 'true' ? 'person-fill' : 'person',
+            'rgb(51 65 85)',
+            18,
+          )
+        "
+        class="mr-1"
+      ></span>
 
       {{ email }}
 
@@ -48,7 +57,7 @@
   </div>
 
   <div
-    class="absolute right-6 top-16 bg-white w-72 rounded border border-slate-300"
+    class="absolute right-6 top-14 bg-white w-72 rounded border border-slate-300 z-50"
     v-show="toggleMenu"
     @mouseenter="toggleMenu = true"
     @mouseleave="toggleMenu = false"

@@ -55,6 +55,7 @@ export default defineEventHandler(async (event) => {
       return {
         token: newToken,
         userId: user.id,
+        email: user.email,
         eventId: matchingEvent.eventId,
         eventSlug: matchingEvent.event.slug,
       }
