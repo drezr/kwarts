@@ -29,6 +29,7 @@ interface Event {
     sendMailOnRegister: boolean,
     hasGodfather: boolean,
     isOpen: boolean,
+    hasEnded: boolean,
     userLinks: EventUser[],
     dates: Date[],
 }

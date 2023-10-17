@@ -48,6 +48,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    backHome: {
+      fr: "Retour à l'accueil",
+      nl: '',
+      de: '',
+      en: '',
+    },
     player: {
       fr: 'Joueur',
       nl: '',
@@ -122,6 +128,24 @@ const localisation = {
     },
     showFideid: {
       fr: 'Donner la possibilité de renseigner un matricule FIDE',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    hasEnded: {
+      fr: "L'évènement est terminé",
+      nl: '',
+      de: '',
+      en: '',
+    },
+    ongoingEvents: {
+      fr: 'Évènements en cours',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    endedEvents: {
+      fr: 'Évènements terminés',
       nl: '',
       de: '',
       en: '',

@@ -446,6 +446,21 @@
           </a>
         </div>
       </div>
+
+      <label
+        for="hasEnded"
+        class="flex text-sm font-medium leading-6 text-gray-900 cursor-pointer hover:opacity-90 mt-6"
+      >
+        <input
+          v-model="event.hasEnded"
+          type="checkbox"
+          id="hasEnded"
+          class="cursor-pointer mb-3 mr-3 block w-6 h-6 rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+          @change="updateEvent('hasEnded', event.hasEnded, 0)"
+        />
+
+        {{ _local(['common', 'hasEnded']) }}
+      </label>
     </div>
 
     <div

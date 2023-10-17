@@ -41,6 +41,7 @@ model Event {
   sendMailOnRegister Boolean     @default(true)
   hasGodfather       Boolean     @default(false)
   isOpen             Boolean     @default(false)
+  hasEnded           Boolean     @default(false)
   userLinks          EventUser[]
   dates              Date[]
 }
