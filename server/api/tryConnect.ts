@@ -1,5 +1,6 @@
 import prisma from '~/server/prisma'
 import { v4 as uuidv4 } from 'uuid'
+import crypto from 'crypto'
 
 export default defineEventHandler(async (event) => {
   const params: any = getQuery(event)
@@ -22,21 +23,27 @@ export default defineEventHandler(async (event) => {
   })
 
   if (user) {
-    if (password == user.password) {
-      await prisma.user.update({
-        where: {
-          id: user.id,
-        },
-        data: {
-          token: newToken,
-        },
-      })
+    if (user.salt) {
+      const newHash = crypto
+        .pbkdf2Sync(password, user.salt, 1000, 64, 'sha512')
+        .toString('hex')
 
-      return {
-        token: newToken,
-        userId: user.id,
-        email: user.email,
-        userLogged: true,
+      if (newHash == user.password) {
+        await prisma.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            token: newToken,
+          },
+        })
+
+        return {
+          token: newToken,
+          userId: user.id,
+          email: user.email,
+          userLogged: true,
+        }
       }
     }
 

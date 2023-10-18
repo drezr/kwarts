@@ -3,6 +3,7 @@ interface User {
     email?: string,
     chosenLanguage: string,
     password?: string,
+    salt?: string,
     token?: string,
     isAdmin: boolean,
     eventLinks: EventUser[],

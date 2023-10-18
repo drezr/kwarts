@@ -60,6 +60,36 @@ const localisation = {
       de: '',
       en: '',
     },
+    oldPassword: {
+      fr: 'Ancien mot de passe',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    newPassword: {
+      fr: 'Nouveau mot de passe',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    newPasswordRepeat: {
+      fr: 'Confirmez le nouveau mot de passe',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    passwordUpdated: {
+      fr: 'Votre mot de passe a été mis à jour ✔',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    oldPasswordWrong: {
+      fr: 'Votre ancien mot de passe est incorrect.',
+      nl: '',
+      de: '',
+      en: '',
+    },
     player: {
       fr: 'Joueur',
       nl: '',
