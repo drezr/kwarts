@@ -90,6 +90,18 @@ const localisation = {
       de: '',
       en: '',
     },
+    forgotPassword: {
+      fr: 'Mot de passe oublié ?',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    sendNewPassword: {
+      fr: 'Envoyer un nouveau mot de passe',
+      nl: '',
+      de: '',
+      en: '',
+    },
     player: {
       fr: 'Joueur',
       nl: '',
@@ -224,6 +236,18 @@ const localisation = {
     },
     loginError: {
       fr: "L'adresse email et le mot de passe que vous avez introduit ne correspondent à aucun évènement.",
+      nl: '',
+      de: '',
+      en: '',
+    },
+    forgotError: {
+      fr: "L'adresse email que vous avez introduit n'existe pas dans la base de données.",
+      nl: '',
+      de: '',
+      en: '',
+    },
+    sendNewPasswordSuccess: {
+      fr: 'Un nouveau mot de passe a été envoyé sur votre boîte mail ✔',
       nl: '',
       de: '',
       en: '',
