@@ -134,12 +134,14 @@ async function getData() {
   for (const division of reqDivisions) {
     let targetEncounter = division.rounds[0].encounters.find(
       (e: any) =>
-        e.icclub_home == targetClubId || e.icclub_visit == targetClubId.value
+        e.icclub_home == targetClubId.value ||
+        e.icclub_visit == targetClubId.value
     )
 
     let home = division.teams.find(
       (t: any) => t.idclub == targetEncounter.icclub_home
     )
+
     let visitor = division.teams.find(
       (t: any) => t.idclub == targetEncounter.icclub_visit
     )
