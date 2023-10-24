@@ -142,12 +142,18 @@
               class="flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               @click="sendNewPassword()"
               :class="
-                !forgotEmail
+                !forgotEmail || sendNewPasswordLoading
                   ? 'bg-slate-400 hover:bg-slate-400'
                   : 'bg-slate-900 hover:bg-slate-800'
               "
-              :disabled="!forgotEmail"
+              :disabled="!forgotEmail || sendNewPasswordLoading"
             >
+              <span
+                v-if="sendNewPasswordLoading"
+                v-html="_icon('arrow-clockwise', 'white', 24)"
+                class="mr-3 animate-spin"
+              ></span>
+
               {{ _local(['common', 'sendNewPassword']) }}
             </button>
           </div>
@@ -179,6 +185,7 @@ const email = ref()
 const password = ref()
 const loginError = ref(false)
 const forgotError = ref(false)
+const sendNewPasswordLoading = ref(false)
 const forgotEmail = ref()
 const tab = ref('login')
 
@@ -212,12 +219,22 @@ async function tryConnect() {
 }
 
 async function sendNewPassword() {
+  sendNewPasswordLoading.value = true
+
   const request = await _fetch('/api/sendNewPassword', {
     email: forgotEmail.value,
   })
 
-  tab.value = 'login'
+  sendNewPasswordLoading.value = false
 
-  alert(_local(['common', 'sendNewPasswordSuccess']))
+  if (request) {
+    tab.value = 'login'
+    forgotEmail.value = ''
+    forgotError.value = false
+
+    alert(_local(['common', 'sendNewPasswordSuccess']))
+  } else {
+    forgotError.value = true
+  }
 }
 </script>

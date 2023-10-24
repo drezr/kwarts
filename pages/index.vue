@@ -82,10 +82,10 @@ if (!loggedUserId.value) logout()
 let requestedUserLinks = await _fetch('/api/getUserLinks', {})
 
 const ongoingEvents = requestedUserLinks.filter(
-  (ul: EventUser) => !ul.event.hasEnded,
+  (ul: EventUser) => !ul.event.hasEnded
 )
 const endedEvents = requestedUserLinks.filter(
-  (ul: EventUser) => ul.event.hasEnded,
+  (ul: EventUser) => ul.event.hasEnded
 )
 
 loading.value = false

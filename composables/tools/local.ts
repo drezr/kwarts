@@ -54,6 +54,12 @@ const localisation = {
       de: '',
       en: '',
     },
+    errorMessage: {
+      fr: 'Une erreur est survenue.',
+      nl: '',
+      de: '',
+      en: '',
+    },
     updatePassword: {
       fr: 'Changer votre mot de passe',
       nl: '',
@@ -798,12 +804,6 @@ const localisation = {
       de: '',
       en: '',
     },
-    errorMessage: {
-      fr: 'Une erreur est survenue.',
-      nl: '',
-      de: '',
-      en: '',
-    },
     successRegister: {
       fr: "Merci, vous avez bien été inscrit(e) à l'évènement",
       nl: '',
@@ -892,6 +892,18 @@ const localisation = {
     },
     sendPasswordContent: {
       fr: "Voici vos informations de connexion afin de donner vos disponibilités pour l'évènement",
+      nl: '',
+      de: '',
+      en: '',
+    },
+    sendNewPasswordContent: {
+      fr: 'Voici votre nouveau mot de passe',
+      nl: '',
+      de: '',
+      en: '',
+    },
+    sendNewPasswordCanUpdate: {
+      fr: 'Vous pourrez le modifier une fois connecté',
       nl: '',
       de: '',
       en: '',

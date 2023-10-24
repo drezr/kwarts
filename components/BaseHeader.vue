@@ -40,7 +40,7 @@
           _icon(
             isUserLogged == 'true' ? 'person-fill' : 'person',
             'rgb(51 65 85)',
-            18,
+            18
           )
         "
         class="mr-1"
@@ -103,6 +103,20 @@
       </div>
     </div>
 
+    <div
+      v-if="forgotError"
+      class="bg-red-100 rounded p-4 mb-4 text-red-800 flex items-center"
+    >
+      <span
+        v-html="_icon('exclamation-triangle', 'rgb(153 27 27)', 24)"
+        class="mr-3"
+      ></span>
+
+      <div>
+        {{ _local(['common', 'errorMessage']) }}
+      </div>
+    </div>
+
     <label
       v-if="isUserLogged == 'true'"
       for="oldPassword"
@@ -118,8 +132,26 @@
       v-model="oldPassword"
       type="password"
       id="oldPassword"
-      class="mb-3 w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
+      class="mb-1 w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
     />
+
+    <div v-if="isUserLogged == 'true'" class="mb-3 flex justify-center">
+      <button
+        @click="sendNewPassword()"
+        class="flex items-center text-blue-800 hover:opacity-70"
+        :disabled="sendNewPasswordLoading"
+        :class="{ 'opacity-30': sendNewPasswordLoading }"
+      >
+        <span
+          v-if="sendNewPasswordLoading"
+          v-html="_icon('arrow-clockwise', 'rgb(30 64 175)', 20)"
+          class="mr-1 animate-spin"
+        ></span>
+
+        {{ _local(['common', 'forgotPassword']) }}
+      </button>
+    </div>
+
     <label
       for="newPassword"
       class="block text-sm font-medium leading-6 text-gray-900"
@@ -135,9 +167,18 @@
       id="newPassword"
       class="mb-3 w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
       :class="[
-        { 'bg-red-100': newPassword != newPasswordRepeat },
         {
-          'bg-green-50': newPassword == newPasswordRepeat && newPassword != '',
+          'bg-red-100':
+            newPassword != newPasswordRepeat ||
+            ((newPassword.length < 6 || newPasswordRepeat.length < 6) &&
+              newPassword != ''),
+        },
+        {
+          'bg-green-50':
+            newPassword == newPasswordRepeat &&
+            newPassword != '' &&
+            newPassword.length >= 6 &&
+            newPasswordRepeat.length >= 6,
         },
       ]"
     />
@@ -157,9 +198,18 @@
       id="newPasswordRepeat"
       class="mb-3 w-full block rounded border-0 py-1.5 px-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-600 sm:text-sm sm:leading-6"
       :class="[
-        { 'bg-red-100': newPassword != newPasswordRepeat },
         {
-          'bg-green-50': newPassword == newPasswordRepeat && newPassword != '',
+          'bg-red-100':
+            newPassword != newPasswordRepeat ||
+            ((newPassword.length < 6 || newPasswordRepeat.length < 6) &&
+              newPasswordRepeat != ''),
+        },
+        {
+          'bg-green-50':
+            newPassword == newPasswordRepeat &&
+            newPassword != '' &&
+            newPassword.length >= 6 &&
+            newPasswordRepeat.length >= 6,
         },
       ]"
     />
@@ -187,6 +237,8 @@ const oldPassword = ref('')
 const newPassword = ref('')
 const newPasswordRepeat = ref('')
 const passwordErrorMessage = ref(false)
+const sendNewPasswordLoading = ref(false)
+const forgotError = ref(false)
 
 const toggleMenu = ref(false)
 
@@ -232,6 +284,24 @@ async function updatePassword() {
     }, 100)
   } else {
     passwordErrorMessage.value = true
+  }
+}
+
+async function sendNewPassword() {
+  sendNewPasswordLoading.value = true
+
+  const request = await _fetch('/api/sendNewPassword', {
+    email: email,
+  })
+
+  sendNewPasswordLoading.value = false
+
+  if (request) {
+    forgotError.value = false
+
+    alert(_local(['common', 'sendNewPasswordSuccess']))
+  } else {
+    forgotError.value = true
   }
 }
 </script>
