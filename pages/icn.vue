@@ -154,6 +154,8 @@ async function getData() {
         round: targetRound.value,
         icclub_home: targetEncounter.icclub_home,
         icclub_visit: targetEncounter.icclub_visit,
+        pairingnr_home: home.pairingnumber,
+        pairingnr_visit: visitor.pairingnumber,
       }
     )
 
