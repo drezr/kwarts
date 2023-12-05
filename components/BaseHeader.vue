@@ -40,7 +40,7 @@
           _icon(
             isUserLogged == 'true' ? 'person-fill' : 'person',
             'rgb(51 65 85)',
-            18
+            18,
           )
         "
         class="mr-1"
@@ -57,7 +57,7 @@
   </div>
 
   <div
-    class="absolute right-6 top-14 bg-white w-72 rounded border border-slate-300 z-50"
+    class="absolute right-6 top-12 bg-white w-72 rounded border border-slate-300 z-50"
     v-show="toggleMenu"
     @mouseenter="toggleMenu = true"
     @mouseleave="toggleMenu = false"
